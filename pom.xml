@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
@@ -15,6 +16,12 @@
 	<scm>
 		<url>https://github.com/MassBank/SpectrumSearch.git</url>
 	</scm>
+
+	<prerequisites>
+		<maven>3.2.3</maven>
+	</prerequisites>
+
+
 	<issueManagement>
 		<system>github</system>
 		<url>https://github.com/MassBank/SpectrumSearch/issues</url>
@@ -64,8 +71,6 @@ Retrieves spectra similar to user's spectrum in terms of the m/z value. This sea
 				<artifactId>properties-maven-plugin</artifactId>
 				<version>1.0-alpha-2</version>
 				<executions>
-					<!-- Associate the read-project-properties goal with the initialize 
-						phase, to read the properties file. -->
 					<execution>
 						<phase>validate</phase>
 						<goals>
@@ -80,9 +85,6 @@ Retrieves spectra similar to user's spectrum in terms of the m/z value. This sea
 				</executions>
 			</plugin>
 
-
-
-
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jarsigner-plugin</artifactId>
@@ -95,8 +97,61 @@ Retrieves spectra similar to user's spectrum in terms of the m/z value. This sea
 						</goals>
 					</execution>
 				</executions>
+			</plugin>
 
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>2.10.1</version>
+				<configuration>
+					<show>private</show>
+					<encoding>UTF-8</encoding>
+					<locale>en</locale>
+					<javadocVersion>1.8</javadocVersion>
+					<failOnError>false</failOnError>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>findbugs-maven-plugin</artifactId>
+				<version>3.0.0</version>
 			</plugin>
 		</plugins>
 	</build>
+
+
+	<reporting>
+		<plugins>
+			<plugin>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>2.10.1</version>
+				<configuration>
+					<show>private</show>
+					<linksource>true</linksource>
+					<keywords>true</keywords>
+					<use>false</use>
+					<windowtitle>SpectrumSearch</windowtitle>
+					<encoding>UTF-8</encoding>
+					<locale>en</locale>
+					<javadocVersion>1.8</javadocVersion>
+					<verbose>true</verbose>
+					<minmemory>32m</minmemory>
+					<maxmemory>128m</maxmemory>
+					<failOnError>false</failOnError>
+					<includeDependencySources>true</includeDependencySources>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>findbugs-maven-plugin</artifactId>
+				<version>3.0.0</version>
+				<configuration>
+					<xmlOutput>true</xmlOutput>
+				</configuration>
+			</plugin>
+		</plugins>
+	</reporting>
 </project>
+
+
