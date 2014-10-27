@@ -18,7 +18,7 @@
  *
  *******************************************************************************
  *
- * SearchPage ƒNƒ‰ƒX
+ * SearchPage ã‚¯ãƒ©ã‚¹
  *
  * ver 1.0.20 2011.12.16
  *
@@ -100,7 +100,7 @@ import massbank.GetInstInfo;
 import massbank.MassBankCommon;
 
 /**
- * SearchPage ƒNƒ‰ƒX
+ * SearchPage ã‚¯ãƒ©ã‚¹
  */
 @SuppressWarnings("serial")
 public class SearchPage extends JApplet {
@@ -140,25 +140,25 @@ public class SearchPage extends JApplet {
 	public static final String TABLE_QUERY_DB = "QueryDb";
 	public static final String TABLE_RESULT = "Result";
 	
-	private TableSorter fileSorter = null;						// ƒNƒGƒŠ[ƒtƒ@ƒCƒ‹ƒe[ƒuƒ‹ƒ‚ƒfƒ‹
-	private TableSorter querySorter = null; 					// ƒNƒGƒŠ[DBƒe[ƒuƒ‹ƒ‚ƒfƒ‹
-	private TableSorter resultSorter = null;					// ŒŸõŒ‹‰Êƒe[ƒuƒ‹ƒ‚ƒfƒ‹
+	private TableSorter fileSorter = null;						// ã‚¯ã‚¨ãƒªãƒ¼ãƒ•ã‚¡ã‚¤ãƒ«ãƒ†ãƒ¼ãƒ–ãƒ«ãƒ¢ãƒ‡ãƒ«
+	private TableSorter querySorter = null; 					// ã‚¯ã‚¨ãƒªãƒ¼DBãƒ†ãƒ¼ãƒ–ãƒ«ãƒ¢ãƒ‡ãƒ«
+	private TableSorter resultSorter = null;					// æ¤œç´¢çµæœãƒ†ãƒ¼ãƒ–ãƒ«ãƒ¢ãƒ‡ãƒ«
 	
-	private JTable queryFileTable = null;						// ƒNƒGƒŠ[ƒ†[ƒUƒtƒ@ƒCƒ‹ƒe[ƒuƒ‹
-	private JTable queryDbTable = null;						// ƒNƒGƒŠ[DBƒe[ƒuƒ‹
-	private JTable resultTable = null;							// ŒŸõŒ‹‰Êƒe[ƒuƒ‹
+	private JTable queryFileTable = null;						// ã‚¯ã‚¨ãƒªãƒ¼ãƒ¦ãƒ¼ã‚¶ãƒ•ã‚¡ã‚¤ãƒ«ãƒ†ãƒ¼ãƒ–ãƒ«
+	private JTable queryDbTable = null;						// ã‚¯ã‚¨ãƒªãƒ¼DBãƒ†ãƒ¼ãƒ–ãƒ«
+	private JTable resultTable = null;							// æ¤œç´¢çµæœãƒ†ãƒ¼ãƒ–ãƒ«
 	
-	private PeakPanel queryPlot = new PeakPanel(false);		// ƒNƒGƒŠ[ƒXƒyƒNƒgƒ‹ƒpƒlƒ‹
-	private PeakPanel resultPlot = new PeakPanel(false);		// ŒŸõŒ‹‰ÊƒXƒyƒNƒgƒ‹ƒpƒlƒ‹
-	private PeakPanel compPlot = new PeakPanel(true);			// ”äŠr—pƒXƒyƒNƒgƒ‹ƒpƒlƒ‹
+	private PeakPanel queryPlot = new PeakPanel(false);		// ã‚¯ã‚¨ãƒªãƒ¼ã‚¹ãƒšã‚¯ãƒˆãƒ«ãƒ‘ãƒãƒ«
+	private PeakPanel resultPlot = new PeakPanel(false);		// æ¤œç´¢çµæœã‚¹ãƒšã‚¯ãƒˆãƒ«ãƒ‘ãƒãƒ«
+	private PeakPanel compPlot = new PeakPanel(true);			// æ¯”è¼ƒç”¨ã‚¹ãƒšã‚¯ãƒˆãƒ«ãƒ‘ãƒãƒ«
 
-	private JTabbedPane queryTabPane = new JTabbedPane();		// ƒNƒGƒŠ[ƒ^ƒuƒyƒCƒ“
-	private JTabbedPane resultTabPane = new JTabbedPane();		// ŒŸõŒ‹‰Êƒ^ƒuƒyƒCƒ“
-	private JTabbedPane viewTabPane = new JTabbedPane();		// ƒXƒyƒNƒgƒ‹•\¦ƒ^ƒuƒyƒCƒ“
+	private JTabbedPane queryTabPane = new JTabbedPane();		// ã‚¯ã‚¨ãƒªãƒ¼ã‚¿ãƒ–ãƒšã‚¤ãƒ³
+	private JTabbedPane resultTabPane = new JTabbedPane();		// æ¤œç´¢çµæœã‚¿ãƒ–ãƒšã‚¤ãƒ³
+	private JTabbedPane viewTabPane = new JTabbedPane();		// ã‚¹ãƒšã‚¯ãƒˆãƒ«è¡¨ç¤ºã‚¿ãƒ–ãƒšã‚¤ãƒ³
 
-	private JScrollPane queryFilePane = null;					// ƒNƒGƒŠ[ƒtƒ@ƒCƒ‹ƒyƒCƒ“
-	private JScrollPane resultPane = null;						// ƒNƒGƒŠ[DBƒyƒCƒ“
-	private JScrollPane queryDbPane = null;					// ŒŸõŒ‹‰ÊƒyƒCƒ“
+	private JScrollPane queryFilePane = null;					// ã‚¯ã‚¨ãƒªãƒ¼ãƒ•ã‚¡ã‚¤ãƒ«ãƒšã‚¤ãƒ³
+	private JScrollPane resultPane = null;						// ã‚¯ã‚¨ãƒªãƒ¼DBãƒšã‚¤ãƒ³
+	private JScrollPane queryDbPane = null;					// æ¤œç´¢çµæœãƒšã‚¤ãƒ³
 	
 	private JButton btnName = new JButton("Search Name");
 	private JButton btnAll = new JButton("All");
@@ -167,21 +167,21 @@ public class SearchPage extends JApplet {
 
 	private JButton etcPropertyButton = new JButton("Search Parameter Setting");
 	
-	private boolean isRecActu;			// ƒXƒyƒNƒgƒ‹ŒŸõƒtƒ‰ƒO(À‘ªƒXƒyƒNƒgƒ‹)
-	private boolean isRecInteg;			// ƒXƒyƒNƒgƒ‹ŒŸõƒtƒ‰ƒO(“‡ƒXƒyƒNƒgƒ‹)
-	private boolean isDispSelected;		// Package View•\¦ƒtƒ‰ƒO(‘I‘ğƒŒƒR[ƒh)
-	private boolean isDispRelated;		// Package View•\¦ƒtƒ‰ƒO(ŠÖ˜AƒXƒyƒNƒgƒ‹)
+	private boolean isRecActu;			// ã‚¹ãƒšã‚¯ãƒˆãƒ«æ¤œç´¢ãƒ•ãƒ©ã‚°(å®Ÿæ¸¬ã‚¹ãƒšã‚¯ãƒˆãƒ«)
+	private boolean isRecInteg;			// ã‚¹ãƒšã‚¯ãƒˆãƒ«æ¤œç´¢ãƒ•ãƒ©ã‚°(çµ±åˆã‚¹ãƒšã‚¯ãƒˆãƒ«)
+	private boolean isDispSelected;		// Package Viewè¡¨ç¤ºãƒ•ãƒ©ã‚°(é¸æŠãƒ¬ã‚³ãƒ¼ãƒ‰)
+	private boolean isDispRelated;		// Package Viewè¡¨ç¤ºãƒ•ãƒ©ã‚°(é–¢é€£ã‚¹ãƒšã‚¯ãƒˆãƒ«)
 	
 	private JRadioButton tolUnit1 = new JRadioButton("unit", true);
 	private JRadioButton tolUnit2 = new JRadioButton("ppm");
 
-	private Map<String, List<String>> instGroup;							// ‘•’uí•ÊƒOƒ‹[ƒvƒ}ƒbƒv
-	private LinkedHashMap<String, JCheckBox> instCheck;					// ‘•’uí•Êƒ`ƒFƒbƒNƒ{ƒbƒNƒXŠi”[—p
-	private HashMap<String, Boolean> isInstCheck;							// ‘•’uí•Êƒ`ƒFƒbƒNƒ{ƒbƒNƒX’lŠi”[—p
-	private LinkedHashMap<String, JCheckBox> msCheck;						// MSí•Êƒ`ƒFƒbƒNƒ{ƒbƒNƒXŠi”[—p
-	private HashMap<String, Boolean> isMsCheck;							// MSí•Êƒ`ƒFƒbƒNƒ{ƒbƒNƒX’lŠi”[—p
-	private LinkedHashMap<String, JRadioButton> ionRadio;					// ƒCƒIƒ“í•Êƒ‰ƒWƒIƒ{ƒ^ƒ“Ši”[—p
-	private HashMap<String, Boolean> isIonRadio;							// ƒCƒIƒ“í•Êƒ‰ƒWƒIƒ{ƒ^ƒ“’lŠi”[—p
+	private Map<String, List<String>> instGroup;							// è£…ç½®ç¨®åˆ¥ã‚°ãƒ«ãƒ¼ãƒ—ãƒãƒƒãƒ—
+	private LinkedHashMap<String, JCheckBox> instCheck;					// è£…ç½®ç¨®åˆ¥ãƒã‚§ãƒƒã‚¯ãƒœãƒƒã‚¯ã‚¹æ ¼ç´ç”¨
+	private HashMap<String, Boolean> isInstCheck;							// è£…ç½®ç¨®åˆ¥ãƒã‚§ãƒƒã‚¯ãƒœãƒƒã‚¯ã‚¹å€¤æ ¼ç´ç”¨
+	private LinkedHashMap<String, JCheckBox> msCheck;						// MSç¨®åˆ¥ãƒã‚§ãƒƒã‚¯ãƒœãƒƒã‚¯ã‚¹æ ¼ç´ç”¨
+	private HashMap<String, Boolean> isMsCheck;							// MSç¨®åˆ¥ãƒã‚§ãƒƒã‚¯ãƒœãƒƒã‚¯ã‚¹å€¤æ ¼ç´ç”¨
+	private LinkedHashMap<String, JRadioButton> ionRadio;					// ã‚¤ã‚ªãƒ³ç¨®åˆ¥ãƒ©ã‚¸ã‚ªãƒœã‚¿ãƒ³æ ¼ç´ç”¨
+	private HashMap<String, Boolean> isIonRadio;							// ã‚¤ã‚ªãƒ³ç¨®åˆ¥ãƒ©ã‚¸ã‚ªãƒœã‚¿ãƒ³å€¤æ ¼ç´ç”¨
 	
 	private boolean isSubWindow = false;
 
@@ -197,7 +197,7 @@ public class SearchPage extends JApplet {
 
 	private JPanel parentPanel2 = null;
 
-	private PackageViewPanel pkgView = null;					// PackageViewƒRƒ“ƒ|[ƒlƒ“ƒg
+	private PackageViewPanel pkgView = null;					// PackageViewã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆ
 	
 	private MassBankCommon mbcommon = new MassBankCommon();
 	private final Cursor waitCursor = new Cursor(Cursor.WAIT_CURSOR);
@@ -205,19 +205,19 @@ public class SearchPage extends JApplet {
 	private static int seaqId = 0;
 	private static int seaqCompound = 0;
 
-	public static AppletContext context = null;				// ƒAƒvƒŒƒbƒgƒRƒ“ƒeƒLƒXƒg
-	public static int initAppletWidth = 0;					// ƒAƒvƒŒƒbƒg‰Šú‰æ–ÊƒTƒCƒY(•)
-	public static int initAppletHight = 0;					// ƒAƒvƒŒƒbƒg‰Šú‰æ–ÊƒTƒCƒY(‚‚³)
+	public static AppletContext context = null;				// ã‚¢ãƒ—ãƒ¬ãƒƒãƒˆã‚³ãƒ³ãƒ†ã‚­ã‚¹ãƒˆ
+	public static int initAppletWidth = 0;					// ã‚¢ãƒ—ãƒ¬ãƒƒãƒˆåˆæœŸç”»é¢ã‚µã‚¤ã‚º(å¹…)
+	public static int initAppletHight = 0;					// ã‚¢ãƒ—ãƒ¬ãƒƒãƒˆåˆæœŸç”»é¢ã‚µã‚¤ã‚º(é«˜ã•)
 	
-	public static final int MAX_DISPLAY_NUM = 30;				// Package ViewÅ‘å•\¦‰Â”\Œ”
+	public static final int MAX_DISPLAY_NUM = 30;				// Package Viewæœ€å¤§è¡¨ç¤ºå¯èƒ½ä»¶æ•°
 	
 	private CookieManager cm;							// Cookie Manager
-//	private final String COOKIE_PRE = "PRE";			// Cookieî•ñƒL[iPRECURSORj
-	private final String COOKIE_TOL = "TOL";			// Cookieî•ñƒL[iTOLERANCEj
-	private final String COOKIE_CUTOFF = "CUTOFF"; 	// Cookieî•ñƒL[iCOOKIE_CUTOFFj
-	private final String COOKIE_INST = "INST";			// Cookieî•ñƒL[iINSTRUMENTj
-	private final String COOKIE_MS = "MS";				// Cookieî•ñƒL[iMSj
-	private final String COOKIE_ION = "ION";			// Cookieî•ñƒL[iIONj
+//	private final String COOKIE_PRE = "PRE";			// Cookieæƒ…å ±ã‚­ãƒ¼ï¼ˆPRECURSORï¼‰
+	private final String COOKIE_TOL = "TOL";			// Cookieæƒ…å ±ã‚­ãƒ¼ï¼ˆTOLERANCEï¼‰
+	private final String COOKIE_CUTOFF = "CUTOFF"; 	// Cookieæƒ…å ±ã‚­ãƒ¼ï¼ˆCOOKIE_CUTOFFï¼‰
+	private final String COOKIE_INST = "INST";			// Cookieæƒ…å ±ã‚­ãƒ¼ï¼ˆINSTRUMENTï¼‰
+	private final String COOKIE_MS = "MS";				// Cookieæƒ…å ±ã‚­ãƒ¼ï¼ˆMSï¼‰
+	private final String COOKIE_ION = "ION";			// Cookieæƒ…å ±ã‚­ãƒ¼ï¼ˆIONï¼‰
 
 	private final JRadioButton dispSelected = new JRadioButton("selected", true);
 	private final JRadioButton dispRelated = new JRadioButton("related");
@@ -228,58 +228,58 @@ public class SearchPage extends JApplet {
 	public String param = "";
 
 	/**
-	 * ƒƒCƒ“ƒvƒƒOƒ‰ƒ€
+	 * ãƒ¡ã‚¤ãƒ³ãƒ—ãƒ­ã‚°ãƒ©ãƒ 
 	 */
 	public void init() {
 		
-		// ƒAƒvƒŒƒbƒgƒRƒ“ƒeƒLƒXƒgæ“¾
+		// ã‚¢ãƒ—ãƒ¬ãƒƒãƒˆã‚³ãƒ³ãƒ†ã‚­ã‚¹ãƒˆå–å¾—
 		context = getAppletContext();
 		
-		// ƒAƒvƒŒƒbƒg‰Šú‰æ–ÊƒTƒCƒYæ“¾
+		// ã‚¢ãƒ—ãƒ¬ãƒƒãƒˆåˆæœŸç”»é¢ã‚µã‚¤ã‚ºå–å¾—
 		initAppletWidth = getWidth();
 		initAppletHight = getHeight();
 
-		// ŠÂ‹«İ’èƒtƒ@ƒCƒ‹‚©‚ç˜AŒgƒTƒCƒg‚ÌURL‚ğæ“¾
+		// ç’°å¢ƒè¨­å®šãƒ•ã‚¡ã‚¤ãƒ«ã‹ã‚‰é€£æºã‚µã‚¤ãƒˆã®URLã‚’å–å¾—
 		String confPath = getCodeBase().toString();
 		confPath = confPath.replaceAll("/jsp", "");
 		GetConfig conf = new GetConfig(confPath);
 		siteNameList = conf.getSiteName();
 		baseUrl = conf.getServerUrl();
 		
-		// Cookieî•ñƒ†[ƒeƒBƒŠƒeƒB‰Šú‰»
+		// Cookieæƒ…å ±ãƒ¦ãƒ¼ãƒ†ã‚£ãƒªãƒ†ã‚£åˆæœŸåŒ–
 		cm = new CookieManager(this, "SerchApplet", 30, conf.isCookie());
 		
-		// Precursor m/zî•ñ‰Šú‰»
+		// Precursor m/zæƒ…å ±åˆæœŸåŒ–
 		initPreInfo();
 		
-		// Toleranceî•ñ‰Šú‰»
+		// Toleranceæƒ…å ±åˆæœŸåŒ–
 		initTolInfo();
 		
-		// Cutoff Thresholdî•ñ‰Šú‰»
+		// Cutoff Thresholdæƒ…å ±åˆæœŸåŒ–
 		initCutoffInfo();
 		
-		// ‘•’uí•Êî•ñ‰Šú‰»
+		// è£…ç½®ç¨®åˆ¥æƒ…å ±åˆæœŸåŒ–
 		instInfo = new GetInstInfo(confPath);
 		initInstInfo();
 		
-		// MSí•Êî•ñ‰Šú‰»
+		// MSç¨®åˆ¥æƒ…å ±åˆæœŸåŒ–
 		initMsInfo();
 		
-		// ƒCƒIƒ“í•Êî•ñ‰Šú‰»
+		// ã‚¤ã‚ªãƒ³ç¨®åˆ¥æƒ…å ±åˆæœŸåŒ–
 		initIonInfo();
 
 		
-		// ƒEƒCƒ“ƒhƒE¶¬
+		// ã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ç”Ÿæˆ
 		createWindow();
 
-		// ŒŸõ’†ƒ_ƒCƒAƒƒO
+		// æ¤œç´¢ä¸­ãƒ€ã‚¤ã‚¢ãƒ­ã‚°
 		this.dlg = new ProgressDialog(getFrame());
 
-		// ƒ†[ƒU[ƒtƒ@ƒCƒ‹“Ç‚İ
+		// ãƒ¦ãƒ¼ã‚¶ãƒ¼ãƒ•ã‚¡ã‚¤ãƒ«èª­è¾¼ã¿
 		if (getParameter("file") != null) {
 			loadFile(getParameter("file"));
 		}
-		// ‘¼‰æ–Ê‚©‚ç‚ÌƒNƒGƒŠ’Ç‰Á
+		// ä»–ç”»é¢ã‹ã‚‰ã®ã‚¯ã‚¨ãƒªè¿½åŠ 
 		else if (getParameter("num") != null) {
 			DefaultTableModel dm = (DefaultTableModel) querySorter.getTableModel();
 			dm.setRowCount(0);
@@ -301,7 +301,7 @@ public class SearchPage extends JApplet {
 	}
 	
 	/**
-	 * ‹­“xƒŒƒ“ƒW‹y‚Ñƒ}ƒXƒŒƒ“ƒWİ’è
+	 * å¼·åº¦ãƒ¬ãƒ³ã‚¸åŠã³ãƒã‚¹ãƒ¬ãƒ³ã‚¸è¨­å®š
 	 */
 	public void setAllPlotAreaRange() {
 		queryPlot.setIntensityRange(PeakPanel.INTENSITY_MAX);
@@ -327,7 +327,7 @@ public class SearchPage extends JApplet {
 	}
 
 	/**
-	 * ‹­“xƒŒƒ“ƒW‹y‚Ñƒ}ƒXƒŒƒ“ƒWİ’è
+	 * å¼·åº¦ãƒ¬ãƒ³ã‚¸åŠã³ãƒã‚¹ãƒ¬ãƒ³ã‚¸è¨­å®š
 	 * @param panel PeakPanel
 	 */
 	public void setAllPlotAreaRange(PeakPanel panel) {
@@ -352,8 +352,8 @@ public class SearchPage extends JApplet {
 	}
 
 	/**
-	 * Å‘å‹­“xæ“¾
-	 * ƒ}ƒXƒŒƒ“ƒW“àƒs[ƒN“à‚Å‚ÌÅ‘å‹­“xæ“¾
+	 * æœ€å¤§å¼·åº¦å–å¾—
+	 * ãƒã‚¹ãƒ¬ãƒ³ã‚¸å†…ãƒ”ãƒ¼ã‚¯å†…ã§ã®æœ€å¤§å¼·åº¦å–å¾—
 	 * @param start
 	 * @param end
 	 */
@@ -370,16 +370,16 @@ public class SearchPage extends JApplet {
 	}
 
 	/**
-	 * ƒEƒCƒ“ƒhƒE¶¬
+	 * ã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ç”Ÿæˆ
 	 */
 	private void createWindow() {
 		
-		// ƒc[ƒ‹ƒ`ƒbƒvƒ}ƒl[ƒWƒƒ[İ’è
+		// ãƒ„ãƒ¼ãƒ«ãƒãƒƒãƒ—ãƒãƒãƒ¼ã‚¸ãƒ£ãƒ¼è¨­å®š
 		ToolTipManager ttm = ToolTipManager.sharedInstance();
 		ttm.setInitialDelay(50);
 		ttm.setDismissDelay(8000);
 		
-		// Searchƒpƒlƒ‹
+		// Searchãƒ‘ãƒãƒ«
 		JPanel mainPanel = new JPanel();
 		mainPanel.setLayout(new BorderLayout());
 		Border border = BorderFactory.createCompoundBorder(BorderFactory.createEtchedBorder(),
@@ -387,7 +387,7 @@ public class SearchPage extends JApplet {
 		mainPanel.setBorder(border);
 		
 		// *********************************************************************
-		// User File Queryƒ^ƒu
+		// User File Queryã‚¿ãƒ–
 		// *********************************************************************
 		DefaultTableModel fileDm = new DefaultTableModel();
 		fileSorter = new TableSorter(fileDm, TABLE_QUERY_FILE);
@@ -395,7 +395,7 @@ public class SearchPage extends JApplet {
 			@Override
 			public boolean isCellEditable(int row, int column) {
 //				super.isCellEditable(row, column);
-				// ƒI[ƒo[ƒ‰ƒCƒh‚ÅƒZƒ‹•ÒW‚ğ•s‰Â‚Æ‚·‚é
+				// ã‚ªãƒ¼ãƒãƒ¼ãƒ©ã‚¤ãƒ‰ã§ã‚»ãƒ«ç·¨é›†ã‚’ä¸å¯ã¨ã™ã‚‹
 				return false;
 			}
 		};
@@ -423,7 +423,7 @@ public class SearchPage extends JApplet {
 		
 		
 		// *********************************************************************
-		// Resultƒ^ƒu
+		// Resultã‚¿ãƒ–
 		// *********************************************************************
 		DefaultTableModel resultDm = new DefaultTableModel();
 		resultSorter = new TableSorter(resultDm, TABLE_RESULT);
@@ -431,7 +431,7 @@ public class SearchPage extends JApplet {
 			@Override
 			public String getToolTipText(MouseEvent me) {
 //				super.getToolTipText(me);
-				// ƒI[ƒo[ƒ‰ƒCƒh‚Åƒc[ƒ‹ƒ`ƒbƒv‚Ì•¶š—ñ‚ğ•Ô‚·
+				// ã‚ªãƒ¼ãƒãƒ¼ãƒ©ã‚¤ãƒ‰ã§ãƒ„ãƒ¼ãƒ«ãƒãƒƒãƒ—ã®æ–‡å­—åˆ—ã‚’è¿”ã™
 				Point pt = me.getPoint();
 				int row = rowAtPoint(pt);
 				if (row < 0) {
@@ -444,7 +444,7 @@ public class SearchPage extends JApplet {
 			@Override
 			public boolean isCellEditable(int row, int column) {
 //				super.isCellEditable(row, column);
-				// ƒI[ƒo[ƒ‰ƒCƒh‚ÅƒZƒ‹•ÒW‚ğ•s‰Â‚Æ‚·‚é
+				// ã‚ªãƒ¼ãƒãƒ¼ãƒ©ã‚¤ãƒ‰ã§ã‚»ãƒ«ç·¨é›†ã‚’ä¸å¯ã¨ã™ã‚‹
 				return false;
 			}
 		};
@@ -481,7 +481,7 @@ public class SearchPage extends JApplet {
 		
 		
 		// *********************************************************************
-		// DB Queryƒ^ƒu
+		// DB Queryã‚¿ãƒ–
 		// *********************************************************************
 		DefaultTableModel dbDm = new DefaultTableModel();
 		querySorter = new TableSorter(dbDm, TABLE_QUERY_DB);
@@ -489,7 +489,7 @@ public class SearchPage extends JApplet {
 			@Override
 			public boolean isCellEditable(int row, int column) {
 //				super.isCellEditable(row, column);
-				// ƒI[ƒo[ƒ‰ƒCƒh‚ÅƒZƒ‹•ÒW‚ğ•s‰Â‚Æ‚·‚é
+				// ã‚ªãƒ¼ãƒãƒ¼ãƒ©ã‚¤ãƒ‰ã§ã‚»ãƒ«ç·¨é›†ã‚’ä¸å¯ã¨ã™ã‚‹
 				return false;
 			}
 		};
@@ -508,7 +508,7 @@ public class SearchPage extends JApplet {
 		DefaultTableModel model = (DefaultTableModel) querySorter.getTableModel();
 		model.setColumnIdentifiers(col3);
 
-		// —ñ•ƒZƒbƒg
+		// åˆ—å¹…ã‚»ãƒƒãƒˆ
 		queryDbTable.getColumn(queryDbTable.getColumnName(0))
 				.setPreferredWidth(70);
 		queryDbTable.getColumn(queryDbTable.getColumnName(1))
@@ -522,7 +522,7 @@ public class SearchPage extends JApplet {
 		lm3.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		lm3.addListSelectionListener(new LmQueryDbListener());
 		
-		// ƒ{ƒ^ƒ“ƒpƒlƒ‹
+		// ãƒœã‚¿ãƒ³ãƒ‘ãƒãƒ«
 		JPanel btnPanel = new JPanel();
 		btnName.addActionListener(new BtnSearchNameListener());
 		btnAll.addActionListener(new BtnAllListener());
@@ -534,7 +534,7 @@ public class SearchPage extends JApplet {
 		parentPanel2.add(btnPanel);
 		parentPanel2.add(queryDbPane);
 		
-		// ƒIƒvƒVƒ‡ƒ“ƒpƒlƒ‹
+		// ã‚ªãƒ—ã‚·ãƒ§ãƒ³ãƒ‘ãƒãƒ«
 		JPanel dispModePanel = new JPanel();
 		isDispSelected = dispSelected.isSelected();
 		isDispRelated = dispRelated.isSelected();
@@ -556,7 +556,7 @@ public class SearchPage extends JApplet {
 						isDispSelected = dispSelected.isSelected();
 						isDispRelated = dispRelated.isSelected();
 						
-						// Œ‹‰ÊƒŒƒR[ƒh‘I‘ğó‘Ô‚ğ‰ğœ
+						// çµæœãƒ¬ã‚³ãƒ¼ãƒ‰é¸æŠçŠ¶æ…‹ã‚’è§£é™¤
 						resultTable.clearSelection();
 						resultPlot.clear();
 						compPlot.setPeaks(null, 1);
@@ -590,7 +590,7 @@ public class SearchPage extends JApplet {
 		etcPropertyButton.addActionListener(new ActionListener() {
 			private ParameterSetWindow ps = null;
 			public void actionPerformed(ActionEvent e) {
-				// q‰æ–Ê‚ªŠJ‚¢‚Ä‚¢‚È‚¯‚ê‚Î¶¬
+				// å­ç”»é¢ãŒé–‹ã„ã¦ã„ãªã‘ã‚Œã°ç”Ÿæˆ
 				if (!isSubWindow) {
 					ps = new ParameterSetWindow();
 				} else {
@@ -604,7 +604,7 @@ public class SearchPage extends JApplet {
 		optionPanel.add(dispModePanel);
 		optionPanel.add(paramPanel);
 		
-		// PackageView¶¬‹y‚ÑA‰Šú‰»
+		// PackageViewç”ŸæˆåŠã³ã€åˆæœŸåŒ–
 		pkgView = new PackageViewPanel();
 		pkgView.initAllRecInfo();
 		
@@ -617,7 +617,7 @@ public class SearchPage extends JApplet {
 		queryTabPane.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent e) {
 
-				// ƒvƒƒbƒgƒyƒCƒ“‰Šú‰»
+				// ãƒ—ãƒ­ãƒƒãƒˆãƒšã‚¤ãƒ³åˆæœŸåŒ–
 				queryPlot.clear();
 				compPlot.clear();
 				resultPlot.clear();
@@ -625,10 +625,10 @@ public class SearchPage extends JApplet {
 				compPlot.setPeaks(null, 1);
 				resultPlot.setPeaks(null, 0);
 
-				// PackageView‰Šú‰»
+				// PackageViewåˆæœŸåŒ–
 				pkgView.initAllRecInfo();
 				
-				// DB Hitƒ^ƒuŠÖ˜A‰Šú‰»
+				// DB Hitã‚¿ãƒ–é–¢é€£åˆæœŸåŒ–
 				if (resultTabPane.getTabCount() > 0) {
 					resultTabPane.setSelectedIndex(0);
 				}
@@ -637,7 +637,7 @@ public class SearchPage extends JApplet {
 				dataModel.setRowCount(0);
 				hitLabel.setText(" ");
 
-				// DBƒ^ƒuAUser Fileƒ^ƒu‚Ì‘I‘ğÏ‚İƒŒƒR[ƒh”½‰fˆ—
+				// DBã‚¿ãƒ–ã€User Fileã‚¿ãƒ–ã®é¸æŠæ¸ˆã¿ãƒ¬ã‚³ãƒ¼ãƒ‰åæ˜ å‡¦ç†
 				queryTabPane.update(queryTabPane.getGraphics());
 				if (queryTabPane.getSelectedIndex() == TAB_ORDER_DB) {
 					parentPanel2.update(parentPanel2.getGraphics());
@@ -650,7 +650,7 @@ public class SearchPage extends JApplet {
 		});
 		
 		
-		// ƒŒƒCƒAƒEƒg		
+		// ãƒ¬ã‚¤ã‚¢ã‚¦ãƒˆ		
 		JPanel queryPanel = new JPanel();
 		queryPanel.setLayout(new BorderLayout());
 		queryPanel.add(queryTabPane, BorderLayout.CENTER);
@@ -709,8 +709,8 @@ public class SearchPage extends JApplet {
 	}
 
 	/**
-	 * ƒtƒ@ƒCƒ‹“Ç‚İ‚İˆ—
-	 * @param fileName ƒtƒ@ƒCƒ‹–¼
+	 * ãƒ•ã‚¡ã‚¤ãƒ«èª­ã¿è¾¼ã¿å‡¦ç†
+	 * @param fileName ãƒ•ã‚¡ã‚¤ãƒ«å
 	 */
 	private void loadFile(String fileName) {
 		seaqCompound = 0;
@@ -723,7 +723,7 @@ public class SearchPage extends JApplet {
 			URL url = new URL(reqUrl);
 			URLConnection con = url.openConnection();
 
-			// ƒŒƒXƒ|ƒ“ƒXæ“¾
+			// ãƒ¬ã‚¹ãƒãƒ³ã‚¹å–å¾—
 			BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
 			String line = "";
 			while ((line = in.readLine()) != null) {
@@ -731,24 +731,24 @@ public class SearchPage extends JApplet {
 			}
 			in.close();
 			
-			// 1s‚à“Ç‚İ‚ß‚È‚©‚Á‚½ê‡
+			// 1è¡Œã‚‚èª­ã¿è¾¼ã‚ãªã‹ã£ãŸå ´åˆ
 			if (lineList.size() == 0) {
-				// ERRORFƒtƒ@ƒCƒ‹‚ª‚ ‚è‚Ü‚¹‚ñ
+				// ERRORï¼šãƒ•ã‚¡ã‚¤ãƒ«ãŒã‚ã‚Šã¾ã›ã‚“
 				JOptionPane.showMessageDialog(null, "No file.", "Error",
 						JOptionPane.ERROR_MESSAGE);
 				return;
 			}
 		}
-		catch (MalformedURLException mue) {			// URL‘®–³Œø
+		catch (MalformedURLException mue) {			// URLæ›¸å¼ç„¡åŠ¹
 			mue.printStackTrace();
-			// ERRORFƒT[ƒo[ƒGƒ‰[
+			// ERRORï¼šã‚µãƒ¼ãƒãƒ¼ã‚¨ãƒ©ãƒ¼
 			JOptionPane.showMessageDialog(null, "Server error.", "Error",
 					JOptionPane.ERROR_MESSAGE);
 			return;
 		}
-		catch (IOException ie) {					// “üo—Í—áŠO
+		catch (IOException ie) {					// å…¥å‡ºåŠ›ä¾‹å¤–
 			ie.printStackTrace();
-			// ERRORFƒT[ƒo[ƒGƒ‰[
+			// ERRORï¼šã‚µãƒ¼ãƒãƒ¼ã‚¨ãƒ©ãƒ¼
 			JOptionPane.showMessageDialog(null, "Server error.", "Error",
 					JOptionPane.ERROR_MESSAGE);
 			return;
@@ -768,12 +768,12 @@ public class SearchPage extends JApplet {
 				
 				line = lineList.get(i);
 				
-				// ƒRƒƒ“ƒgs“Ç‚İ”ò‚Î‚µ
+				// ã‚³ãƒ¡ãƒ³ãƒˆè¡Œèª­ã¿é£›ã°ã—
 				if (line.trim().startsWith("//")) {
 					continue;
 				}
 				
-				// ƒŒƒR[ƒhî•ñæ“¾ˆ—
+				// ãƒ¬ã‚³ãƒ¼ãƒ‰æƒ…å ±å–å¾—å‡¦ç†
 				if (line.trim().indexOf(":") == -1 && line.trim().length() != 0) {
 					if (usrData == null) {
 						usrData = new UserFileData();
@@ -798,7 +798,7 @@ public class SearchPage extends JApplet {
 					usrData.setId(line.substring(3).trim());
 				}
 				
-				// ƒŒƒR[ƒhî•ñ’Ç‰Áˆ—
+				// ãƒ¬ã‚³ãƒ¼ãƒ‰æƒ…å ±è¿½åŠ å‡¦ç†
 				if (line.trim().length() == 0 || i == lineList.size()-1) {
 					
 					if (usrData != null) {
@@ -810,37 +810,37 @@ public class SearchPage extends JApplet {
 							usrData.setId(createId());
 						}
 						
-						// === ‰»‡•¨–¼ ===
+						// === åŒ–åˆç‰©å ===
 						if (usrData.getName().equals("")) {
 							usrData.setName(createName());
 						}
 						
 						if (peaksLine.length() != 0) {
 							
-							// ƒs[ƒNî•ñ‰ÁH(m/z¸‡‚Ìm/z‚Æ‹­“x‚Ì‘g‚İ‡‚í‚¹)
+							// ãƒ”ãƒ¼ã‚¯æƒ…å ±åŠ å·¥(m/zæ˜‡é †ã®m/zã¨å¼·åº¦ã®çµ„ã¿åˆã‚ã›)
 							double max = 0d;
 							ArrayList<String> peakList = new ArrayList<String>(Arrays.asList(peaksLine.split(";")));
 							for (int j = 0; j < peakList.size(); j++) {
 								peakList.set(j, peakList.get(j).replaceAll("^ +", ""));
 								peakList.set(j, peakList.get(j).replaceAll(" +", "\t"));
 								
-								// Å‘å‹­“x•Û
+								// æœ€å¤§å¼·åº¦ä¿æŒ
 								if (max < Double.parseDouble(peakList.get(j).split("\t")[1])) {
 									max = Double.parseDouble(peakList.get(j).split("\t")[1]);
 								}
 							}
 							Collections.sort(peakList, new PeakComparator());
 							
-							// ‹­§“I‚É‹­“x‚ğ‘Š‘Î‹­“x‚É•ÏŠ·
+							// å¼·åˆ¶çš„ã«å¼·åº¦ã‚’ç›¸å¯¾å¼·åº¦ã«å¤‰æ›
 							for (int j = 0; j < peakList.size(); j++) {
 								
-								// m/z‘Ş”ğ
+								// m/zé€€é¿
 								String tmpMz = peakList.get(j).split("\t")[0];
 								
-								// Œ³‚Ì‹­“x
+								// å…ƒã®å¼·åº¦
 								String beforeVal = peakList.get(j).split("\t")[1];
 								
-								// ‘Š‘Î‹­“x
+								// ç›¸å¯¾å¼·åº¦
 								long tmpVal = Math.round(Double.parseDouble(beforeVal) / max * 999d);
 								if (tmpVal > 999) { 
 									tmpVal = 999;
@@ -856,10 +856,10 @@ public class SearchPage extends JApplet {
 							
 						}
 						
-						// ƒ†[ƒUƒf[ƒ^î•ñ’Ç‰Á
+						// ãƒ¦ãƒ¼ã‚¶ãƒ‡ãƒ¼ã‚¿æƒ…å ±è¿½åŠ 
 						tmpUserDataList.add(usrData);
 						
-						// ƒe[ƒuƒ‹î•ñ’Ç‰Á
+						// ãƒ†ãƒ¼ãƒ–ãƒ«æƒ…å ±è¿½åŠ 
 						row = new Object[3];
 						row[0] = String.valueOf(dataNum);
 						row[1] = usrData.getName();
@@ -875,7 +875,7 @@ public class SearchPage extends JApplet {
 		catch (Exception e) {
 			System.out.println("Illegal file format.");
 			e.printStackTrace();
-			// WARNINGFƒtƒ@ƒCƒ‹ƒtƒH[ƒ}ƒbƒg‚ª•s³‚Å‚·
+			// WARNINGï¼šãƒ•ã‚¡ã‚¤ãƒ«ãƒ•ã‚©ãƒ¼ãƒãƒƒãƒˆãŒä¸æ­£ã§ã™
 			JOptionPane.showMessageDialog(null, "Illegal file format.", "Warning",
 					JOptionPane.WARNING_MESSAGE);
 			return;
@@ -885,9 +885,9 @@ public class SearchPage extends JApplet {
 	}
 
 	/**
-	 * ID¶¬
-	 * ID‚ğ©“®¶¬‚µ•Ô‹p‚·‚é
-	 * @return ‰»‡•¨–¼
+	 * IDç”Ÿæˆ
+	 * IDã‚’è‡ªå‹•ç”Ÿæˆã—è¿”å´ã™ã‚‹
+	 * @return åŒ–åˆç‰©å
 	 */
 	private String createId() {
 		String tmpId = "US";
@@ -904,9 +904,9 @@ public class SearchPage extends JApplet {
 	}
 	
 	/**
-	 * ‰»‡•¨–¼¶¬
-	 * ‰»‡•¨–¼‚ğ©“®¶¬‚µ•Ô‹p‚·‚é
-	 * @return ‰»‡•¨–¼
+	 * åŒ–åˆç‰©åç”Ÿæˆ
+	 * åŒ–åˆç‰©åã‚’è‡ªå‹•ç”Ÿæˆã—è¿”å´ã™ã‚‹
+	 * @return åŒ–åˆç‰©å
 	 */
 	private String createName() {
 		String tmpName = "Compound_";
@@ -923,12 +923,12 @@ public class SearchPage extends JApplet {
 	}
 
 	/**
-	 * DBŒŸõ
-	 * ƒNƒGƒŠ[‚Éƒqƒbƒg‚·‚éƒs[ƒN‚ÌƒXƒyƒNƒgƒ‹‚ğDB‚©‚çŒŸõ‚·‚éB
-	 * @param ps ƒs[ƒNî•ñ
-	 * @param precursor ƒvƒŠƒJ[ƒT[
-	 * @param queryName ƒNƒGƒŠ[‰»‡•¨–¼
-	 * @param queryKey ƒNƒGƒŠ[ƒŒƒR[ƒhƒL[
+	 * DBæ¤œç´¢
+	 * ã‚¯ã‚¨ãƒªãƒ¼ã«ãƒ’ãƒƒãƒˆã™ã‚‹ãƒ”ãƒ¼ã‚¯ã®ã‚¹ãƒšã‚¯ãƒˆãƒ«ã‚’DBã‹ã‚‰æ¤œç´¢ã™ã‚‹ã€‚
+	 * @param ps ãƒ”ãƒ¼ã‚¯æƒ…å ±
+	 * @param precursor ãƒ—ãƒªã‚«ãƒ¼ã‚µãƒ¼
+	 * @param queryName ã‚¯ã‚¨ãƒªãƒ¼åŒ–åˆç‰©å
+	 * @param queryKey ã‚¯ã‚¨ãƒªãƒ¼ãƒ¬ã‚³ãƒ¼ãƒ‰ã‚­ãƒ¼
 	 */
 	private void searchDb(String[] ps, String precursor, String queryName, String queryKey) {
 		queryPlot.clear();
@@ -947,7 +947,7 @@ public class SearchPage extends JApplet {
 			queryPlot.setSpectrumInfo(queryName, queryKey, precursor, PeakPanel.SP_TYPE_QUERY, true);
 		}
 		
-		// ƒNƒGƒŠ‘¤ƒXƒyƒNƒgƒ‹‚Ìƒs[ƒN‚ª‚È‚¢ê‡
+		// ã‚¯ã‚¨ãƒªå´ã‚¹ãƒšã‚¯ãƒˆãƒ«ã®ãƒ”ãƒ¼ã‚¯ãŒãªã„å ´åˆ
 		if (ps.length == 0 || (ps.length == 1 && ps[0].split("\t")[0].equals("0") && ps[0].split("\t")[1].equals("0"))) {
 			queryPlot.setNoPeak(true);
 			hitLabel.setText(" 0 Hit.    ("
@@ -957,12 +957,12 @@ public class SearchPage extends JApplet {
 					+ " "
 					+ ((tolUnit1.isSelected()) ? tolUnit1.getText() : tolUnit2.getText()) + ", Cutoff threshold : "
 					+ CUTOFF_THRESHOLD + ")");
-			// ƒ}ƒEƒXƒJ[ƒ\ƒ‹‚ğƒfƒtƒHƒ‹ƒgƒJ[ƒ\ƒ‹‚É
+			// ãƒã‚¦ã‚¹ã‚«ãƒ¼ã‚½ãƒ«ã‚’ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã‚«ãƒ¼ã‚½ãƒ«ã«
 			this.setCursor(Cursor.getDefaultCursor());
 			return;
 		}
 
-		// POSTƒf[ƒ^‚ğì¬
+		// POSTãƒ‡ãƒ¼ã‚¿ã‚’ä½œæˆ
 		StringBuffer post = new StringBuffer();
 		if (isRecInteg)
 			post.append( "INTEG=true&" );
@@ -1037,10 +1037,10 @@ public class SearchPage extends JApplet {
 			post.append( ps[i].replace("\t", ",") + "@" );
 		}
 
-		// ‰æ–Ê‘€ì‚ğ–³Œø‚·‚é
+		// ç”»é¢æ“ä½œã‚’ç„¡åŠ¹ã™ã‚‹
 		setOperationEnbled(false);
 
-		// ŒŸõ’†ƒ_ƒCƒAƒƒO•\¦‚·‚é
+		// æ¤œç´¢ä¸­ãƒ€ã‚¤ã‚¢ãƒ­ã‚°è¡¨ç¤ºã™ã‚‹
 		dlg.setVisible(true);
 
 		this.param = post.toString();
@@ -1049,17 +1049,17 @@ public class SearchPage extends JApplet {
 			private ArrayList<String> result = null;
 
 			public Object construct() {
-				// ƒT[ƒuƒŒƒbƒgŒÄ‚Ño‚µ-ƒ}ƒ‹ƒ`ƒXƒŒƒbƒh‚ÅCGI‚ğ‹N“®
+				// ã‚µãƒ¼ãƒ–ãƒ¬ãƒƒãƒˆå‘¼ã³å‡ºã—-ãƒãƒ«ãƒã‚¹ãƒ¬ãƒƒãƒ‰ã§CGIã‚’èµ·å‹•
 				String cgiType = MassBankCommon.CGI_TBL[MassBankCommon.CGI_TBL_NUM_TYPE][MassBankCommon.CGI_TBL_TYPE_SEARCH];
 				result = mbcommon.execMultiDispatcher(baseUrl, cgiType, SearchPage.this.param);
 				return null;
 			}
 
 			public void finished() {
-				// ‰æ–Ê‘€ì–³Œø‚ğ‰ğœ‚·‚é
+				// ç”»é¢æ“ä½œç„¡åŠ¹ã‚’è§£é™¤ã™ã‚‹
 				setOperationEnbled(true);
 
-				// ŒŸõ’†ƒ_ƒCƒAƒƒO‚ğ”ñ•\¦‚É‚·‚é
+				// æ¤œç´¢ä¸­ãƒ€ã‚¤ã‚¢ãƒ­ã‚°ã‚’éè¡¨ç¤ºã«ã™ã‚‹
 				dlg.setVisible(false);
 
 				int total = 0;
@@ -1067,7 +1067,7 @@ public class SearchPage extends JApplet {
 					total = result.size();
 					DefaultTableModel dataModel = (DefaultTableModel)resultSorter.getTableModel();
 
-					// ŒŸõŒ‹‰Ê‚ğDBTable‚ÉƒZƒbƒg
+					// æ¤œç´¢çµæœã‚’DBTableã«ã‚»ãƒƒãƒˆ
 					siteList = new String[total];
 					for (int i = 0; i < total; i++) {
 						String line = (String) result.get(i);
@@ -1143,11 +1143,11 @@ public class SearchPage extends JApplet {
 	}
 	
 	/**
-	 * ƒNƒGƒŠ[‚Ì‘I‘ğó‘Ô‚ğXV
+	 * ã‚¯ã‚¨ãƒªãƒ¼ã®é¸æŠçŠ¶æ…‹ã‚’æ›´æ–°
 	 */
 	private void updateSelectQueryTable(JTable tbl) {
 		
-		// ƒ}ƒEƒXƒJ[ƒ\ƒ‹‚ğ»Œv‚É
+		// ãƒã‚¦ã‚¹ã‚«ãƒ¼ã‚½ãƒ«ã‚’ç ‚æ™‚è¨ˆã«
 		this.setCursor(waitCursor);
 		
 		int selRow = tbl.getSelectedRow();
@@ -1159,13 +1159,13 @@ public class SearchPage extends JApplet {
 			tbl.update(tbl.getGraphics());
 			tbl.setSelectionBackground(defColor);
 		}
-		// ƒ}ƒEƒXƒJ[ƒ\ƒ‹‚ğƒfƒtƒHƒ‹ƒgƒJ[ƒ\ƒ‹‚É
+		// ãƒã‚¦ã‚¹ã‚«ãƒ¼ã‚½ãƒ«ã‚’ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã‚«ãƒ¼ã‚½ãƒ«ã«
 		this.setCursor(Cursor.getDefaultCursor());
 	}
 
 	/**
-	 * ƒXƒyƒNƒgƒ‹æ“¾
-	 * DB‚©‚çƒXƒyƒNƒgƒ‹‚ğæ“¾‚·‚é
+	 * ã‚¹ãƒšã‚¯ãƒˆãƒ«å–å¾—
+	 * DBã‹ã‚‰ã‚¹ãƒšã‚¯ãƒˆãƒ«ã‚’å–å¾—ã™ã‚‹
 	 * @param searchName 
 	 */
 	private void getSpectrumForQuery(String searchName) {
@@ -1199,7 +1199,7 @@ public class SearchPage extends JApplet {
 			param = "name=" + searchName + wc;
 		}
 
-		// ƒT[ƒuƒŒƒbƒgŒÄ‚Ño‚µ-ƒ}ƒ‹ƒ`ƒXƒŒƒbƒh‚ÅCGI‚ğ‹N“®
+		// ã‚µãƒ¼ãƒ–ãƒ¬ãƒƒãƒˆå‘¼ã³å‡ºã—-ãƒãƒ«ãƒã‚¹ãƒ¬ãƒƒãƒ‰ã§CGIã‚’èµ·å‹•
 		String cgiType = MassBankCommon.CGI_TBL[MassBankCommon.CGI_TBL_NUM_TYPE][MassBankCommon.CGI_TBL_TYPE_GNAME];
 		ArrayList<String> result = mbcommon.execMultiDispatcher(baseUrl, cgiType, param);
 		DefaultTableModel dataModel = (DefaultTableModel) querySorter.getTableModel();
@@ -1208,7 +1208,7 @@ public class SearchPage extends JApplet {
 			return;
 		}
 
-		// ƒ\[ƒg
+		// ã‚½ãƒ¼ãƒˆ
 		Collections.sort(result);
 
 		nameList.clear();
@@ -1226,21 +1226,21 @@ public class SearchPage extends JApplet {
 			site = siteNameList[Integer.parseInt(site)];
 			String[] idNameSite2 = new String[] { id, name, site, String.valueOf(i + 1) };
 
-			// æ“¾’l‚ğƒe[ƒuƒ‹‚ÉƒZƒbƒg
+			// å–å¾—å€¤ã‚’ãƒ†ãƒ¼ãƒ–ãƒ«ã«ã‚»ãƒƒãƒˆ
 			dataModel.addRow(idNameSite2);
 		}
 	}
 	
 	/**
-	 * ƒŒƒR[ƒhƒy[ƒW•\¦
-	 * @param selectIndex ‘I‘ğsƒCƒ“ƒfƒbƒNƒX
+	 * ãƒ¬ã‚³ãƒ¼ãƒ‰ãƒšãƒ¼ã‚¸è¡¨ç¤º
+	 * @param selectIndex é¸æŠè¡Œã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹
 	 */
 	private void showRecordPage(JTable eventTbl) {
 		int selRows[] = eventTbl.getSelectedRows();
 		int idCol = eventTbl.getColumnModel().getColumnIndex(COL_LABEL_ID);
 		int siteCol = eventTbl.getColumnModel().getColumnIndex(COL_LABEL_CONTRIBUTOR);
 		
-		// ‘I‘ğ‚³‚ê‚½s‚Ì’l(id)‚ğæ“¾
+		// é¸æŠã•ã‚ŒãŸè¡Œã®å€¤(id)ã‚’å–å¾—
 		String id = (String)eventTbl.getValueAt(selRows[0], idCol);
 		String siteName = (String)eventTbl.getValueAt(selRows[0], siteCol);
 		String site = "0";
@@ -1251,7 +1251,7 @@ public class SearchPage extends JApplet {
 			}
 		}
 
-		// CGIŒÄ‚Ño‚µ
+		// CGIå‘¼ã³å‡ºã—
 		String typeName = MassBankCommon.CGI_TBL[MassBankCommon.CGI_TBL_NUM_TYPE][MassBankCommon.CGI_TBL_TYPE_DISP];
 		String reqUrl = baseUrl + "jsp/" + MassBankCommon.DISPATCHER_NAME
 				+ "?type=" + typeName + "&id=" + id + "&site=" + site;
@@ -1263,8 +1263,8 @@ public class SearchPage extends JApplet {
 	}
 	
 	/**
-	 * ƒŒƒR[ƒhƒŠƒXƒg—pƒ|ƒbƒvƒAƒbƒv•\¦
-	 * @param e ƒ}ƒEƒXƒCƒxƒ“ƒg
+	 * ãƒ¬ã‚³ãƒ¼ãƒ‰ãƒªã‚¹ãƒˆç”¨ãƒãƒƒãƒ—ã‚¢ãƒƒãƒ—è¡¨ç¤º
+	 * @param e ãƒã‚¦ã‚¹ã‚¤ãƒ™ãƒ³ãƒˆ
 	 */
 	private void recListPopup(MouseEvent e) {
 		JTable tbl = null;
@@ -1291,7 +1291,7 @@ public class SearchPage extends JApplet {
 		JMenuItem item2 = new JMenuItem("Multiple Display");
 		item2.addActionListener(new PopupMultipleDisplayListener(tbl));
 		
-		// ‰Â‹İ’è
+		// å¯è¦–è¨­å®š
 		if (tbl.equals(queryFileTable)) {
 			item1.setEnabled(false);
 			item2.setEnabled(false);
@@ -1309,7 +1309,7 @@ public class SearchPage extends JApplet {
 			item2.setEnabled(true);
 		}
 		
-		// ƒ|ƒbƒvƒAƒbƒvƒƒjƒ…[•\¦
+		// ãƒãƒƒãƒ—ã‚¢ãƒƒãƒ—ãƒ¡ãƒ‹ãƒ¥ãƒ¼è¡¨ç¤º
 		JPopupMenu popup = new JPopupMenu();
 		popup.add(item1);
 		if (tbl.equals(resultTable)) {
@@ -1319,18 +1319,18 @@ public class SearchPage extends JApplet {
 	}
 	
 	/**
-	 * Precursor m/zî•ñ‰Šú‰»
+	 * Precursor m/zæƒ…å ±åˆæœŸåŒ–
 	 */
 	private void initPreInfo() {
-//		// Cookieî•ñ—pƒŠƒXƒg‚ÉCookie‚©‚çPrecursoró‘Ô‚ğæ“¾
+//		// Cookieæƒ…å ±ç”¨ãƒªã‚¹ãƒˆã«Cookieã‹ã‚‰PrecursorçŠ¶æ…‹ã‚’å–å¾—
 //		ArrayList<String> valueList = cm.getCookie(COOKIE_PRE);
 //		
-//		// Cookie‚ª‘¶İ‚·‚éê‡
+//		// CookieãŒå­˜åœ¨ã™ã‚‹å ´åˆ
 //		if (valueList.size() != 0) {
 //			try {
 //				PRECURSOR = Integer.valueOf(valueList.get(0));
 //			} catch (Exception e) {
-//				// PRECURSOR‚ÍƒfƒtƒHƒ‹ƒg’l‚ğg—p
+//				// PRECURSORã¯ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆå€¤ã‚’ä½¿ç”¨
 //			}
 //		} else {
 			PRECURSOR = -1;
@@ -1340,18 +1340,18 @@ public class SearchPage extends JApplet {
 	}
 	
 	/**
-	 * Toleranceî•ñ‰Šú‰»
+	 * Toleranceæƒ…å ±åˆæœŸåŒ–
 	 */
 	private void initTolInfo() {
-		// Cookieî•ñ—pƒŠƒXƒg‚ÉCookie‚©‚çToleranceó‘Ô‚ğæ“¾
+		// Cookieæƒ…å ±ç”¨ãƒªã‚¹ãƒˆã«Cookieã‹ã‚‰ToleranceçŠ¶æ…‹ã‚’å–å¾—
 		ArrayList<String> valueList = cm.getCookie(COOKIE_TOL);
 		
-		// Cookie‚ª‘¶İ‚·‚éê‡
+		// CookieãŒå­˜åœ¨ã™ã‚‹å ´åˆ
 		if (valueList.size() != 0) {
 			try {
 				TOLERANCE = Float.valueOf(valueList.get(0));
 			} catch (Exception e) {
-				// TOLERANCE‚ÍƒfƒtƒHƒ‹ƒg’l‚ğg—p
+				// TOLERANCEã¯ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆå€¤ã‚’ä½¿ç”¨
 			}
 			
 			if (valueList.contains(tolUnit2.getText())) {
@@ -1375,18 +1375,18 @@ public class SearchPage extends JApplet {
 	}
 	
 	/**
-	 * Cutoff Thresholdî•ñ‰Šú‰»
+	 * Cutoff Thresholdæƒ…å ±åˆæœŸåŒ–
 	 */
 	private void initCutoffInfo() {
-		// Cookieî•ñ—pƒŠƒXƒg‚ÉCookie‚©‚çCutoff Thresholdó‘Ô‚ğæ“¾
+		// Cookieæƒ…å ±ç”¨ãƒªã‚¹ãƒˆã«Cookieã‹ã‚‰Cutoff ThresholdçŠ¶æ…‹ã‚’å–å¾—
 		ArrayList<String> valueList = cm.getCookie(COOKIE_CUTOFF);
 		
-		// Cookie‚ª‘¶İ‚·‚éê‡
+		// CookieãŒå­˜åœ¨ã™ã‚‹å ´åˆ
 		if (valueList.size() != 0) {
 			try {
 				CUTOFF_THRESHOLD = Integer.valueOf(valueList.get(0));
 			} catch (Exception e) {
-				// CUTOFF_THRESHOLD‚ÍƒfƒtƒHƒ‹ƒg’l‚ğg—p
+				// CUTOFF_THRESHOLDã¯ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆå€¤ã‚’ä½¿ç”¨
 			}
 		} else {
 			CUTOFF_THRESHOLD = 5;
@@ -1396,17 +1396,17 @@ public class SearchPage extends JApplet {
 	}
 	
 	/**
-	 * ‘•’uí•Êî•ñ‰Šú‰»
-	 * ƒf[ƒ^ƒx[ƒX‚©‚ç‘S‘•’uí•Êî•ñ‚ğæ“¾‚µ‚Ä‘Î‰‚·‚éƒ`ƒFƒbƒNƒ{ƒbƒNƒX‚ğ¶¬
-	 * ƒ`ƒFƒbƒNƒ{ƒbƒNƒX‚Ì‘I‘ğó‘Ô‚Í[Cookieî•ñ]„[ƒfƒtƒHƒ‹ƒg]‚Ì—Dæ‡‚Å‘I‘ğó‘Ô‚ğ‰Šú‰»‚·‚é
-	 * ƒ`ƒFƒbƒNƒ{ƒbƒNƒX‚ª1‚Â‚à‘I‘ğ‚³‚ê‚È‚¢ê‡‚Í‹­§“I‚É‘S‚Ä‘I‘ğ‚µ‚½ó‘Ô‚Å‰Šú‰»‚·‚é
+	 * è£…ç½®ç¨®åˆ¥æƒ…å ±åˆæœŸåŒ–
+	 * ãƒ‡ãƒ¼ã‚¿ãƒ™ãƒ¼ã‚¹ã‹ã‚‰å…¨è£…ç½®ç¨®åˆ¥æƒ…å ±ã‚’å–å¾—ã—ã¦å¯¾å¿œã™ã‚‹ãƒã‚§ãƒƒã‚¯ãƒœãƒƒã‚¯ã‚¹ã‚’ç”Ÿæˆ
+	 * ãƒã‚§ãƒƒã‚¯ãƒœãƒƒã‚¯ã‚¹ã®é¸æŠçŠ¶æ…‹ã¯[Cookieæƒ…å ±]ï¼[ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆ]ã®å„ªå…ˆé †ã§é¸æŠçŠ¶æ…‹ã‚’åˆæœŸåŒ–ã™ã‚‹
+	 * ãƒã‚§ãƒƒã‚¯ãƒœãƒƒã‚¯ã‚¹ãŒ1ã¤ã‚‚é¸æŠã•ã‚Œãªã„å ´åˆã¯å¼·åˆ¶çš„ã«å…¨ã¦é¸æŠã—ãŸçŠ¶æ…‹ã§åˆæœŸåŒ–ã™ã‚‹
 	 */
 	private void initInstInfo() {
 		instCheck = new LinkedHashMap<String, JCheckBox>();
 		isInstCheck = new HashMap<String, Boolean>();
 		instGroup = instInfo.getTypeGroup();
 		
-		// Cookieî•ñ—pƒŠƒXƒg‚ÉCookie‚©‚ç‘•’uí•Ê‚Ì‘I‘ğó‘Ô‚ğæ“¾
+		// Cookieæƒ…å ±ç”¨ãƒªã‚¹ãƒˆã«Cookieã‹ã‚‰è£…ç½®ç¨®åˆ¥ã®é¸æŠçŠ¶æ…‹ã‚’å–å¾—
 		ArrayList<String> valueGetList = cm.getCookie(COOKIE_INST);
 		ArrayList<String> valueSetList = new ArrayList<String>();
 		
@@ -1421,7 +1421,7 @@ public class SearchPage extends JApplet {
 			
 				JCheckBox chkBox;
 				
-				// Cookie‚ª‘¶İ‚·‚éê‡
+				// CookieãŒå­˜åœ¨ã™ã‚‹å ´åˆ
 				if (valueGetList.size() != 0) {
 					if (valueGetList.contains(val)) {
 						chkBox = new JCheckBox(val, true);
@@ -1430,7 +1430,7 @@ public class SearchPage extends JApplet {
 						chkBox = new JCheckBox(val, false);
 					}
 				} else {
-					if ( isDefaultInst(val) ) {	// ƒfƒtƒHƒ‹ƒg‘•’uí•Ê‚Ìê‡ 
+					if ( isDefaultInst(val) ) {	// ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆè£…ç½®ç¨®åˆ¥ã®å ´åˆ 
 						chkBox = new JCheckBox(val, true);
 						checked = true;
 						valueSetList.add(val);
@@ -1444,7 +1444,7 @@ public class SearchPage extends JApplet {
 			}
 		}
 		
-		// ‘•’uí•Ê‚ªƒf[ƒ^ƒx[ƒX‚É“o˜^‚³‚ê‚Ä‚¢‚È‚¢ê‡
+		// è£…ç½®ç¨®åˆ¥ãŒãƒ‡ãƒ¼ã‚¿ãƒ™ãƒ¼ã‚¹ã«ç™»éŒ²ã•ã‚Œã¦ã„ãªã„å ´åˆ
 		if (instCheck.size() == 0 && isInstCheck.size() == 0) {
 			JOptionPane.showMessageDialog(null,
 					"Instrument Type is not registered in the database.",
@@ -1453,7 +1453,7 @@ public class SearchPage extends JApplet {
 			return;
 		}
 		
-		// ‚±‚±‚Ü‚Å‚Ìˆ—‚Å‘•’uí•Ê‚ª1‚Â‚à‘I‘ğ‚³‚ê‚Ä‚¢‚È‚¢ê‡‚Í‹­§“I‚É‘S‚Ä‘I‘ğ‚·‚é
+		// ã“ã“ã¾ã§ã®å‡¦ç†ã§è£…ç½®ç¨®åˆ¥ãŒ1ã¤ã‚‚é¸æŠã•ã‚Œã¦ã„ãªã„å ´åˆã¯å¼·åˆ¶çš„ã«å…¨ã¦é¸æŠã™ã‚‹
 		if ( !checked ) {
 			for (Iterator i=instCheck.keySet().iterator(); i.hasNext();) {
 				String key = (String)i.next();
@@ -1464,23 +1464,23 @@ public class SearchPage extends JApplet {
 			}
 		}
 		
-		// ‰‰ñ“Ç‚İ‚İ‚ÉCookieî•ñ‚ª‘¶İ‚µ‚È‚¢ê‡‚ÍCookie‚Éİ’è
+		// åˆå›èª­ã¿è¾¼ã¿æ™‚ã«Cookieæƒ…å ±ãŒå­˜åœ¨ã—ãªã„å ´åˆã¯Cookieã«è¨­å®š
 		if (valueGetList.size() == 0) {
 			cm.setCookie(COOKIE_INST, valueSetList);
 		}
 	}
 	
 	/**
-	 * MSí•Êî•ñ‰Šú‰»
-	 * ƒf[ƒ^ƒx[ƒX‚©‚ç‘SMSí•Êî•ñ‚ğæ“¾‚µ‚Ä‘Î‰‚·‚éƒ`ƒFƒbƒNƒ{ƒbƒNƒX‚ğ¶¬
-	 * ƒ`ƒFƒbƒNƒ{ƒbƒNƒX‚Ì‘I‘ğó‘Ô‚Í[Cookieî•ñ]„[ƒfƒtƒHƒ‹ƒg]‚Ì—Dæ‡‚Å‘I‘ğó‘Ô‚ğ‰Šú‰»‚·‚é
-	 * ƒ`ƒFƒbƒNƒ{ƒbƒNƒX‚ª1‚Â‚à‘I‘ğ‚³‚ê‚È‚¢ê‡‚Í‹­§“I‚É‘S‚Ä‘I‘ğ‚µ‚½ó‘Ô‚Å‰Šú‰»‚·‚é
+	 * MSç¨®åˆ¥æƒ…å ±åˆæœŸåŒ–
+	 * ãƒ‡ãƒ¼ã‚¿ãƒ™ãƒ¼ã‚¹ã‹ã‚‰å…¨MSç¨®åˆ¥æƒ…å ±ã‚’å–å¾—ã—ã¦å¯¾å¿œã™ã‚‹ãƒã‚§ãƒƒã‚¯ãƒœãƒƒã‚¯ã‚¹ã‚’ç”Ÿæˆ
+	 * ãƒã‚§ãƒƒã‚¯ãƒœãƒƒã‚¯ã‚¹ã®é¸æŠçŠ¶æ…‹ã¯[Cookieæƒ…å ±]ï¼[ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆ]ã®å„ªå…ˆé †ã§é¸æŠçŠ¶æ…‹ã‚’åˆæœŸåŒ–ã™ã‚‹
+	 * ãƒã‚§ãƒƒã‚¯ãƒœãƒƒã‚¯ã‚¹ãŒ1ã¤ã‚‚é¸æŠã•ã‚Œãªã„å ´åˆã¯å¼·åˆ¶çš„ã«å…¨ã¦é¸æŠã—ãŸçŠ¶æ…‹ã§åˆæœŸåŒ–ã™ã‚‹
 	 */
 	private void initMsInfo() {
 		msCheck = new LinkedHashMap<String, JCheckBox>();
 		isMsCheck = new HashMap<String, Boolean>();
 		
-		// Cookieî•ñ—pƒŠƒXƒg‚ÉCookie‚©‚çMSí•Ê‚Ì‘I‘ğó‘Ô‚ğæ“¾
+		// Cookieæƒ…å ±ç”¨ãƒªã‚¹ãƒˆã«Cookieã‹ã‚‰MSç¨®åˆ¥ã®é¸æŠçŠ¶æ…‹ã‚’å–å¾—
 		ArrayList<String> valueGetList = cm.getCookie(COOKIE_MS);
 		ArrayList<String> valueSetList = new ArrayList<String>();
 		
@@ -1492,7 +1492,7 @@ public class SearchPage extends JApplet {
 		
 			JCheckBox chkBox;
 			
-			// Cookie‚ª‘¶İ‚·‚éê‡
+			// CookieãŒå­˜åœ¨ã™ã‚‹å ´åˆ
 			if (valueGetList.size() != 0) {
 				if (valueGetList.contains(val)) {
 					chkBox = new JCheckBox(val, true);
@@ -1510,7 +1510,7 @@ public class SearchPage extends JApplet {
 			isMsCheck.put(val, chkBox.isSelected());
 		}
 		
-		// MSí•Ê‚ªƒf[ƒ^ƒx[ƒX‚É“o˜^‚³‚ê‚Ä‚¢‚È‚¢ê‡
+		// MSç¨®åˆ¥ãŒãƒ‡ãƒ¼ã‚¿ãƒ™ãƒ¼ã‚¹ã«ç™»éŒ²ã•ã‚Œã¦ã„ãªã„å ´åˆ
 		if (msCheck.size() == 0 && isMsCheck.size() == 0) {
 			JOptionPane.showMessageDialog(null,
 					"MS Type is not registered in the database.",
@@ -1519,7 +1519,7 @@ public class SearchPage extends JApplet {
 			return;
 		}
 		
-		// ‚±‚±‚Ü‚Å‚Ìˆ—‚ÅMSí•Ê‚ª1‚Â‚à‘I‘ğ‚³‚ê‚Ä‚¢‚È‚¢ê‡‚Í‹­§“I‚É‘S‚Ä‘I‘ğ‚·‚é
+		// ã“ã“ã¾ã§ã®å‡¦ç†ã§MSç¨®åˆ¥ãŒ1ã¤ã‚‚é¸æŠã•ã‚Œã¦ã„ãªã„å ´åˆã¯å¼·åˆ¶çš„ã«å…¨ã¦é¸æŠã™ã‚‹
 		if ( !checked ) {
 			for (Iterator i=msCheck.keySet().iterator(); i.hasNext();) {
 				String key = (String)i.next();
@@ -1529,14 +1529,14 @@ public class SearchPage extends JApplet {
 			}
 		}
 		
-		// ‰‰ñ“Ç‚İ‚İ‚ÉCookieî•ñ‚ª‘¶İ‚µ‚È‚¢ê‡‚ÍCookie‚Éİ’è
+		// åˆå›èª­ã¿è¾¼ã¿æ™‚ã«Cookieæƒ…å ±ãŒå­˜åœ¨ã—ãªã„å ´åˆã¯Cookieã«è¨­å®š
 		if (valueGetList.size() == 0) {
 			cm.setCookie(COOKIE_MS, valueSetList);
 		}
 	}
 	
 	/**
-	 * ƒCƒIƒ“í•Êî•ñ‰Šú‰»
+	 * ã‚¤ã‚ªãƒ³ç¨®åˆ¥æƒ…å ±åˆæœŸåŒ–
 	 */
 	private void initIonInfo() {
 		final String keyPosi = "Posi";
@@ -1546,14 +1546,14 @@ public class SearchPage extends JApplet {
 		ionRadio = new LinkedHashMap<String, JRadioButton>();
 		isIonRadio = new HashMap<String, Boolean>();
 		
-		// Cookieî•ñ—pƒŠƒXƒg‚ÉCookie‚©‚çƒCƒIƒ“í•Ê‚Ì‘I‘ğó‘Ô‚ğæ“¾
+		// Cookieæƒ…å ±ç”¨ãƒªã‚¹ãƒˆã«Cookieã‹ã‚‰ã‚¤ã‚ªãƒ³ç¨®åˆ¥ã®é¸æŠçŠ¶æ…‹ã‚’å–å¾—
 		ArrayList<String> valueList = cm.getCookie(COOKIE_ION);
 		
 		JRadioButton ionPosi = new JRadioButton("Positive");
 		JRadioButton ionNega = new JRadioButton("Negative");
 		JRadioButton ionBoth = new JRadioButton("Both");
 		
-		// Cookie‚ª‘¶İ‚·‚éê‡
+		// CookieãŒå­˜åœ¨ã™ã‚‹å ´åˆ
 		if (valueList.size() != 0) {
 			ionPosi.setSelected(valueList.contains(keyPosi));
 			ionNega.setSelected(valueList.contains(keyNega));
@@ -1576,9 +1576,9 @@ public class SearchPage extends JApplet {
 	}
 
 	/**
-	 * ƒfƒtƒHƒ‹ƒg‘•’uí•Êƒ`ƒFƒbƒN
-	 * ‘•’uí•Ê‚É"ESI"A"APPI"A"MALDI"‚ğŠÜ‚Ş‚à‚Ì‚ğƒfƒtƒHƒ‹ƒg‘•’uí•Ê‚Æ‚·‚é
-	 * @param inst ‘•’uí•Ê
+	 * ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆè£…ç½®ç¨®åˆ¥ãƒã‚§ãƒƒã‚¯
+	 * è£…ç½®ç¨®åˆ¥ã«"ESI"ã€"APPI"ã€"MALDI"ã‚’å«ã‚€ã‚‚ã®ã‚’ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆè£…ç½®ç¨®åˆ¥ã¨ã™ã‚‹
+	 * @param inst è£…ç½®ç¨®åˆ¥
 	 */
 	private boolean isDefaultInst(String inst) {
 		
@@ -1592,7 +1592,7 @@ public class SearchPage extends JApplet {
 	}
 	
 	/**
-	 * ƒAƒvƒŒƒbƒg‚ÌƒtƒŒ[ƒ€‚ğæ“¾
+	 * ã‚¢ãƒ—ãƒ¬ãƒƒãƒˆã®ãƒ•ãƒ¬ãƒ¼ãƒ ã‚’å–å¾—
 	 */
 	protected Frame getFrame() {
 		for (Container p = getParent(); p != null; p = p.getParent()) {
@@ -1602,7 +1602,7 @@ public class SearchPage extends JApplet {
 	}
 
 	/**
-	 * ‰æ–Ê‘€ì—LŒøE–³Œøİ’è
+	 * ç”»é¢æ“ä½œæœ‰åŠ¹ãƒ»ç„¡åŠ¹è¨­å®š
 	 */
 	private void setOperationEnbled(boolean value) {
 		queryFileTable.setEnabled(value);
@@ -1619,7 +1619,7 @@ public class SearchPage extends JApplet {
 	}
 
 	/**
-	 * ParameterSetWindowƒNƒ‰ƒX
+	 * ParameterSetWindowã‚¯ãƒ©ã‚¹
 	 */
 	class ParameterSetWindow extends JFrame {
 		
@@ -1633,18 +1633,18 @@ public class SearchPage extends JApplet {
 		private boolean isTolUnit2 = tolUnit2.isSelected();
 		
 		/**
-		 * ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+		 * ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 		 */
 		public ParameterSetWindow() {
 			
-			// ƒEƒBƒ“ƒhƒEƒTƒCƒYŒÅ’è
+			// ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã‚µã‚¤ã‚ºå›ºå®š
 			setResizable(false);
 			
-			// ƒL[ƒŠƒXƒi[“o˜^—pƒRƒ“ƒ|[ƒlƒ“ƒgƒŠƒXƒg
+			// ã‚­ãƒ¼ãƒªã‚¹ãƒŠãƒ¼ç™»éŒ²ç”¨ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆãƒªã‚¹ãƒˆ
 			ArrayList<Component> keyListenerList = new ArrayList<Component>();
 			keyListenerList.add(this);
 			
-			// ƒƒCƒ“ƒRƒ“ƒeƒi[æ“¾
+			// ãƒ¡ã‚¤ãƒ³ã‚³ãƒ³ãƒ†ãƒŠãƒ¼å–å¾—
 			Container container= getContentPane();
 			initMainContainer(container);
 			
@@ -1741,13 +1741,13 @@ public class SearchPage extends JApplet {
 				initItemPanel(itemPanel);
 				
 				
-				// ¬•ª—Ş’PˆÊ‚ÌƒRƒ“ƒ|[ƒlƒ“ƒg’Ç‰Áˆ—
+				// å°åˆ†é¡å˜ä½ã®ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆè¿½åŠ å‡¦ç†
 				List<String> list = instGroup.get(key);
 				int valNum = 0;
 				for ( int j = 0; j < list.size(); j++ ) {
 					String val = list.get(j);
 					
-					// ƒZƒpƒŒ[ƒ^‘}“ü
+					// ã‚»ãƒ‘ãƒ¬ãƒ¼ã‚¿æŒ¿å…¥
 					if (keyNum != 0 && valNum == 0) {
 						itemPanel.add(new JSeparator(), itemPanelGBC(0d, 0d, 0, valNum, 3, 1));
 						valNum += 1;
@@ -1761,7 +1761,7 @@ public class SearchPage extends JApplet {
 				}
 				
 				
-				// ‘å•ª—Ş’PˆÊ‚ÌƒRƒ“ƒ|[ƒlƒ“ƒg’Ç‰Áˆ—
+				// å¤§åˆ†é¡å˜ä½ã®ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆè¿½åŠ å‡¦ç†
 				if (valNum > 0) {
 					labelPanel = newLabelPanel(key, null, LABEL_SIZE_S, 2);
 					if (isSep) {
@@ -1876,7 +1876,7 @@ public class SearchPage extends JApplet {
 			
 			
 			
-			// ƒ{ƒ^ƒ“
+			// ãƒœã‚¿ãƒ³
 			final JButton okButton = new JButton("OK");
 			keyListenerList.add(okButton);
 			final JButton cancelButton = new JButton("Cancel");
@@ -1888,7 +1888,7 @@ public class SearchPage extends JApplet {
 			container.add(btnPanel, mainContainerGBC(0, 6, 1, 1));
 			
 			
-			// ‘•’uí•ÊAllƒ`ƒFƒbƒNƒŠƒXƒi[
+			// è£…ç½®ç¨®åˆ¥Allãƒã‚§ãƒƒã‚¯ãƒªã‚¹ãƒŠãƒ¼
 			chkBoxInstAll.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					for (Iterator i=instCheck.keySet().iterator(); i.hasNext(); ) {
@@ -1903,13 +1903,13 @@ public class SearchPage extends JApplet {
 				}
 			});
 			
-			// ‘•’uí•ÊDefaultƒ`ƒFƒbƒNƒŠƒXƒi[
+			// è£…ç½®ç¨®åˆ¥Defaultãƒã‚§ãƒƒã‚¯ãƒªã‚¹ãƒŠãƒ¼
 			chkBoxInstDefault.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					for (Iterator i=instCheck.keySet().iterator(); i.hasNext(); ) {
 						String key = (String)i.next();
 						if (chkBoxInstDefault.isSelected()) {
-							// Allƒ`ƒFƒbƒN‚ğ‚Í‚¸‚µ‚ÄƒfƒtƒHƒ‹ƒg‘I‘ğ
+							// Allãƒã‚§ãƒƒã‚¯ã‚’ã¯ãšã—ã¦ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆé¸æŠ
 							chkBoxInstAll.setSelected(false);
 							if ( isDefaultInst(key) ) {
 								((JCheckBox)instCheck.get(key)).setSelected(true);
@@ -1924,7 +1924,7 @@ public class SearchPage extends JApplet {
 				}
 			});
 			
-			// ‘•’uí•Êƒ`ƒFƒbƒNƒŠƒXƒi[
+			// è£…ç½®ç¨®åˆ¥ãƒã‚§ãƒƒã‚¯ãƒªã‚¹ãƒŠãƒ¼
 			for (Iterator i=instCheck.keySet().iterator(); i.hasNext();) {
 				String key = (String)i.next();
 				((JCheckBox)instCheck.get(key)).addActionListener(new ActionListener() {
@@ -1935,7 +1935,7 @@ public class SearchPage extends JApplet {
 				});
 			}
 			
-			// MSí•ÊAllƒ`ƒFƒbƒNƒŠƒXƒi[
+			// MSç¨®åˆ¥Allãƒã‚§ãƒƒã‚¯ãƒªã‚¹ãƒŠãƒ¼
 			chkBoxMsAll.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					for (Iterator i=msCheck.keySet().iterator(); i.hasNext(); ) {
@@ -1949,7 +1949,7 @@ public class SearchPage extends JApplet {
 				}
 			});
 			
-			// MSí•Êƒ`ƒFƒbƒNƒŠƒXƒi[
+			// MSç¨®åˆ¥ãƒã‚§ãƒƒã‚¯ãƒªã‚¹ãƒŠãƒ¼
 			for (Iterator i=msCheck.keySet().iterator(); i.hasNext();) {
 				String key = (String)i.next();
 				((JCheckBox)msCheck.get(key)).addActionListener(new ActionListener() {
@@ -1959,29 +1959,29 @@ public class SearchPage extends JApplet {
 				});
 			}
 			
-			// OKƒ{ƒ^ƒ“ƒŠƒXƒi[
+			// OKãƒœã‚¿ãƒ³ãƒªã‚¹ãƒŠãƒ¼
 			okButton.addActionListener(new ActionListener() {
 				private final Color defColor = okButton.getBackground();
 				private void startProc() {
-					// ƒ{ƒ^ƒ“‚ÌF‚ğ•ÏX
+					// ãƒœã‚¿ãƒ³ã®è‰²ã‚’å¤‰æ›´
 					okButton.setBackground(Color.PINK);
 					okButton.update(okButton.getGraphics());
-					// ƒ}ƒEƒXƒJ[ƒ\ƒ‹‚ğ»Œv‚É
+					// ãƒã‚¦ã‚¹ã‚«ãƒ¼ã‚½ãƒ«ã‚’ç ‚æ™‚è¨ˆã«
 					ParameterSetWindow.this.setCursor(waitCursor);
 				}
 				private void endProc() {
-					// ƒ}ƒEƒXƒJ[ƒ\ƒ‹‚ğƒfƒtƒHƒ‹ƒgƒJ[ƒ\ƒ‹‚É
+					// ãƒã‚¦ã‚¹ã‚«ãƒ¼ã‚½ãƒ«ã‚’ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã‚«ãƒ¼ã‚½ãƒ«ã«
 					if (!ParameterSetWindow.this.getCursor().equals(Cursor.getDefaultCursor())) {
 						ParameterSetWindow.this.setCursor(Cursor.getDefaultCursor());
 					}
-					// ƒ{ƒ^ƒ“‚ÌF‚ğ–ß‚·
+					// ãƒœã‚¿ãƒ³ã®è‰²ã‚’æˆ»ã™
 					okButton.setBackground(defColor);
 				}
 				public void actionPerformed(ActionEvent e) {
 					
 					startProc();
 					
-					// “ü—Íƒ`ƒFƒbƒN
+					// å…¥åŠ›ãƒã‚§ãƒƒã‚¯
 					try {
 						tolField.setText(tolField.getText().trim());
 						float num = Float.parseFloat(tolField.getText());
@@ -2075,7 +2075,7 @@ public class SearchPage extends JApplet {
 					}
 					
 					
-					// ğŒİ’è‚É•ÏX‚ª‚ ‚Á‚½ê‡
+					// æ¡ä»¶è¨­å®šã«å¤‰æ›´ãŒã‚ã£ãŸå ´åˆ
 					if (isPreChange()
 							|| isTolChange()
 							|| isCutoffChange()
@@ -2090,13 +2090,13 @@ public class SearchPage extends JApplet {
 						msChange(true);
 						ionChange(true);
 
-						// ƒNƒGƒŠ[‚Ì‘I‘ğó‘Ô‚ÌXVˆ—
+						// ã‚¯ã‚¨ãƒªãƒ¼ã®é¸æŠçŠ¶æ…‹ã®æ›´æ–°å‡¦ç†
 						resultPlot.setSpectrumInfo("", "", "", "", false);
 						switch (queryTabPane.getSelectedIndex()) {
-						case TAB_ORDER_DB :						// DBƒ^ƒu‘I‘ğ
+						case TAB_ORDER_DB :						// DBã‚¿ãƒ–é¸æŠæ™‚
 							updateSelectQueryTable(queryDbTable);
 							break;
-						case TAB_ORDER_FILE :						// FILEƒ^ƒu‘I‘ğ
+						case TAB_ORDER_FILE :						// FILEã‚¿ãƒ–é¸æŠæ™‚
 							updateSelectQueryTable(queryFileTable);
 							break;
 						}
@@ -2109,10 +2109,10 @@ public class SearchPage extends JApplet {
 				}
 			});
 			
-			// Cancelƒ{ƒ^ƒ“ƒŠƒXƒi[
+			// Cancelãƒœã‚¿ãƒ³ãƒªã‚¹ãƒŠãƒ¼
 			cancelButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					// İ’èî•ñ‚ğ–ß‚·
+					// è¨­å®šæƒ…å ±ã‚’æˆ»ã™
 					preChange(false);
 					tolChange(false);
 					cutoffChange(false);
@@ -2125,13 +2125,13 @@ public class SearchPage extends JApplet {
 				}
 			});
 
-			// ƒL[ƒŠƒXƒi[’Ç‰Á
+			// ã‚­ãƒ¼ãƒªã‚¹ãƒŠãƒ¼è¿½åŠ 
 			for (int i = 0; i < keyListenerList.size(); i++) {
 				keyListenerList.get(i).addKeyListener(new KeyAdapter() {
 					public void keyReleased(KeyEvent e) {
-						// EscƒL[ƒŠƒŠ[ƒX
+						// Escã‚­ãƒ¼ãƒªãƒªãƒ¼ã‚¹
 						if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
-							// İ’èî•ñ‚ğ–ß‚·
+							// è¨­å®šæƒ…å ±ã‚’æˆ»ã™
 							preChange(false);
 							tolChange(false);
 							cutoffChange(false);
@@ -2152,7 +2152,7 @@ public class SearchPage extends JApplet {
 					(int)(d.getHeight() / 2 - getHeight() / 2));
 			setVisible(true);
 			
-			// ƒEƒBƒ“ƒhƒEƒŠƒXƒi[’Ç‰Á
+			// ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ãƒªã‚¹ãƒŠãƒ¼è¿½åŠ 
 			addWindowListener(new WindowAdapter() {
 				public void windowOpened(WindowEvent e) {
 					isSubWindow = true;
@@ -2164,9 +2164,9 @@ public class SearchPage extends JApplet {
 		}
 		
 		/**
-		 * Tolerance’l•ÏXŠm”F
-		 * Tolerance’l‚ª•ÏX‚³‚ê‚Ä‚¢‚½ê‡‚Ítrue‚ğ•Ô‹p‚·‚éB
-		 * @return •ÏXƒtƒ‰ƒO
+		 * Toleranceå€¤å¤‰æ›´ç¢ºèª
+		 * Toleranceå€¤ãŒå¤‰æ›´ã•ã‚Œã¦ã„ãŸå ´åˆã¯trueã‚’è¿”å´ã™ã‚‹ã€‚
+		 * @return å¤‰æ›´ãƒ•ãƒ©ã‚°
 		 */
 		private boolean isTolChange() {
 			
@@ -2181,15 +2181,15 @@ public class SearchPage extends JApplet {
 		}
 		
 		/**
-		 * Tolerance’l•ÏX
-		 * Tolerance’l‚ğ•ÏX‚µ‚½ê‡‚ÉŠm’è‚à‚µ‚­‚ÍƒLƒƒƒ“ƒZƒ‹‚·‚éB
-		 * @param isChange •ÏXƒtƒ‰ƒO
+		 * Toleranceå€¤å¤‰æ›´
+		 * Toleranceå€¤ã‚’å¤‰æ›´ã—ãŸå ´åˆã«ç¢ºå®šã‚‚ã—ãã¯ã‚­ãƒ£ãƒ³ã‚»ãƒ«ã™ã‚‹ã€‚
+		 * @param isChange å¤‰æ›´ãƒ•ãƒ©ã‚°
 		 */
 		private void tolChange(boolean isChange) {
 			
 			if (isChange) {
 				
-				// Cookieî•ñ—pƒŠƒXƒg
+				// Cookieæƒ…å ±ç”¨ãƒªã‚¹ãƒˆ
 				ArrayList<String> valueList = new ArrayList<String>();
 				
 				TOLERANCE = Float.parseFloat(tolField.getText());
@@ -2204,7 +2204,7 @@ public class SearchPage extends JApplet {
 					valueList.add(tolUnit1.getText());
 				}
 				
-				// Tolerance’l‚ğCookie‚Éİ’è
+				// Toleranceå€¤ã‚’Cookieã«è¨­å®š
 				cm.setCookie(COOKIE_TOL, valueList);
 			}
 			else {
@@ -2214,9 +2214,9 @@ public class SearchPage extends JApplet {
 		}
 		
 		/**
-		 * Cutoff Threshold’l•ÏXŠm”F
-		 * Cutoff Threshold’l‚ª•ÏX‚³‚ê‚Ä‚¢‚½ê‡‚Ítrue‚ğ•Ô‹p‚·‚éB
-		 * @return •ÏXƒtƒ‰ƒO
+		 * Cutoff Thresholdå€¤å¤‰æ›´ç¢ºèª
+		 * Cutoff Thresholdå€¤ãŒå¤‰æ›´ã•ã‚Œã¦ã„ãŸå ´åˆã¯trueã‚’è¿”å´ã™ã‚‹ã€‚
+		 * @return å¤‰æ›´ãƒ•ãƒ©ã‚°
 		 */
 		private boolean isCutoffChange() {
 			
@@ -2227,29 +2227,29 @@ public class SearchPage extends JApplet {
 		}
 		
 		/**
-		 * Cutoff Threshold’l•ÏX
-		 * Cutoff Threshold’l‚ğ•ÏX‚µ‚½ê‡‚ÉŠm’è‚à‚µ‚­‚ÍƒLƒƒƒ“ƒZƒ‹‚·‚éB
-		 * @param isChange •ÏXƒtƒ‰ƒO
+		 * Cutoff Thresholdå€¤å¤‰æ›´
+		 * Cutoff Thresholdå€¤ã‚’å¤‰æ›´ã—ãŸå ´åˆã«ç¢ºå®šã‚‚ã—ãã¯ã‚­ãƒ£ãƒ³ã‚»ãƒ«ã™ã‚‹ã€‚
+		 * @param isChange å¤‰æ›´ãƒ•ãƒ©ã‚°
 		 */
 		private void cutoffChange(boolean isChange) {
 			
 			if (isChange) {
 				
-				// Cookieî•ñ—pƒŠƒXƒg
+				// Cookieæƒ…å ±ç”¨ãƒªã‚¹ãƒˆ
 				ArrayList<String> valueList = new ArrayList<String>();
 				
 				CUTOFF_THRESHOLD = Integer.parseInt(cutoffField.getText());
 				valueList.add(String.valueOf(CUTOFF_THRESHOLD));
 				
-				// Cutoff Threshold’l‚ğCookie‚Éİ’è
+				// Cutoff Thresholdå€¤ã‚’Cookieã«è¨­å®š
 				cm.setCookie(COOKIE_CUTOFF, valueList);
 			}
 		}
 		
 		/**
-		 * ‘•’uí•Êƒ`ƒFƒbƒNƒ{ƒbƒNƒX’lƒ`ƒFƒbƒNiAllj
-		 * ‘•’uí•Ê‚ªAll‘I‘ğó‘Ô‚©‚ğ•Ô‹p‚·‚éB
-		 * @return All‘I‘ğƒtƒ‰ƒO
+		 * è£…ç½®ç¨®åˆ¥ãƒã‚§ãƒƒã‚¯ãƒœãƒƒã‚¯ã‚¹å€¤ãƒã‚§ãƒƒã‚¯ï¼ˆAllï¼‰
+		 * è£…ç½®ç¨®åˆ¥ãŒAllé¸æŠçŠ¶æ…‹ã‹ã‚’è¿”å´ã™ã‚‹ã€‚
+		 * @return Allé¸æŠãƒ•ãƒ©ã‚°
 		 */
 		private boolean isInstAll() {
 			
@@ -2267,9 +2267,9 @@ public class SearchPage extends JApplet {
 		}
 
 		/**
-		 * ‘•’uí•Êƒ`ƒFƒbƒNƒ{ƒbƒNƒX’lƒ`ƒFƒbƒNiDefaultj
-		 * ‘•’uí•Ê‚ªDefault‘I‘ğó‘Ô‚©‚ğ•Ô‹p‚·‚éB 
-		 * @return Default‘I‘ğƒtƒ‰ƒO
+		 * è£…ç½®ç¨®åˆ¥ãƒã‚§ãƒƒã‚¯ãƒœãƒƒã‚¯ã‚¹å€¤ãƒã‚§ãƒƒã‚¯ï¼ˆDefaultï¼‰
+		 * è£…ç½®ç¨®åˆ¥ãŒDefaulté¸æŠçŠ¶æ…‹ã‹ã‚’è¿”å´ã™ã‚‹ã€‚ 
+		 * @return Defaulté¸æŠãƒ•ãƒ©ã‚°
 		 */
 		private boolean isInstDefault() {
 			
@@ -2278,7 +2278,7 @@ public class SearchPage extends JApplet {
 			}
 			for (Iterator j=instCheck.keySet().iterator(); j.hasNext(); ) {
 				String key = (String)j.next();
-				if ( isDefaultInst(key) ) {	// ƒfƒtƒHƒ‹ƒg‘•’uí•Ê‚Ìê‡
+				if ( isDefaultInst(key) ) {	// ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆè£…ç½®ç¨®åˆ¥ã®å ´åˆ
 					if ( !((JCheckBox)instCheck.get(key)).isSelected() ) {
 						return false;
 					}
@@ -2292,9 +2292,9 @@ public class SearchPage extends JApplet {
 		}
 		
 		/**
-		 * ‘•’uí•Ê‘I‘ğƒ`ƒFƒbƒN
-		 * ‘•’uí•Ê‚ª1‚Â‚Å‚à‘I‘ğ‚³‚ê‚Ä‚¢‚½ê‡‚Ítrue‚ğ•Ô‹p‚·‚éB
-		 * @return ‘I‘ğÏ‚İƒtƒ‰ƒO
+		 * è£…ç½®ç¨®åˆ¥é¸æŠãƒã‚§ãƒƒã‚¯
+		 * è£…ç½®ç¨®åˆ¥ãŒ1ã¤ã§ã‚‚é¸æŠã•ã‚Œã¦ã„ãŸå ´åˆã¯trueã‚’è¿”å´ã™ã‚‹ã€‚
+		 * @return é¸æŠæ¸ˆã¿ãƒ•ãƒ©ã‚°
 		 */
 		private boolean isInstCheck() {
 			
@@ -2311,9 +2311,9 @@ public class SearchPage extends JApplet {
 		}
 		
 		/**
-		 * ‘•’uí•Ê‘I‘ğ’l•ÏXŠm”F
-		 * ‘•’uí•Êƒ`ƒFƒbƒNƒ{ƒbƒNƒX‚Ì’l‚ª1‚Â‚Å‚à•ÏX‚³‚ê‚Ä‚¢‚½ê‡‚Ítrue‚ğ•Ô‹p‚·‚éB
-		 * @return •ÏXƒtƒ‰ƒO
+		 * è£…ç½®ç¨®åˆ¥é¸æŠå€¤å¤‰æ›´ç¢ºèª
+		 * è£…ç½®ç¨®åˆ¥ãƒã‚§ãƒƒã‚¯ãƒœãƒƒã‚¯ã‚¹ã®å€¤ãŒ1ã¤ã§ã‚‚å¤‰æ›´ã•ã‚Œã¦ã„ãŸå ´åˆã¯trueã‚’è¿”å´ã™ã‚‹ã€‚
+		 * @return å¤‰æ›´ãƒ•ãƒ©ã‚°
 		 */
 		private boolean isInstChange() {
 			
@@ -2332,13 +2332,13 @@ public class SearchPage extends JApplet {
 		}
 		
 		/**
-		 * ‘•’uí•Ê‘I‘ğ’l•ÏX
-		 * ƒ`ƒFƒbƒNƒ{ƒbƒNƒX‚ğ‘I‘ğ•ÏX‚µ‚½ê‡‚ÉŠm’è‚à‚µ‚­‚ÍƒLƒƒƒ“ƒZƒ‹‚·‚éB
-		 * @param isChange •ÏXƒtƒ‰ƒO
+		 * è£…ç½®ç¨®åˆ¥é¸æŠå€¤å¤‰æ›´
+		 * ãƒã‚§ãƒƒã‚¯ãƒœãƒƒã‚¯ã‚¹ã‚’é¸æŠå¤‰æ›´ã—ãŸå ´åˆã«ç¢ºå®šã‚‚ã—ãã¯ã‚­ãƒ£ãƒ³ã‚»ãƒ«ã™ã‚‹ã€‚
+		 * @param isChange å¤‰æ›´ãƒ•ãƒ©ã‚°
 		 */
 		private void instChange(boolean isChange) {
 			
-			// Cookieî•ñ—pƒŠƒXƒg
+			// Cookieæƒ…å ±ç”¨ãƒªã‚¹ãƒˆ
 			ArrayList<String> valueList = new ArrayList<String>();		
 			
 			if (isInstCheck.size() == 0) {
@@ -2360,16 +2360,16 @@ public class SearchPage extends JApplet {
 					valueList.add(key);
 				}
 			}
-			// ‘•’uí•Ê‘I‘ğó‘Ô‚ğCookie‚Éİ’è
+			// è£…ç½®ç¨®åˆ¥é¸æŠçŠ¶æ…‹ã‚’Cookieã«è¨­å®š
 			if (isChange) {
 				cm.setCookie(COOKIE_INST, valueList);
 			}
 		}
 		
 		/**
-		 * MSí•Êƒ`ƒFƒbƒNƒ{ƒbƒNƒX’lƒ`ƒFƒbƒNiAllj
-		 * MSí•Ê‚ªAll‘I‘ğó‘Ô‚©‚ğ•Ô‹p‚·‚éB
-		 * @return All‘I‘ğƒtƒ‰ƒO
+		 * MSç¨®åˆ¥ãƒã‚§ãƒƒã‚¯ãƒœãƒƒã‚¯ã‚¹å€¤ãƒã‚§ãƒƒã‚¯ï¼ˆAllï¼‰
+		 * MSç¨®åˆ¥ãŒAllé¸æŠçŠ¶æ…‹ã‹ã‚’è¿”å´ã™ã‚‹ã€‚
+		 * @return Allé¸æŠãƒ•ãƒ©ã‚°
 		 */
 		private boolean isMsAll() {
 			
@@ -2386,9 +2386,9 @@ public class SearchPage extends JApplet {
 		}
 		
 		/**
-		 * MSí•Ê‘I‘ğƒ`ƒFƒbƒN
-		 * MSí•Ê‚ª1‚Â‚Å‚à‘I‘ğ‚³‚ê‚Ä‚¢‚½ê‡‚Ítrue‚ğ•Ô‹p‚·‚éB
-		 * @return ‘I‘ğÏ‚İƒtƒ‰ƒO
+		 * MSç¨®åˆ¥é¸æŠãƒã‚§ãƒƒã‚¯
+		 * MSç¨®åˆ¥ãŒ1ã¤ã§ã‚‚é¸æŠã•ã‚Œã¦ã„ãŸå ´åˆã¯trueã‚’è¿”å´ã™ã‚‹ã€‚
+		 * @return é¸æŠæ¸ˆã¿ãƒ•ãƒ©ã‚°
 		 */
 		private boolean isMsCheck() {
 			
@@ -2405,9 +2405,9 @@ public class SearchPage extends JApplet {
 		}
 		
 		/**
-		 * MSí•Ê‘I‘ğ’l•ÏXŠm”F
-		 * MSí•Êƒ`ƒFƒbƒNƒ{ƒbƒNƒX‚Ì’l‚ª1‚Â‚Å‚à•ÏX‚³‚ê‚Ä‚¢‚½ê‡‚Ítrue‚ğ•Ô‹p‚·‚éB
-		 * @return •ÏXƒtƒ‰ƒO
+		 * MSç¨®åˆ¥é¸æŠå€¤å¤‰æ›´ç¢ºèª
+		 * MSç¨®åˆ¥ãƒã‚§ãƒƒã‚¯ãƒœãƒƒã‚¯ã‚¹ã®å€¤ãŒ1ã¤ã§ã‚‚å¤‰æ›´ã•ã‚Œã¦ã„ãŸå ´åˆã¯trueã‚’è¿”å´ã™ã‚‹ã€‚
+		 * @return å¤‰æ›´ãƒ•ãƒ©ã‚°
 		 */
 		private boolean isMsChange() {
 			
@@ -2426,13 +2426,13 @@ public class SearchPage extends JApplet {
 		}
 		
 		/**
-		 * MSí•Ê‘I‘ğ’l•ÏX
-		 * ƒ`ƒFƒbƒNƒ{ƒbƒNƒX‚ğ‘I‘ğ•ÏX‚µ‚½ê‡‚ÉŠm’è‚à‚µ‚­‚ÍƒLƒƒƒ“ƒZƒ‹‚·‚éB
-		 * @param isChange •ÏXƒtƒ‰ƒO
+		 * MSç¨®åˆ¥é¸æŠå€¤å¤‰æ›´
+		 * ãƒã‚§ãƒƒã‚¯ãƒœãƒƒã‚¯ã‚¹ã‚’é¸æŠå¤‰æ›´ã—ãŸå ´åˆã«ç¢ºå®šã‚‚ã—ãã¯ã‚­ãƒ£ãƒ³ã‚»ãƒ«ã™ã‚‹ã€‚
+		 * @param isChange å¤‰æ›´ãƒ•ãƒ©ã‚°
 		 */
 		private void msChange(boolean isChange) {
 			
-			// Cookieî•ñ—pƒŠƒXƒg
+			// Cookieæƒ…å ±ç”¨ãƒªã‚¹ãƒˆ
 			ArrayList<String> valueList = new ArrayList<String>();		
 			
 			if (isMsCheck.size() == 0) {
@@ -2454,16 +2454,16 @@ public class SearchPage extends JApplet {
 					valueList.add(key);
 				}
 			}
-			// MSí•Ê‘I‘ğó‘Ô‚ğCookie‚Éİ’è
+			// MSç¨®åˆ¥é¸æŠçŠ¶æ…‹ã‚’Cookieã«è¨­å®š
 			if (isChange) {
 				cm.setCookie(COOKIE_MS, valueList);
 			}
 		}
 		
 		/**
-		 * ƒCƒIƒ“í•Ê‘I‘ğ’l•ÏXŠm”F
-		 * ƒCƒIƒ“í•Êƒ‰ƒWƒIƒ{ƒ^ƒ“‚Ì’l‚ª•ÏX‚³‚ê‚Ä‚¢‚½ê‡‚Ítrue‚ğ•Ô‹p‚·‚éB
-		 * @return •ÏXƒtƒ‰ƒO
+		 * ã‚¤ã‚ªãƒ³ç¨®åˆ¥é¸æŠå€¤å¤‰æ›´ç¢ºèª
+		 * ã‚¤ã‚ªãƒ³ç¨®åˆ¥ãƒ©ã‚¸ã‚ªãƒœã‚¿ãƒ³ã®å€¤ãŒå¤‰æ›´ã•ã‚Œã¦ã„ãŸå ´åˆã¯trueã‚’è¿”å´ã™ã‚‹ã€‚
+		 * @return å¤‰æ›´ãƒ•ãƒ©ã‚°
 		 */
 		private boolean isIonChange() {
 			
@@ -2481,13 +2481,13 @@ public class SearchPage extends JApplet {
 		}
 		
 		/**
-		 * ƒCƒIƒ“í•Ê‘I‘ğ’l•ÏX
-		 * ƒ‰ƒWƒIƒ{ƒ^ƒ“‚ğ‘I‘ğ•ÏX‚µ‚½ê‡‚ÉŠm’è‚à‚µ‚­‚ÍƒLƒƒƒ“ƒZƒ‹‚·‚éB
-		 * @param isChange •ÏXƒtƒ‰ƒO
+		 * ã‚¤ã‚ªãƒ³ç¨®åˆ¥é¸æŠå€¤å¤‰æ›´
+		 * ãƒ©ã‚¸ã‚ªãƒœã‚¿ãƒ³ã‚’é¸æŠå¤‰æ›´ã—ãŸå ´åˆã«ç¢ºå®šã‚‚ã—ãã¯ã‚­ãƒ£ãƒ³ã‚»ãƒ«ã™ã‚‹ã€‚
+		 * @param isChange å¤‰æ›´ãƒ•ãƒ©ã‚°
 		 */
 		private void ionChange(boolean isChange) {
 			
-			// Cookieî•ñ—pƒŠƒXƒg
+			// Cookieæƒ…å ±ç”¨ãƒªã‚¹ãƒˆ
 			ArrayList<String> valueList = new ArrayList<String>();		
 			
 			for (Iterator i=isIonRadio.keySet().iterator(); i.hasNext(); ) {
@@ -2508,16 +2508,16 @@ public class SearchPage extends JApplet {
 					valueList.add(key);
 				}
 			}
-			// ƒCƒIƒ“í•Ê‘I‘ğó‘Ô‚ğCookie‚Éİ’è
+			// ã‚¤ã‚ªãƒ³ç¨®åˆ¥é¸æŠçŠ¶æ…‹ã‚’Cookieã«è¨­å®š
 			if (isChange) {
 				cm.setCookie(COOKIE_ION, valueList);
 			}
 		}
 		
 		/**
-		 * Precursor m/z’l•ÏXŠm”F
-		 * Precursor m/z’l‚ª•ÏX‚³‚ê‚Ä‚¢‚½ê‡‚Ítrue‚ğ•Ô‹p‚·‚éB
-		 * @return •ÏXƒtƒ‰ƒO
+		 * Precursor m/zå€¤å¤‰æ›´ç¢ºèª
+		 * Precursor m/zå€¤ãŒå¤‰æ›´ã•ã‚Œã¦ã„ãŸå ´åˆã¯trueã‚’è¿”å´ã™ã‚‹ã€‚
+		 * @return å¤‰æ›´ãƒ•ãƒ©ã‚°
 		 */
 		private boolean isPreChange() {
 			
@@ -2533,15 +2533,15 @@ public class SearchPage extends JApplet {
 		}
 		
 		/**
-		 * Precursor m/z’l•ÏX
-		 * Precursor m/z’l‚ğ•ÏX‚µ‚½ê‡‚ÉŠm’è‚à‚µ‚­‚ÍƒLƒƒƒ“ƒZƒ‹‚·‚éB
-		 * @param isChange •ÏXƒtƒ‰ƒO
+		 * Precursor m/zå€¤å¤‰æ›´
+		 * Precursor m/zå€¤ã‚’å¤‰æ›´ã—ãŸå ´åˆã«ç¢ºå®šã‚‚ã—ãã¯ã‚­ãƒ£ãƒ³ã‚»ãƒ«ã™ã‚‹ã€‚
+		 * @param isChange å¤‰æ›´ãƒ•ãƒ©ã‚°
 		 */
 		private void preChange(boolean isChange) {
 			
 			if (isChange) {
 				
-//				// Cookieî•ñ—pƒŠƒXƒg
+//				// Cookieæƒ…å ±ç”¨ãƒªã‚¹ãƒˆ
 //				ArrayList<String> valueList = new ArrayList<String>();
 				
 				if (preField.getText().equals("")) {
@@ -2552,26 +2552,26 @@ public class SearchPage extends JApplet {
 				}
 //				valueList.add(String.valueOf(PRECURSOR));
 				
-//				// Precursor m/z’l‚ğCookie‚Éİ’è
+//				// Precursor m/zå€¤ã‚’Cookieã«è¨­å®š
 //				cm.setCookie(COOKIE_PRE, valueList);
 			}
 		}
 		
 		/**
-		 * ƒƒCƒ“ƒRƒ“ƒeƒi[‚Ì‰Šú‰»
-		 * @param c ƒRƒ“ƒeƒi[
+		 * ãƒ¡ã‚¤ãƒ³ã‚³ãƒ³ãƒ†ãƒŠãƒ¼ã®åˆæœŸåŒ–
+		 * @param c ã‚³ãƒ³ãƒ†ãƒŠãƒ¼
 		 */
 		private void initMainContainer(Container c) {
 			c.setLayout(new GridBagLayout());
 		}
 
 		/**
-		 * ƒƒCƒ“ƒRƒ“ƒeƒi[—pƒŒƒCƒAƒEƒg§–ñ
-		 * @param x …•½•ûŒüƒZƒ‹ˆÊ’u
-		 * @param y ‚’¼•ûŒüƒZƒ‹ˆÊ’u
-		 * @param w …•½•ûŒü‚Ì1s‚ÌƒZƒ‹”
-		 * @param h ‚’¼•ûŒü‚Ì1s‚ÌƒZƒ‹”
-		 * @return ƒŒƒCƒAƒEƒg§–ñ
+		 * ãƒ¡ã‚¤ãƒ³ã‚³ãƒ³ãƒ†ãƒŠãƒ¼ç”¨ãƒ¬ã‚¤ã‚¢ã‚¦ãƒˆåˆ¶ç´„
+		 * @param x æ°´å¹³æ–¹å‘ã‚»ãƒ«ä½ç½®
+		 * @param y å‚ç›´æ–¹å‘ã‚»ãƒ«ä½ç½®
+		 * @param w æ°´å¹³æ–¹å‘ã®1è¡Œã®ã‚»ãƒ«æ•°
+		 * @param h å‚ç›´æ–¹å‘ã®1è¡Œã®ã‚»ãƒ«æ•°
+		 * @return ãƒ¬ã‚¤ã‚¢ã‚¦ãƒˆåˆ¶ç´„
 		 */
 		private GridBagConstraints mainContainerGBC(int x, int y, int w, int h) {
 			
@@ -2592,11 +2592,11 @@ public class SearchPage extends JApplet {
 		}
 		
 		/**
-		 * ğŒ‹æØ‚è—p‚Ìƒpƒlƒ‹‚Ì‰Šú‰»
+		 * æ¡ä»¶åŒºåˆ‡ã‚Šç”¨ã®ãƒ‘ãƒãƒ«ã®åˆæœŸåŒ–
 		 * 
 		 * @param p
 		 * @param isBorder
-		 * @return ğŒ‹æØ‚è—pƒpƒlƒ‹
+		 * @return æ¡ä»¶åŒºåˆ‡ã‚Šç”¨ãƒ‘ãƒãƒ«
 		 */
 		private void initDelimPanel(JPanel p, boolean isBorder) {
 			
@@ -2610,15 +2610,15 @@ public class SearchPage extends JApplet {
 		}
 		
 		/**
-		 * ğŒ‹æØ‚è—p‚Ìƒpƒlƒ‹‚ÌƒŒƒCƒAƒEƒg§–ñ
+		 * æ¡ä»¶åŒºåˆ‡ã‚Šç”¨ã®ãƒ‘ãƒãƒ«ã®ãƒ¬ã‚¤ã‚¢ã‚¦ãƒˆåˆ¶ç´„
 		 * 
-		 * @parma wx …•½•ûŒüŠg‘å”{—¦
-		 * @parma wy ‚’¼•ûŒüŠg‘å”{—¦
-		 * @param x …•½•ûŒüƒZƒ‹ˆÊ’u
-		 * @param y ‚’¼•ûŒüƒZƒ‹ˆÊ’u
-		 * @param w …•½•ûŒü‚Ì1s‚ÌƒZƒ‹”
-		 * @param h ‚’¼•ûŒü‚Ì1s‚ÌƒZƒ‹”
-		 * @return ƒŒƒCƒAƒEƒg§–ñ
+		 * @parma wx æ°´å¹³æ–¹å‘æ‹¡å¤§å€ç‡
+		 * @parma wy å‚ç›´æ–¹å‘æ‹¡å¤§å€ç‡
+		 * @param x æ°´å¹³æ–¹å‘ã‚»ãƒ«ä½ç½®
+		 * @param y å‚ç›´æ–¹å‘ã‚»ãƒ«ä½ç½®
+		 * @param w æ°´å¹³æ–¹å‘ã®1è¡Œã®ã‚»ãƒ«æ•°
+		 * @param h å‚ç›´æ–¹å‘ã®1è¡Œã®ã‚»ãƒ«æ•°
+		 * @return ãƒ¬ã‚¤ã‚¢ã‚¦ãƒˆåˆ¶ç´„
 		 */
 		private GridBagConstraints delimPanelGBC(double wx, double wy, int x, int y, int w, int h) {
 			
@@ -2639,20 +2639,20 @@ public class SearchPage extends JApplet {
 		}
 		
 		/**
-		 * ƒ‰ƒxƒ‹ƒpƒlƒ‹¶¬iƒŒƒCƒAƒEƒg’²®—pj
+		 * ãƒ©ãƒ™ãƒ«ãƒ‘ãƒãƒ«ç”Ÿæˆï¼ˆãƒ¬ã‚¤ã‚¢ã‚¦ãƒˆèª¿æ•´ç”¨ï¼‰
 		 * 
-		 * JLabel‚ğ’¼ÚƒRƒ“ƒ|[ƒlƒ“ƒg‚Éadd‚·‚é‚ÆˆÊ’u‚Ì”÷’²®‚ª‚Å‚«‚È‚¢‚½‚ßA
-		 * ”÷’²®‚ğs‚¢JPanel‚Åƒ‰ƒbƒsƒ“ƒO‚µ‚Ä•Ô‹p‚·‚éB
-		 * ‚Ü‚½Aƒ‰ƒxƒ‹ƒTƒCƒY‚Ì“ˆê‚Ì‚½‚ß‚Ég—p‚·‚é‚±‚Æ‚ğ„§‚·‚éB
+		 * JLabelã‚’ç›´æ¥ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆã«addã™ã‚‹ã¨ä½ç½®ã®å¾®èª¿æ•´ãŒã§ããªã„ãŸã‚ã€
+		 * å¾®èª¿æ•´ã‚’è¡Œã„JPanelã§ãƒ©ãƒƒãƒ”ãƒ³ã‚°ã—ã¦è¿”å´ã™ã‚‹ã€‚
+		 * ã¾ãŸã€ãƒ©ãƒ™ãƒ«ã‚µã‚¤ã‚ºã®çµ±ä¸€ã®ãŸã‚ã«ä½¿ç”¨ã™ã‚‹ã“ã¨ã‚’æ¨å¥¨ã™ã‚‹ã€‚
 		 * 
-		 * @param label ƒ‰ƒxƒ‹•¶š—ñiHTMLƒ^ƒO“à‚É•\¦‚·‚é•¶š—ñj
-		 * @param tooltip ƒc[ƒ‹ƒ`ƒbƒv•¶š—ñiHTMLƒ^ƒO“à‚É•\¦‚·‚é•¶š—ñj
-		 * @param size ƒ‰ƒxƒ‹ƒTƒCƒY
-		 * @param labelIndent ƒ‰ƒxƒ‹¶ƒCƒ“ƒfƒ“ƒg•i”¼ŠpƒXƒy[ƒX‚Ì”j
-		 * @return ƒ‰ƒxƒ‹‚ğƒ‰ƒbƒsƒ“ƒO‚µ‚½ƒpƒlƒ‹
+		 * @param label ãƒ©ãƒ™ãƒ«æ–‡å­—åˆ—ï¼ˆHTMLã‚¿ã‚°å†…ã«è¡¨ç¤ºã™ã‚‹æ–‡å­—åˆ—ï¼‰
+		 * @param tooltip ãƒ„ãƒ¼ãƒ«ãƒãƒƒãƒ—æ–‡å­—åˆ—ï¼ˆHTMLã‚¿ã‚°å†…ã«è¡¨ç¤ºã™ã‚‹æ–‡å­—åˆ—ï¼‰
+		 * @param size ãƒ©ãƒ™ãƒ«ã‚µã‚¤ã‚º
+		 * @param labelIndent ãƒ©ãƒ™ãƒ«å·¦ã‚¤ãƒ³ãƒ‡ãƒ³ãƒˆå¹…ï¼ˆåŠè§’ã‚¹ãƒšãƒ¼ã‚¹ã®æ•°ï¼‰
+		 * @return ãƒ©ãƒ™ãƒ«ã‚’ãƒ©ãƒƒãƒ”ãƒ³ã‚°ã—ãŸãƒ‘ãƒãƒ«
 		 */
 		private JPanel newLabelPanel(String label, String tooltip, int size, int labelIndent) {
-			// ƒ‰ƒxƒ‹¶¬
+			// ãƒ©ãƒ™ãƒ«ç”Ÿæˆ
 			for (int i=0; i<labelIndent; i++) {
 				label = " " + label;
 			}
@@ -2680,7 +2680,7 @@ public class SearchPage extends JApplet {
 			}
 			
 			
-			// ƒpƒlƒ‹ƒZƒbƒg
+			// ãƒ‘ãƒãƒ«ã‚»ãƒƒãƒˆ
 			JPanel p = new JPanel();
 			p.setLayout(new GridBagLayout());
 			
@@ -2703,15 +2703,15 @@ public class SearchPage extends JApplet {
 		}
 		
 		/**
-		 * ƒeƒLƒXƒgƒtƒB[ƒ‹ƒhƒ‰ƒbƒsƒ“ƒOiƒŒƒCƒAƒEƒg’²®—pj
+		 * ãƒ†ã‚­ã‚¹ãƒˆãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ãƒ©ãƒƒãƒ”ãƒ³ã‚°ï¼ˆãƒ¬ã‚¤ã‚¢ã‚¦ãƒˆèª¿æ•´ç”¨ï¼‰
 		 * 
-		 * JTextField‚ğadd‚·‚éê‡‚ÉˆÊ’u‚Ì”÷’²®‚ğs‚¢‚½‚¢ê‡‚Ég—p‚·‚éB
+		 * JTextFieldã‚’addã™ã‚‹å ´åˆã«ä½ç½®ã®å¾®èª¿æ•´ã‚’è¡Œã„ãŸã„å ´åˆã«ä½¿ç”¨ã™ã‚‹ã€‚
 		 * 
-		 * @return ƒeƒLƒXƒgƒtƒB[ƒ‹ƒh‚ğƒ‰ƒbƒsƒ“ƒO‚µ‚½ƒpƒlƒ‹
+		 * @return ãƒ†ã‚­ã‚¹ãƒˆãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ã‚’ãƒ©ãƒƒãƒ”ãƒ³ã‚°ã—ãŸãƒ‘ãƒãƒ«
 		 */
 		private JPanel wrappTextPanel(JTextField t) {
 			
-			// ƒpƒlƒ‹ƒZƒbƒg
+			// ãƒ‘ãƒãƒ«ã‚»ãƒƒãƒˆ
 			JPanel p = new JPanel();
 			p.setLayout(new GridBagLayout());
 			
@@ -2734,22 +2734,22 @@ public class SearchPage extends JApplet {
 		}
 		
 		/**
-		 * ƒAƒCƒeƒ€ƒpƒlƒ‹‚Ì‰Šú‰»
-		 * @return ƒAƒCƒeƒ€ƒpƒlƒ‹
+		 * ã‚¢ã‚¤ãƒ†ãƒ ãƒ‘ãƒãƒ«ã®åˆæœŸåŒ–
+		 * @return ã‚¢ã‚¤ãƒ†ãƒ ãƒ‘ãƒãƒ«
 		 */
 		private void initItemPanel(JPanel p) {
 			p.setLayout(new GridBagLayout());
 		}
 		
 		/**
-		 * ƒAƒCƒeƒ€ƒpƒlƒ‹‚ÌƒŒƒCƒAƒEƒg§–ñ
-		 * @parma wx …•½•ûŒüŠg‘å”{—¦
-		 * @parma wy ‚’¼•ûŒüŠg‘å”{—¦
-		 * @param x …•½•ûŒüƒZƒ‹ˆÊ’u
-		 * @param y ‚’¼•ûŒüƒZƒ‹ˆÊ’u
-		 * @param w …•½•ûŒü‚Ì1s‚ÌƒZƒ‹”
-		 * @param h ‚’¼•ûŒü‚Ì1s‚ÌƒZƒ‹”
-		 * @return ƒŒƒCƒAƒEƒg§–ñ
+		 * ã‚¢ã‚¤ãƒ†ãƒ ãƒ‘ãƒãƒ«ã®ãƒ¬ã‚¤ã‚¢ã‚¦ãƒˆåˆ¶ç´„
+		 * @parma wx æ°´å¹³æ–¹å‘æ‹¡å¤§å€ç‡
+		 * @parma wy å‚ç›´æ–¹å‘æ‹¡å¤§å€ç‡
+		 * @param x æ°´å¹³æ–¹å‘ã‚»ãƒ«ä½ç½®
+		 * @param y å‚ç›´æ–¹å‘ã‚»ãƒ«ä½ç½®
+		 * @param w æ°´å¹³æ–¹å‘ã®1è¡Œã®ã‚»ãƒ«æ•°
+		 * @param h å‚ç›´æ–¹å‘ã®1è¡Œã®ã‚»ãƒ«æ•°
+		 * @return ãƒ¬ã‚¤ã‚¢ã‚¦ãƒˆåˆ¶ç´„
 		 */
 		private GridBagConstraints itemPanelGBC(double wx, double wy, int x, int y, int w, int h) {
 			
@@ -2771,13 +2771,13 @@ public class SearchPage extends JApplet {
 	}
 	
 	/**
-	 * Fileƒ^ƒu‚Ìƒe[ƒuƒ‹ƒŠƒXƒgƒ‚ƒfƒ‹ƒŠƒXƒi[ƒNƒ‰ƒX
-	 * SerarchPage‚ÌƒCƒ“ƒi[ƒNƒ‰ƒXB
+	 * Fileã‚¿ãƒ–ã®ãƒ†ãƒ¼ãƒ–ãƒ«ãƒªã‚¹ãƒˆãƒ¢ãƒ‡ãƒ«ãƒªã‚¹ãƒŠãƒ¼ã‚¯ãƒ©ã‚¹
+	 * SerarchPageã®ã‚¤ãƒ³ãƒŠãƒ¼ã‚¯ãƒ©ã‚¹ã€‚
 	 */
 	class LmFileListener implements ListSelectionListener {
 		
 		/**
-		 * ƒoƒŠƒ…[ƒ`ƒFƒ“ƒWƒCƒxƒ“ƒg
+		 * ãƒãƒªãƒ¥ãƒ¼ãƒã‚§ãƒ³ã‚¸ã‚¤ãƒ™ãƒ³ãƒˆ
 		 * @see javax.swing.event.ListSelectionListener#valueChanged(java.swing.event.ListSelectionEvent)
 		 */
 		public void valueChanged(ListSelectionEvent le) {
@@ -2788,7 +2788,7 @@ public class SearchPage extends JApplet {
 			
 			final int selRow = queryFileTable.getSelectedRow();
 			if (selRow < 0) {
-				// CompareView‰Šú‰»
+				// CompareViewåˆæœŸåŒ–
 				queryPlot.clear();
 				compPlot.clear();
 				resultPlot.clear();
@@ -2796,7 +2796,7 @@ public class SearchPage extends JApplet {
 				compPlot.setPeaks(null, 1);
 				resultPlot.setPeaks(null, 0);
 
-				// PackageView‰Šú‰»
+				// PackageViewåˆæœŸåŒ–
 				pkgView.initAllRecInfo();
 				
 				DefaultTableModel dm = (DefaultTableModel)resultSorter.getTableModel();
@@ -2805,41 +2805,41 @@ public class SearchPage extends JApplet {
 				return;
 			}
 			
-			// ƒ}ƒEƒXƒJ[ƒ\ƒ‹‚ğ»Œv‚É
+			// ãƒã‚¦ã‚¹ã‚«ãƒ¼ã‚½ãƒ«ã‚’ç ‚æ™‚è¨ˆã«
 			SearchPage.this.setCursor(waitCursor);
 
-			// PackageView•\¦ƒtƒ@ƒCƒ‹ƒf[ƒ^İ’è
+			// PackageViewè¡¨ç¤ºãƒ•ã‚¡ã‚¤ãƒ«ãƒ‡ãƒ¼ã‚¿è¨­å®š
 			int noCol = queryFileTable.getColumnModel().getColumnIndex(COL_LABEL_NO);
 			int nameCol = queryFileTable.getColumnModel().getColumnIndex(COL_LABEL_NAME);
 			int idCol = queryFileTable.getColumnModel().getColumnIndex(COL_LABEL_ID);
 			
-			// ƒs[ƒNî•ñ
+			// ãƒ”ãƒ¼ã‚¯æƒ…å ±
 			String[] peaks = userDataList[selRow].getPeaks();
 				
 			PackageRecData recData = new PackageRecData();
 			
-			// == ƒNƒGƒŠ[ƒŒƒR[ƒhƒtƒ‰ƒO ===
+			// == ã‚¯ã‚¨ãƒªãƒ¼ãƒ¬ã‚³ãƒ¼ãƒ‰ãƒ•ãƒ©ã‚° ===
 			recData.setQueryRecord(true);
 			
-			// === “‡ƒŒƒR[ƒhƒtƒ‰ƒO ===
+			// === çµ±åˆãƒ¬ã‚³ãƒ¼ãƒ‰ãƒ•ãƒ©ã‚° ===
 			recData.setIntegRecord(false);
 			
 			// === ID ===
 			recData.setId((String)queryFileTable.getValueAt(selRow, idCol));
 			
-			// === ƒXƒRƒA ===
+			// === ã‚¹ã‚³ã‚¢ ===
 			recData.setScore(" -");
 			
-			// === ƒTƒCƒg ===
+			// === ã‚µã‚¤ãƒˆ ===
 			recData.setSite("");
 			
-			// === ‰»‡•¨–¼ ===
+			// === åŒ–åˆç‰©å ===
 			recData.setName((String)queryFileTable.getValueAt(selRow, nameCol));
 			
-			// === ƒvƒŠƒJ[ƒT[ ===
+			// === ãƒ—ãƒªã‚«ãƒ¼ã‚µãƒ¼ ===
 			recData.setPrecursor("");
 			
-			// === ƒs[ƒN” ===
+			// === ãƒ”ãƒ¼ã‚¯æ•° ===
 			int num = peaks.length;
 			if (num == 1) {
 				if (peaks[0].split("\t")[0].equals("0") && peaks[0].split("\t")[1].equals("0")) {
@@ -2852,19 +2852,19 @@ public class SearchPage extends JApplet {
 				// === m/z ===
 				recData.setMz( i, peaks[i].split("\t")[0] );
 				
-				// === ‹­“x ===
+				// === å¼·åº¦ ===
 				recData.setIntensity(i, peaks[i].split("\t")[1] );
 			}
 			
-			// === ƒs[ƒNF ===
+			// === ãƒ”ãƒ¼ã‚¯è‰² ===
 			recData.setPeakColorType(PackageRecData.COLOR_TYPE_BLACK);
 			
-			// ƒŒƒR[ƒhî•ñ’Ç‰Á
+			// ãƒ¬ã‚³ãƒ¼ãƒ‰æƒ…å ±è¿½åŠ 
 			pkgView.addQueryRecInfo(recData);
 			pkgView.addRecInfoAfter(true, recData.getId(), PackageSpecData.SORT_KEY_NONE);
 			
 			
-			// DBŒŸõ
+			// DBæ¤œç´¢
 			String name = (String)queryFileTable.getValueAt(selRow, nameCol);
 			String key = String.valueOf(queryFileTable.getValueAt(selRow, noCol));
 			searchDb(userDataList[selRow].getPeaks(), "", name, key);
@@ -2872,13 +2872,13 @@ public class SearchPage extends JApplet {
 	}
 	
 	/**
-	 * Resultƒ^ƒu‚Ìƒe[ƒuƒ‹ƒŠƒXƒgƒ‚ƒfƒ‹ƒŠƒXƒi[ƒNƒ‰ƒX
-	 * SerarchPage‚ÌƒCƒ“ƒi[ƒNƒ‰ƒXB
+	 * Resultã‚¿ãƒ–ã®ãƒ†ãƒ¼ãƒ–ãƒ«ãƒªã‚¹ãƒˆãƒ¢ãƒ‡ãƒ«ãƒªã‚¹ãƒŠãƒ¼ã‚¯ãƒ©ã‚¹
+	 * SerarchPageã®ã‚¤ãƒ³ãƒŠãƒ¼ã‚¯ãƒ©ã‚¹ã€‚
 	 */
 	class LmResultListener implements ListSelectionListener {
 		
 		/**
-		 * ƒoƒŠƒ…[ƒ`ƒFƒ“ƒWƒCƒxƒ“ƒg
+		 * ãƒãƒªãƒ¥ãƒ¼ãƒã‚§ãƒ³ã‚¸ã‚¤ãƒ™ãƒ³ãƒˆ
 		 * @see javax.swing.event.ListSelectionListener#valueChanged(java.swing.event.ListSelectionEvent)
 		 */
 		public void valueChanged(ListSelectionEvent le) {
@@ -2889,18 +2889,18 @@ public class SearchPage extends JApplet {
 			
 			int[] selRows = resultTable.getSelectedRows();
 			if (selRows.length < 1) {
-				// CompareView‰Šú‰»
+				// CompareViewåˆæœŸåŒ–
 				resultPlot.clear();
 				compPlot.setPeaks(null, 1);
 				resultPlot.setPeaks(null, 0);
 				setAllPlotAreaRange();
 				
-				// PackageView‰Šú‰»
+				// PackageViewåˆæœŸåŒ–
 				pkgView.initResultRecInfo();
 				return;
 			}
 			
-			// ƒ}ƒEƒXƒJ[ƒ\ƒ‹‚ğ»Œv‚É
+			// ãƒã‚¦ã‚¹ã‚«ãƒ¼ã‚½ãƒ«ã‚’ç ‚æ™‚è¨ˆã«
 			SearchPage.this.setCursor(waitCursor);
 			
 			int idCol = resultTable.getColumnModel().getColumnIndex(COL_LABEL_ID);
@@ -2928,9 +2928,9 @@ public class SearchPage extends JApplet {
 			
 			if (isDispSelected) {
 				
-				// Compare View—pƒf[ƒ^ƒNƒ‰ƒX‰Šú‰»
+				// Compare Viewç”¨ãƒ‡ãƒ¼ã‚¿ã‚¯ãƒ©ã‚¹åˆæœŸåŒ–
 				if (selRows.length > 1) {
-					// 2ŒˆÈã‘I‘ğ‚Í•\¦‚Å‚«‚È‚¢
+					// 2ä»¶ä»¥ä¸Šé¸æŠæ™‚ã¯è¡¨ç¤ºã§ããªã„
 					resultPlot.clear();
 					compPlot.setPeaks(null, 1);
 					resultPlot.setPeaks(null, 0);
@@ -2946,7 +2946,7 @@ public class SearchPage extends JApplet {
 					return;
 				}
 				
-				// PackageView•\¦ƒf[ƒ^İ’è
+				// PackageViewè¡¨ç¤ºãƒ‡ãƒ¼ã‚¿è¨­å®š
 				boolean recChangeFlag = true;
 				PeakData peak = null;
 				for (int i=0; i<selRows.length; i++) {
@@ -2973,13 +2973,13 @@ public class SearchPage extends JApplet {
 						URL url = new URL( reqUrl );
 						URLConnection con = url.openConnection();
 						
-						// ƒŒƒXƒ|ƒ“ƒXæ“¾
+						// ãƒ¬ã‚¹ãƒãƒ³ã‚¹å–å¾—
 						BufferedReader in = new BufferedReader( new InputStreamReader(con.getInputStream()) );
 						
-						// ƒŒƒXƒ|ƒ“ƒXŠi”[
+						// ãƒ¬ã‚¹ãƒãƒ³ã‚¹æ ¼ç´
 						String result;
 						while ( (result = in.readLine()) != null ) {
-							if ( !result.equals("") ) {		// ƒXƒy[ƒXs‚ğ“Ç‚İ”ò‚Î‚·
+							if ( !result.equals("") ) {		// ã‚¹ãƒšãƒ¼ã‚¹è¡Œã‚’èª­ã¿é£›ã°ã™
 								line = result;
 								break;
 							}
@@ -2994,11 +2994,11 @@ public class SearchPage extends JApplet {
 						
 					recData = new PackageRecData();
 					
-					// === ‰»‡•¨–¼ ===
+					// === åŒ–åˆç‰©å ===
 					findStr = "name=";
 					recData.setName(line, findStr);
 					
-					// === ƒvƒŠƒJ[ƒT[ ===
+					// === ãƒ—ãƒªã‚«ãƒ¼ã‚µãƒ¼ ===
 					findStr = "precursor=";
 					recData.setPrecursor(line, findStr);
 					
@@ -3006,26 +3006,26 @@ public class SearchPage extends JApplet {
 					findStr = "id=";
 					recData.setId(line, findStr);
 					
-					// === ƒŠƒUƒ‹ƒgƒŒƒR[ƒhƒtƒ‰ƒO ===
+					// === ãƒªã‚¶ãƒ«ãƒˆãƒ¬ã‚³ãƒ¼ãƒ‰ãƒ•ãƒ©ã‚° ===
 					recData.setResultRecord(true);
 					
-					// === “‡ƒŒƒR[ƒhƒtƒ‰ƒO ===
+					// === çµ±åˆãƒ¬ã‚³ãƒ¼ãƒ‰ãƒ•ãƒ©ã‚° ===
 					recData.setIntegRecord(recData.getName());
 					
-					// === ƒXƒRƒA ===
+					// === ã‚¹ã‚³ã‚¢ ===
 					recData.setScore(score);
 					
-					// === ƒTƒCƒg ===
+					// === ã‚µã‚¤ãƒˆ ===
 					recData.setSite(site);
 					
-					// ƒŒƒR[ƒhî•ñˆÈ~‚Ì•¶š—ñ‚ğíœ‚µAƒs[ƒNî•ñ(m/zA‹­“x)‚Ì‚İ‚ğc‚µ
-					// ƒs[ƒNî•ñ‚Ì‚İ‚ğØ‚èo‚·B
+					// ãƒ¬ã‚³ãƒ¼ãƒ‰æƒ…å ±ä»¥é™ã®æ–‡å­—åˆ—ã‚’å‰Šé™¤ã—ã€ãƒ”ãƒ¼ã‚¯æƒ…å ±(m/zã€å¼·åº¦)ã®ã¿ã‚’æ®‹ã—
+					// ãƒ”ãƒ¼ã‚¯æƒ…å ±ã®ã¿ã‚’åˆ‡ã‚Šå‡ºã™ã€‚
 					if (line.indexOf("::") > 0) {
 						line = line.substring(0, line.indexOf("::"));
 					}
 					String[] tmpPeak = line.split("\t\t");
 					
-					// === ƒs[ƒN” ===
+					// === ãƒ”ãƒ¼ã‚¯æ•° ===
 					int num = tmpPeak.length;
 					if (num == 1) {
 						if (tmpPeak[0].split("\t")[0].equals("0") && tmpPeak[0].split("\t")[1].equals("0")) {
@@ -3038,18 +3038,18 @@ public class SearchPage extends JApplet {
 						// === m/z ===
 						recData.setMz( j, tmpPeak[j].split("\t")[0] );
 						
-						// === ‹­“x ===
+						// === å¼·åº¦ ===
 						recData.setIntensity(j, tmpPeak[j].split("\t")[1] );
 					}
 					
-					// === ƒs[ƒNF ===
+					// === ãƒ”ãƒ¼ã‚¯è‰² ===
 					recData.setPeakColorType(PackageRecData.COLOR_TYPE_BLACK);
 					
-					// ƒŒƒR[ƒhî•ñ’Ç‰Á
+					// ãƒ¬ã‚³ãƒ¼ãƒ‰æƒ…å ±è¿½åŠ 
 					pkgView.addResultRecInfo(recData, recChangeFlag);
 					recChangeFlag = false;
 					
-					// Compare View—pƒf[ƒ^ƒNƒ‰ƒX¶¬
+					// Compare Viewç”¨ãƒ‡ãƒ¼ã‚¿ã‚¯ãƒ©ã‚¹ç”Ÿæˆ
 					if (selRows.length == 1) {
 						peak = new PeakData(tmpPeak);
 						resultPlot.clear();
@@ -3093,19 +3093,19 @@ public class SearchPage extends JApplet {
 					BufferedReader in = new BufferedReader(
 							new InputStreamReader(con.getInputStream()));
 					
-					// PackageView•\¦ƒf[ƒ^İ’è
+					// PackageViewè¡¨ç¤ºãƒ‡ãƒ¼ã‚¿è¨­å®š
 					while ((line = in.readLine()) != null) {
-						if (line.equals("")) {		// ƒXƒy[ƒXs‚ğ“Ç‚İ”ò‚Î‚·
+						if (line.equals("")) {		// ã‚¹ãƒšãƒ¼ã‚¹è¡Œã‚’èª­ã¿é£›ã°ã™
 							continue;
 						}
 						
 						recData = new PackageRecData();
 						
-						// === ‰»‡•¨–¼ ===
+						// === åŒ–åˆç‰©å ===
 						findStr = "name=";
 						recData.setName(line, findStr);
 						
-						// === ƒvƒŠƒJ[ƒT[ ===
+						// === ãƒ—ãƒªã‚«ãƒ¼ã‚µãƒ¼ ===
 						findStr = "precursor=";
 						recData.setPrecursor(line, findStr);
 						
@@ -3113,23 +3113,23 @@ public class SearchPage extends JApplet {
 						findStr = "id=";
 						recData.setId(line, findStr);
 						
-						// === “‡ƒŒƒR[ƒhƒtƒ‰ƒO ===
+						// === çµ±åˆãƒ¬ã‚³ãƒ¼ãƒ‰ãƒ•ãƒ©ã‚° ===
 						recData.setIntegRecord(recData.getName());
 						
-						// === ƒXƒRƒA ===
+						// === ã‚¹ã‚³ã‚¢ ===
 						recData.setScore("");
 						
-						// === ƒTƒCƒg ===
+						// === ã‚µã‚¤ãƒˆ ===
 						recData.setSite(site);
 						
-						// ƒŒƒR[ƒhî•ñˆÈ~‚Ì•¶š—ñ‚ğíœ‚µAƒs[ƒNî•ñ(m/zA‹­“x)‚Ì‚İ‚ğc‚µ
-						// ƒs[ƒNî•ñ‚Ì‚İ‚ğØ‚èo‚·B
+						// ãƒ¬ã‚³ãƒ¼ãƒ‰æƒ…å ±ä»¥é™ã®æ–‡å­—åˆ—ã‚’å‰Šé™¤ã—ã€ãƒ”ãƒ¼ã‚¯æƒ…å ±(m/zã€å¼·åº¦)ã®ã¿ã‚’æ®‹ã—
+						// ãƒ”ãƒ¼ã‚¯æƒ…å ±ã®ã¿ã‚’åˆ‡ã‚Šå‡ºã™ã€‚
 						if (line.indexOf("::") > 0) {
 							line = line.substring(0, line.indexOf("::"));
 						}
 						String[] tmpPeak = line.split("\t\t");
 						
-						// === ƒs[ƒN” ===
+						// === ãƒ”ãƒ¼ã‚¯æ•° ===
 						int num = tmpPeak.length;
 						if (num == 1) {
 							if (tmpPeak[0].split("\t")[0].equals("0") && tmpPeak[0].split("\t")[1].equals("0")) {
@@ -3142,18 +3142,18 @@ public class SearchPage extends JApplet {
 							// === m/z ===
 							recData.setMz( j, tmpPeak[j].split("\t")[0] );
 							
-							// === ‹­“x ===
+							// === å¼·åº¦ ===
 							recData.setIntensity(j, tmpPeak[j].split("\t")[1] );
 						}
 						
-						// === ƒs[ƒNF ===
+						// === ãƒ”ãƒ¼ã‚¯è‰² ===
 						recData.setPeakColorType(PackageRecData.COLOR_TYPE_BLACK);
 						
-						// ƒŒƒR[ƒhî•ñ’Ç‰Á
+						// ãƒ¬ã‚³ãƒ¼ãƒ‰æƒ…å ±è¿½åŠ 
 						pkgView.addResultRecInfo(recData, recChangeFlag);
 						recChangeFlag = false;
 						
-						// Compare View—pƒf[ƒ^ƒNƒ‰ƒX¶¬
+						// Compare Viewç”¨ãƒ‡ãƒ¼ã‚¿ã‚¯ãƒ©ã‚¹ç”Ÿæˆ
 						if (id.equals(recData.getId())) {
 							peak = new PeakData(tmpPeak);
 							precursor = recData.getPrecursor();
@@ -3178,7 +3178,7 @@ public class SearchPage extends JApplet {
 				compPlot.setTolerance(String.valueOf(TOLERANCE), tolUnit1.isSelected());
 			}
 
-			// \‘¢®‰æ‘œ‚Ìƒtƒ@ƒCƒ‹–¼‚ğæ“¾‚·‚é
+			// æ§‹é€ å¼ç”»åƒã®ãƒ•ã‚¡ã‚¤ãƒ«åã‚’å–å¾—ã™ã‚‹
 			id = recData.getId();
 			site = recData.getSite();
 			String temp = recData.getName();
@@ -3220,13 +3220,13 @@ public class SearchPage extends JApplet {
 	}
 	
 	/**
-	 * ƒNƒGƒŠDBƒ^ƒu‚Ìƒe[ƒuƒ‹ƒŠƒXƒgƒ‚ƒfƒ‹ƒŠƒXƒi[ƒNƒ‰ƒX
-	 * SerarchPage‚ÌƒCƒ“ƒi[ƒNƒ‰ƒXB
+	 * ã‚¯ã‚¨ãƒªDBã‚¿ãƒ–ã®ãƒ†ãƒ¼ãƒ–ãƒ«ãƒªã‚¹ãƒˆãƒ¢ãƒ‡ãƒ«ãƒªã‚¹ãƒŠãƒ¼ã‚¯ãƒ©ã‚¹
+	 * SerarchPageã®ã‚¤ãƒ³ãƒŠãƒ¼ã‚¯ãƒ©ã‚¹ã€‚
 	 */
 	class LmQueryDbListener implements ListSelectionListener {
 		
 		/**
-		 * ƒoƒŠƒ…[ƒ`ƒFƒ“ƒWƒCƒxƒ“ƒg
+		 * ãƒãƒªãƒ¥ãƒ¼ãƒã‚§ãƒ³ã‚¸ã‚¤ãƒ™ãƒ³ãƒˆ
 		 * @see javax.swing.event.ListSelectionListener#valueChanged(java.swing.event.ListSelectionEvent)
 		 */
 		public void valueChanged(ListSelectionEvent le) {
@@ -3237,7 +3237,7 @@ public class SearchPage extends JApplet {
 			
 			final int selRow = queryDbTable.getSelectedRow();
 			if (selRow < 0) {
-				// CompareView‰Šú‰»
+				// CompareViewåˆæœŸåŒ–
 				queryPlot.clear();
 				compPlot.clear();
 				resultPlot.clear();
@@ -3245,7 +3245,7 @@ public class SearchPage extends JApplet {
 				compPlot.setPeaks(null, 1);
 				resultPlot.setPeaks(null, 0);
 
-				// PackageView‰Šú‰»
+				// PackageViewåˆæœŸåŒ–
 				pkgView.initAllRecInfo();
 				
 				DefaultTableModel dm = (DefaultTableModel)resultSorter.getTableModel();
@@ -3254,19 +3254,19 @@ public class SearchPage extends JApplet {
 				return;
 			}
 			
-			// ƒ}ƒEƒXƒJ[ƒ\ƒ‹‚ğ»Œv‚É
+			// ãƒã‚¦ã‚¹ã‚«ãƒ¼ã‚½ãƒ«ã‚’ç ‚æ™‚è¨ˆã«
 			SearchPage.this.setCursor(waitCursor);
 			
 			int idCol = queryDbTable.getColumnModel().getColumnIndex(COL_LABEL_ID);
 			int nameCol = queryDbTable.getColumnModel().getColumnIndex(COL_LABEL_NAME);
 			
-			// nameList‚©‚ç‚ÌƒŒƒR[ƒhî•ñæ“¾—pƒCƒ“ƒfƒbƒNƒX“Á’è
+			// nameListã‹ã‚‰ã®ãƒ¬ã‚³ãƒ¼ãƒ‰æƒ…å ±å–å¾—ç”¨ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ç‰¹å®š
 			int nameListIndex = -1;
 			if (!querySorter.isSorting()) {
-				// ƒ\[ƒg–³‚µ‚Ìê‡
+				// ã‚½ãƒ¼ãƒˆç„¡ã—ã®å ´åˆ
 				nameListIndex = selRow;
 			} else {
-				// ƒ\[ƒg—L‚è‚Ìê‡
+				// ã‚½ãƒ¼ãƒˆæœ‰ã‚Šã®å ´åˆ
 				String tmpId = (String) queryDbTable.getValueAt(selRow, idCol);
 				for (int i = 0; i < nameList.size(); i++) {
 					if (nameList.get(i)[0].equals(tmpId)) {
@@ -3280,19 +3280,19 @@ public class SearchPage extends JApplet {
 			String site = idName[2];
 			
 			
-			// PackageView•\¦ƒNƒGƒŠ[ƒf[ƒ^İ’è
+			// PackageViewè¡¨ç¤ºã‚¯ã‚¨ãƒªãƒ¼ãƒ‡ãƒ¼ã‚¿è¨­å®š
 			PackageRecData recData = new PackageRecData();
 			
-			// == ƒNƒGƒŠ[ƒŒƒR[ƒhƒtƒ‰ƒO ===
+			// == ã‚¯ã‚¨ãƒªãƒ¼ãƒ¬ã‚³ãƒ¼ãƒ‰ãƒ•ãƒ©ã‚° ===
 			recData.setQueryRecord(true);
 			
 			// === ID ===
 			recData.setId(id);
 			
-			// === ƒXƒRƒA ===
+			// === ã‚¹ã‚³ã‚¢ ===
 			recData.setScore(" -");
 			
-			// === ƒTƒCƒg ===
+			// === ã‚µã‚¤ãƒˆ ===
 			recData.setSite(site);
 			
 			String typeName = MassBankCommon.CGI_TBL[MassBankCommon.CGI_TBL_NUM_TYPE][MassBankCommon.CGI_TBL_TYPE_GSDATA];
@@ -3305,13 +3305,13 @@ public class SearchPage extends JApplet {
 				URL url = new URL( reqUrl );
 				URLConnection con = url.openConnection();
 				
-				// ƒŒƒXƒ|ƒ“ƒXæ“¾
+				// ãƒ¬ã‚¹ãƒãƒ³ã‚¹å–å¾—
 				BufferedReader in = new BufferedReader( new InputStreamReader(con.getInputStream()) );
 				
-				// ƒŒƒXƒ|ƒ“ƒXŠi”[
+				// ãƒ¬ã‚¹ãƒãƒ³ã‚¹æ ¼ç´
 				String result;
 				while ( (result = in.readLine()) != null ) {
-					// ƒXƒy[ƒXs‚ğ“Ç‚İ”ò‚Î‚·
+					// ã‚¹ãƒšãƒ¼ã‚¹è¡Œã‚’èª­ã¿é£›ã°ã™
 					if ( !result.equals("") ) {
 						line = result;
 						break;
@@ -3324,25 +3324,25 @@ public class SearchPage extends JApplet {
 				SearchPage.this.setCursor(Cursor.getDefaultCursor());
 			}
 			
-			// === ‰»‡•¨–¼ ===
+			// === åŒ–åˆç‰©å ===
 			findStr = "name=";
 			recData.setName(line, findStr);
 			
-			// === “‡ƒŒƒR[ƒhƒtƒ‰ƒO ===
+			// === çµ±åˆãƒ¬ã‚³ãƒ¼ãƒ‰ãƒ•ãƒ©ã‚° ===
 			recData.setIntegRecord(recData.getName());
 			
-			// === ƒvƒŠƒJ[ƒT[ ===
+			// === ãƒ—ãƒªã‚«ãƒ¼ã‚µãƒ¼ ===
 			findStr = "precursor=";
 			recData.setPrecursor(line, findStr);
 			
-			// ƒŒƒR[ƒhî•ñˆÈ~‚Ì•¶š—ñ‚ğíœ‚µAƒs[ƒNî•ñ(m/zA‹­“x)‚Ì‚İ‚ğc‚µ
-			// ƒs[ƒNî•ñ‚Ì‚İ‚ğØ‚èo‚·B
+			// ãƒ¬ã‚³ãƒ¼ãƒ‰æƒ…å ±ä»¥é™ã®æ–‡å­—åˆ—ã‚’å‰Šé™¤ã—ã€ãƒ”ãƒ¼ã‚¯æƒ…å ±(m/zã€å¼·åº¦)ã®ã¿ã‚’æ®‹ã—
+			// ãƒ”ãƒ¼ã‚¯æƒ…å ±ã®ã¿ã‚’åˆ‡ã‚Šå‡ºã™ã€‚
 			if (line.indexOf("::") > 0) {
 				line = line.substring(0, line.indexOf("::"));
 			}
 			String[] tmpPeak = line.split("\t\t");
 			
-			// === ƒs[ƒN” ===
+			// === ãƒ”ãƒ¼ã‚¯æ•° ===
 			int num = tmpPeak.length;
 			if (num == 1) {
 				if (tmpPeak[0].split("\t")[0].equals("0") && tmpPeak[0].split("\t")[1].equals("0")) {
@@ -3355,19 +3355,19 @@ public class SearchPage extends JApplet {
 				// === m/z ===
 				recData.setMz( i, tmpPeak[i].split("\t")[0] );
 				
-				// === ‹­“x ===
+				// === å¼·åº¦ ===
 				recData.setIntensity(i, tmpPeak[i].split("\t")[1] );
 			}
 			
-			// === ƒs[ƒNF ===
+			// === ãƒ”ãƒ¼ã‚¯è‰² ===
 			recData.setPeakColorType(PackageRecData.COLOR_TYPE_BLACK);
 			
-			// ƒŒƒR[ƒhî•ñ’Ç‰Á
+			// ãƒ¬ã‚³ãƒ¼ãƒ‰æƒ…å ±è¿½åŠ 
 			pkgView.addQueryRecInfo(recData);
 			pkgView.addRecInfoAfter(true, id, PackageSpecData.SORT_KEY_NONE);
 			
 			
-			// DBŒŸõ
+			// DBæ¤œç´¢
 			String name = (String)queryDbTable.getValueAt(selRow, nameCol);
 			String key = (String)queryDbTable.getValueAt(selRow, idCol);
 			searchDb(tmpPeak, recData.getPrecursor(), name, key);
@@ -3375,8 +3375,8 @@ public class SearchPage extends JApplet {
 	}
 
 	/**
-	 * ƒe[ƒuƒ‹ƒ}ƒEƒXƒŠƒXƒi[ƒNƒ‰ƒX
-	 * SerarchPage‚ÌƒCƒ“ƒi[ƒNƒ‰ƒXB
+	 * ãƒ†ãƒ¼ãƒ–ãƒ«ãƒã‚¦ã‚¹ãƒªã‚¹ãƒŠãƒ¼ã‚¯ãƒ©ã‚¹
+	 * SerarchPageã®ã‚¤ãƒ³ãƒŠãƒ¼ã‚¯ãƒ©ã‚¹ã€‚
 	 */
 	class TblMouseListener extends MouseAdapter {
 		
@@ -3384,7 +3384,7 @@ public class SearchPage extends JApplet {
 		public void mouseClicked(MouseEvent e) {
 			super.mouseClicked(e);
 			
-			// ¶ƒNƒŠƒbƒN‚Ìê‡
+			// å·¦ã‚¯ãƒªãƒƒã‚¯ã®å ´åˆ
 			if (SwingUtilities.isLeftMouseButton(e)) {
 
 				JTable tbl = (JTable)e.getSource();
@@ -3401,7 +3401,7 @@ public class SearchPage extends JApplet {
 					int selRow[] = tbl.getSelectedRows();
 					int idCol = tbl.getColumnModel().getColumnIndex(COL_LABEL_ID);
 					
-					// Package View ƒe[ƒuƒ‹Ä‘I‘ğˆ—
+					// Package View ãƒ†ãƒ¼ãƒ–ãƒ«å†é¸æŠå‡¦ç†
 					String id = (String)tbl.getValueAt(selRow[0], idCol);
 					if (tbl.equals(resultTable)) {
 						pkgView.setTblSelection(false, id);
@@ -3417,7 +3417,7 @@ public class SearchPage extends JApplet {
 		public void mouseReleased(MouseEvent e) {
 			super.mouseReleased(e);
 			
-			// ‰EƒŠƒŠ[ƒX‚Ìê‡
+			// å³ãƒªãƒªãƒ¼ã‚¹ã®å ´åˆ
 			if (SwingUtilities.isRightMouseButton(e)) {
 				
 				recListPopup(e);
@@ -3426,8 +3426,8 @@ public class SearchPage extends JApplet {
 	}
 	
 	/**
-	 * ƒyƒCƒ“ƒ}ƒEƒXƒŠƒXƒi[
-	 * SearchPage‚ÌƒCƒ“ƒi[ƒNƒ‰ƒX
+	 * ãƒšã‚¤ãƒ³ãƒã‚¦ã‚¹ãƒªã‚¹ãƒŠãƒ¼
+	 * SearchPageã®ã‚¤ãƒ³ãƒŠãƒ¼ã‚¯ãƒ©ã‚¹
 	 */
 	class PaneMouseListener extends MouseAdapter {
 		
@@ -3435,7 +3435,7 @@ public class SearchPage extends JApplet {
 		public void mouseReleased(MouseEvent e) {
 			super.mouseReleased(e);
 			
-			// ‰EƒŠƒŠ[ƒX‚Ìê‡
+			// å³ãƒªãƒªãƒ¼ã‚¹ã®å ´åˆ
 			if (SwingUtilities.isRightMouseButton(e)) {
 				recListPopup(e);
 			}
@@ -3443,13 +3443,13 @@ public class SearchPage extends JApplet {
 	}
 	
 	/**
-	 * Search Nameƒ{ƒ^ƒ“ƒŠƒXƒi[ƒNƒ‰ƒX
-	 * SerarchPage‚ÌƒCƒ“ƒi[ƒNƒ‰ƒXB
+	 * Search Nameãƒœã‚¿ãƒ³ãƒªã‚¹ãƒŠãƒ¼ã‚¯ãƒ©ã‚¹
+	 * SerarchPageã®ã‚¤ãƒ³ãƒŠãƒ¼ã‚¯ãƒ©ã‚¹ã€‚
 	 */
 	class BtnSearchNameListener implements ActionListener {
 		
 		/**
-		 * ƒAƒNƒVƒ‡ƒ“ƒCƒxƒ“ƒg
+		 * ã‚¢ã‚¯ã‚·ãƒ§ãƒ³ã‚¤ãƒ™ãƒ³ãƒˆ
 		 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 		 */
 		public void actionPerformed(ActionEvent e) {
@@ -3458,22 +3458,22 @@ public class SearchPage extends JApplet {
 					"Please input the Name.", "Search Name",
 					JOptionPane.PLAIN_MESSAGE, null, null, saveSearchName);
 
-			// ƒLƒƒƒ“ƒZƒ‹ƒ{ƒ^ƒ“A~ƒ{ƒ^ƒ“AEscƒL[‰Ÿ‰º
+			// ã‚­ãƒ£ãƒ³ã‚»ãƒ«ãƒœã‚¿ãƒ³ã€Ã—ãƒœã‚¿ãƒ³ã€Escã‚­ãƒ¼æŠ¼ä¸‹æ™‚
 			if (inputStr == null) {
 				return;
 			}
 
 			String searchName = inputStr.trim();
-			// ƒ{ƒ^ƒ“‚ÌF‚ğ•ÏX
+			// ãƒœã‚¿ãƒ³ã®è‰²ã‚’å¤‰æ›´
 			JButton btn = btnName;
 			Color defColor = btn.getBackground();
 			btn.setBackground(Color.PINK);
 			btn.update(btn.getGraphics());
 
-			// ƒ}ƒEƒXƒJ[ƒ\ƒ‹‚ğ»Œv‚É
+			// ãƒã‚¦ã‚¹ã‚«ãƒ¼ã‚½ãƒ«ã‚’ç ‚æ™‚è¨ˆã«
 			SearchPage.this.setCursor(waitCursor);
 			
-			// ƒvƒƒbƒgƒyƒCƒ“‰Šú‰»
+			// ãƒ—ãƒ­ãƒƒãƒˆãƒšã‚¤ãƒ³åˆæœŸåŒ–
 			queryPlot.clear();
 			compPlot.clear();
 			resultPlot.clear();
@@ -3481,10 +3481,10 @@ public class SearchPage extends JApplet {
 			compPlot.setPeaks(null, 1);
 			resultPlot.setPeaks(null, 0);
 
-			// PackageView‰Šú‰»
+			// PackageViewåˆæœŸåŒ–
 			pkgView.initAllRecInfo();
 			
-			// DB Hitƒ^ƒuŠÖ˜A‰Šú‰»
+			// DB Hitã‚¿ãƒ–é–¢é€£åˆæœŸåŒ–
 			if (resultTabPane.getTabCount() > 0) {
 				resultTabPane.setSelectedIndex(0);
 			}
@@ -3493,7 +3493,7 @@ public class SearchPage extends JApplet {
 			hitLabel.setText(" ");
 
 			if (searchName.equals("")) {
-				// DBƒ^ƒuŠÖ˜A‰Šú‰»
+				// DBã‚¿ãƒ–é–¢é€£åˆæœŸåŒ–
 				DefaultTableModel dataModel = (DefaultTableModel) querySorter.getTableModel();
 				dataModel.setRowCount(0);
 				SearchPage.this.setCursor(Cursor.getDefaultCursor());
@@ -3503,46 +3503,46 @@ public class SearchPage extends JApplet {
 
 			saveSearchName = searchName;
 
-			// ƒXƒyƒNƒgƒ‹æ“¾
+			// ã‚¹ãƒšã‚¯ãƒˆãƒ«å–å¾—
 			getSpectrumForQuery(searchName);
 
-			// ƒ}ƒEƒXƒJ[ƒ\ƒ‹‚ğƒfƒtƒHƒ‹ƒgƒJ[ƒ\ƒ‹‚É
+			// ãƒã‚¦ã‚¹ã‚«ãƒ¼ã‚½ãƒ«ã‚’ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã‚«ãƒ¼ã‚½ãƒ«ã«
 			SearchPage.this.setCursor(Cursor.getDefaultCursor());
 
-			// ƒ{ƒ^ƒ“‚ÌF‚ğ–ß‚·
+			// ãƒœã‚¿ãƒ³ã®è‰²ã‚’æˆ»ã™
 			btn.setBackground(defColor);
 		}
 	}
 
 	/**
-	 * Allƒ{ƒ^ƒ“ƒŠƒXƒi[ƒNƒ‰ƒX
-	 * SerarchPage‚ÌƒCƒ“ƒi[ƒNƒ‰ƒXB
+	 * Allãƒœã‚¿ãƒ³ãƒªã‚¹ãƒŠãƒ¼ã‚¯ãƒ©ã‚¹
+	 * SerarchPageã®ã‚¤ãƒ³ãƒŠãƒ¼ã‚¯ãƒ©ã‚¹ã€‚
 	 */
 	class BtnAllListener implements ActionListener {
 		
 		/**
-		 * ƒAƒNƒVƒ‡ƒ“ƒCƒxƒ“ƒg
+		 * ã‚¢ã‚¯ã‚·ãƒ§ãƒ³ã‚¤ãƒ™ãƒ³ãƒˆ
 		 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 		 */
 		public void actionPerformed(ActionEvent e) {
-			// ƒ{ƒ^ƒ“‚ÌF‚ğ•ÏX
+			// ãƒœã‚¿ãƒ³ã®è‰²ã‚’å¤‰æ›´
 			JButton btn = btnAll;
 			Color defColor = btn.getBackground();
 			btn.setBackground(Color.PINK);
 			btn.update(btn.getGraphics());
 
-			// ƒ}ƒEƒXƒJ[ƒ\ƒ‹‚ğ»Œv‚É
+			// ãƒã‚¦ã‚¹ã‚«ãƒ¼ã‚½ãƒ«ã‚’ç ‚æ™‚è¨ˆã«
 			SearchPage.this.setCursor(waitCursor);
 
-			// –¢ŒŸõ‚Ìê‡
+			// æœªæ¤œç´¢ã®å ´åˆ
 			if (nameListAll.size() == 0) {
-				// ƒXƒyƒNƒgƒ‹æ“¾
+				// ã‚¹ãƒšã‚¯ãƒˆãƒ«å–å¾—
 				getSpectrumForQuery("");
 				nameListAll = new ArrayList(nameList);
 			}
-			// ŠùŒŸõ‚Ìê‡
+			// æ—¢æ¤œç´¢ã®å ´åˆ
 			else {
-				// ƒvƒƒbƒgƒyƒCƒ“‰Šú‰»
+				// ãƒ—ãƒ­ãƒƒãƒˆãƒšã‚¤ãƒ³åˆæœŸåŒ–
 				queryPlot.clear();
 				compPlot.clear();
 				resultPlot.clear();
@@ -3550,7 +3550,7 @@ public class SearchPage extends JApplet {
 				compPlot.setPeaks(null, 1);
 				resultPlot.setPeaks(null, 0);
 
-				// PackageView‰Šú‰»
+				// PackageViewåˆæœŸåŒ–
 				pkgView.initAllRecInfo();
 				
 				DefaultTableModel dm = (DefaultTableModel)resultSorter.getTableModel();
@@ -3573,32 +3573,32 @@ public class SearchPage extends JApplet {
 					ex.printStackTrace();
 				}
 			}
-			// ƒ}ƒEƒXƒJ[ƒ\ƒ‹‚ğƒfƒtƒHƒ‹ƒgƒJ[ƒ\ƒ‹‚É
+			// ãƒã‚¦ã‚¹ã‚«ãƒ¼ã‚½ãƒ«ã‚’ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã‚«ãƒ¼ã‚½ãƒ«ã«
 			SearchPage.this.setCursor(Cursor.getDefaultCursor());
 
-			// ƒ{ƒ^ƒ“‚ÌF‚ğ–ß‚·
+			// ãƒœã‚¿ãƒ³ã®è‰²ã‚’æˆ»ã™
 			btn.setBackground(defColor);
 		}
 	}
 
 	/**
-	 * ƒ|ƒbƒvƒAƒbƒvƒƒjƒ…[Show RecordƒŠƒXƒi[ƒNƒ‰ƒX
-	 * SerarchPage‚ÌƒCƒ“ƒi[ƒNƒ‰ƒXB
+	 * ãƒãƒƒãƒ—ã‚¢ãƒƒãƒ—ãƒ¡ãƒ‹ãƒ¥ãƒ¼Show Recordãƒªã‚¹ãƒŠãƒ¼ã‚¯ãƒ©ã‚¹
+	 * SerarchPageã®ã‚¤ãƒ³ãƒŠãƒ¼ã‚¯ãƒ©ã‚¹ã€‚
 	 */
 	class PopupShowRecordListener implements ActionListener {
 		
-		private JTable eventTbl;	// ƒCƒxƒ“ƒg”­¶ƒe[ƒuƒ‹
+		private JTable eventTbl;	// ã‚¤ãƒ™ãƒ³ãƒˆç™ºç”Ÿãƒ†ãƒ¼ãƒ–ãƒ«
 		
 		/**
-		 * ƒRƒ“ƒXƒgƒ‰ƒNƒ^
-		 * @param eventTbl ƒCƒxƒ“ƒg‚ª”­¶‚µ‚½ƒe[ƒuƒ‹
+		 * ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
+		 * @param eventTbl ã‚¤ãƒ™ãƒ³ãƒˆãŒç™ºç”Ÿã—ãŸãƒ†ãƒ¼ãƒ–ãƒ«
 		 */
 		public PopupShowRecordListener(JTable eventTbl) {
 			this.eventTbl = eventTbl;
 		}
 		
 		/**
-		 * ƒAƒNƒVƒ‡ƒ“ƒCƒxƒ“ƒg
+		 * ã‚¢ã‚¯ã‚·ãƒ§ãƒ³ã‚¤ãƒ™ãƒ³ãƒˆ
 		 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 		 */
 		public void actionPerformed(ActionEvent e) {
@@ -3607,31 +3607,31 @@ public class SearchPage extends JApplet {
 	}
 
 	/**
-	 * ƒ|ƒbƒvƒAƒbƒvƒƒjƒ…[Multiple DisplayƒŠƒXƒi[ƒNƒ‰ƒX
-	 * SerarchPage‚ÌƒCƒ“ƒi[ƒNƒ‰ƒXB
+	 * ãƒãƒƒãƒ—ã‚¢ãƒƒãƒ—ãƒ¡ãƒ‹ãƒ¥ãƒ¼Multiple Displayãƒªã‚¹ãƒŠãƒ¼ã‚¯ãƒ©ã‚¹
+	 * SerarchPageã®ã‚¤ãƒ³ãƒŠãƒ¼ã‚¯ãƒ©ã‚¹ã€‚
 	 */
 	class PopupMultipleDisplayListener implements ActionListener {
 		
-		private JTable eventTbl;	// ƒCƒxƒ“ƒg”­¶ƒe[ƒuƒ‹
+		private JTable eventTbl;	// ã‚¤ãƒ™ãƒ³ãƒˆç™ºç”Ÿãƒ†ãƒ¼ãƒ–ãƒ«
 		
 		/**
-		 * ƒRƒ“ƒXƒgƒ‰ƒNƒ^
-		 * @param eventTbl ƒCƒxƒ“ƒg‚ª”­¶‚µ‚½ƒe[ƒuƒ‹
+		 * ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
+		 * @param eventTbl ã‚¤ãƒ™ãƒ³ãƒˆãŒç™ºç”Ÿã—ãŸãƒ†ãƒ¼ãƒ–ãƒ«
 		 */
 		public PopupMultipleDisplayListener(JTable eventTbl) {
 			this.eventTbl = eventTbl;
 		}
 		
 		/**
-		 * ƒAƒNƒVƒ‡ƒ“ƒCƒxƒ“ƒg
+		 * ã‚¢ã‚¯ã‚·ãƒ§ãƒ³ã‚¤ãƒ™ãƒ³ãƒˆ
 		 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 		 */
 		public void actionPerformed(ActionEvent e) {
 
-			// ‘I‘ğ‚³‚ê‚½s‚ÌƒCƒ“ƒfƒbƒNƒX‚ğæ“¾
+			// é¸æŠã•ã‚ŒãŸè¡Œã®ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã‚’å–å¾—
 			int selRows[] = eventTbl.getSelectedRows();
 
-			// CGIŒÄ‚Ño‚µ
+			// CGIå‘¼ã³å‡ºã—
 			try {
 				String reqUrl = baseUrl + "jsp/Display.jsp";
 				String param = "";
@@ -3684,9 +3684,9 @@ public class SearchPage extends JApplet {
 	}
 	
 	/**
-	 * ƒs[ƒNƒRƒ“ƒpƒŒ[ƒ^
-	 * SearchPage‚ÌƒCƒ“ƒi[ƒNƒ‰ƒXB
-	 * m/z‚Ì¸‡ƒ\[ƒg‚ğs‚¤B
+	 * ãƒ”ãƒ¼ã‚¯ã‚³ãƒ³ãƒ‘ãƒ¬ãƒ¼ã‚¿
+	 * SearchPageã®ã‚¤ãƒ³ãƒŠãƒ¼ã‚¯ãƒ©ã‚¹ã€‚
+	 * m/zã®æ˜‡é †ã‚½ãƒ¼ãƒˆã‚’è¡Œã†ã€‚
 	 */
 	class PeakComparator implements Comparator<Object> {
 		public int compare(Object o1, Object o2) {
