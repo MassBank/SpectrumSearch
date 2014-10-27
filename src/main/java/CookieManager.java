@@ -18,7 +18,7 @@
  *
  *******************************************************************************
  *
- * Cookieî•ñŠÇ— ƒNƒ‰ƒX
+ * Cookieæƒ…å ±ç®¡ç† ã‚¯ãƒ©ã‚¹
  *
  * ver 1.0.5 2011.12.16
  *
@@ -27,239 +27,240 @@
 import java.applet.Applet;
 import java.util.ArrayList;
 
-import netscape.javascript.JSException;
-import netscape.javascript.JSObject;
-import netscape.javascript.JSUtil;
+//import netscape.javascript.JSException;
+//import netscape.javascript.JSObject;
+//import netscape.javascript.JSUtil;
 
 /**
- * Cookieî•ñŠÇ— ƒNƒ‰ƒX
+ * Cookieæƒ…å ±ç®¡ç† ã‚¯ãƒ©ã‚¹
  * 
- * Cookieî•ñ‚ÍŸ‚Ì‚æ‚¤‚Éæ“¾‚Å‚«‚é
- * [Cookie–¼]=[’l]; [‚»‚Ì‘¼ƒL[]=[‚»‚Ì‘¼‚Ì’l];c
- * [Cookie–¼]‚É‚Í“K“–‚È–¼ÌA[’l]‚Í[[ƒL[]=[’l],[ƒL[]=[’l],c;]‚Ì‚æ‚¤‚ÉŠi”[
- * ‚³‚ê‚Ä‚¢‚é‚±‚Æ‚ğ‘O’ñ‚Æ‚µ‚Ä‚¢‚é
+ * Cookieæƒ…å ±ã¯æ¬¡ã®ã‚ˆã†ã«å–å¾—ã§ãã‚‹
+ * [Cookieå]=[å€¤]; [ãã®ä»–ã‚­ãƒ¼]=[ãã®ä»–ã®å€¤];â€¦
+ * [Cookieå]ã«ã¯é©å½“ãªåç§°ã€[å€¤]ã¯[[ã‚­ãƒ¼]=[å€¤],[ã‚­ãƒ¼]=[å€¤],â€¦;]ã®ã‚ˆã†ã«æ ¼ç´
+ * ã•ã‚Œã¦ã„ã‚‹ã“ã¨ã‚’å‰æã¨ã—ã¦ã„ã‚‹
  * 
- * Cookieî•ñ‚Ì—áF
+ * Cookieæƒ…å ±ã®ä¾‹ï¼š
  *   SearchApplet=INST=CI-MS,FI-MS;ION=Positive;
  */
 public class CookieManager {
 
-	private boolean isCookie = false;		// ƒNƒbƒL[—LŒøƒtƒ‰ƒO
-	private JSObject win;					// Javascript‚ÌwindowƒIƒuƒWƒFƒNƒg
-    private JSObject doc;					// Javascript‚ÌdocumentƒIƒuƒWƒFƒNƒg
-	private String cookieName = "Applet";	// ‘ÎÛCookie–¼iƒfƒtƒHƒ‹ƒgAppletj
-	private int expDate = 30;				// —LŒøŠúŒÀ“ú”iƒfƒtƒHƒ‹ƒg30“új
+	private boolean isCookie = false;		// ã‚¯ãƒƒã‚­ãƒ¼æœ‰åŠ¹ãƒ•ãƒ©ã‚°
+//	private JSObject win;					// Javascriptã®windowã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ
+//    private JSObject doc;					// Javascriptã®documentã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ
+	private String cookieName = "Applet";	// å¯¾è±¡Cookieåï¼ˆãƒ‡ãƒ•ã‚©ãƒ«ãƒˆAppletï¼‰
+	private int expDate = 30;				// æœ‰åŠ¹æœŸé™æ—¥æ•°ï¼ˆãƒ‡ãƒ•ã‚©ãƒ«ãƒˆ30æ—¥ï¼‰
 	
 	/**
-	 * ƒfƒtƒHƒ‹ƒgƒRƒ“ƒXƒgƒ‰ƒNƒ^
-	 * @deprecated g—p•s‰Â
+	 * ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
+	 * @deprecated ä½¿ç”¨ä¸å¯
 	 */
 	private CookieManager() {
 	}
 	
 	/**
-	 * ƒRƒ“ƒXƒgƒ‰ƒNƒ^
-	 * ‘ÎÛCookie–¼‚Æ—LŒøŠúŒÀ“ú”‚ğw’è‚·‚éƒRƒ“ƒXƒgƒ‰ƒNƒ^
-	 * Javascript‚ÌWindowƒIƒuƒWƒFƒNƒg‚ªæ“¾‚Å‚«‚È‚¢ê‡‚Í
-	 * ‚±‚ÌƒNƒ‰ƒX‚ğg—p•s‰Â‚Æ‚·‚éƒtƒ‰ƒO‚ğİ’è‚·‚é
-	 * ƒuƒ‰ƒEƒUƒEƒBƒ“ƒhƒEƒIƒuƒWƒFƒNƒg‚ğæ“¾‚Å‚«‚È‚¢ê‡‚Í—áŠO‚ğo—Í‚·‚é
-	 * @param applet ƒAƒvƒŒƒbƒg
-	 * @param name ‘ÎÛCookie–¼
-	 * @param expDate —LŒøŠúŒÀ“ú”
-	 * @param isCookie Cookie—LŒøƒtƒ‰ƒO
+	 * ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
+	 * å¯¾è±¡Cookieåã¨æœ‰åŠ¹æœŸé™æ—¥æ•°ã‚’æŒ‡å®šã™ã‚‹ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
+	 * Javascriptã®Windowã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆãŒå–å¾—ã§ããªã„å ´åˆã¯
+	 * ã“ã®ã‚¯ãƒ©ã‚¹ã‚’ä½¿ç”¨ä¸å¯ã¨ã™ã‚‹ãƒ•ãƒ©ã‚°ã‚’è¨­å®šã™ã‚‹
+	 * ãƒ–ãƒ©ã‚¦ã‚¶ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’å–å¾—ã§ããªã„å ´åˆã¯ä¾‹å¤–ã‚’å‡ºåŠ›ã™ã‚‹
+	 * @param applet ã‚¢ãƒ—ãƒ¬ãƒƒãƒˆ
+	 * @param name å¯¾è±¡Cookieå
+	 * @param expDate æœ‰åŠ¹æœŸé™æ—¥æ•°
+	 * @param isCookie Cookieæœ‰åŠ¹ãƒ•ãƒ©ã‚°
 	 */
 	public CookieManager(Applet applet, String name, int expDate, boolean isCookie) {
-		try {
-			this.win = JSObject.getWindow(applet);
-			this.doc = (JSObject)win.getMember("document");
-			
-			if (!name.trim().equals("")) {
-				this.cookieName = name;
-			}
-			this.expDate = expDate;
-			this.isCookie = isCookie;
-			
-			// Cookie–³Œø‚ÉCookieî•ñ‘Síœ
-			if ( !this.isCookie ) {
-				updateCookie("");
-			}
-		}
-		catch (JSException e) {
-			System.out.println("browser window object doesn't exist.");
-			System.out.println(JSUtil.getStackTrace(e));
-			return;
-		}
+//		try {
+//			this.win = JSObject.getWindow(applet);
+//			this.doc = (JSObject)win.getMember("document");
+//			
+//			if (!name.trim().equals("")) {
+//				this.cookieName = name;
+//			}
+//			this.expDate = expDate;
+//			this.isCookie = isCookie;
+//			
+//			// Cookieç„¡åŠ¹æ™‚ã«Cookieæƒ…å ±å…¨å‰Šé™¤
+//			if ( !this.isCookie ) {
+//				updateCookie("");
+//			}
+//		}
+//		catch (JSException e) {
+//			System.out.println("browser window object doesn't exist.");
+//			System.out.println(JSUtil.getStackTrace(e));
+//			return;
+//		}
 	}
 	
 	/**
-	 * Cookieî•ñİ’è
-	 * ‘ÎÛ‚Æ‚È‚éCookieî•ñ‚ÉƒL[‚Æ’l‚ÌƒZƒbƒg‚ğİ’è‚·‚é
-	 * Šù‚ÉƒL[‚Æ’l‚ÌƒZƒbƒg‚ªCookieî•ñ‚É‘¶İ‚·‚éê‡‚Í’uŠ·‚·‚é
-	 * ƒTƒCƒY0‚Ì’lƒŠƒXƒg‚ğˆø”‚Éó‚¯æ‚Á‚½ê‡‚ÍƒL[‚É‘Î‰‚·‚éCookieî•ñ‚Ì‚İíœ‚³‚ê‚é
-	 * @param key ƒL[
-	 * @param valueList ’l‚ÌƒŠƒXƒg
-	 * @return Œ‹‰Ê
+	 * Cookieæƒ…å ±è¨­å®š
+	 * å¯¾è±¡ã¨ãªã‚‹Cookieæƒ…å ±ã«ã‚­ãƒ¼ã¨å€¤ã®ã‚»ãƒƒãƒˆã‚’è¨­å®šã™ã‚‹
+	 * æ—¢ã«ã‚­ãƒ¼ã¨å€¤ã®ã‚»ãƒƒãƒˆãŒCookieæƒ…å ±ã«å­˜åœ¨ã™ã‚‹å ´åˆã¯ç½®æ›ã™ã‚‹
+	 * ã‚µã‚¤ã‚º0ã®å€¤ãƒªã‚¹ãƒˆã‚’å¼•æ•°ã«å—ã‘å–ã£ãŸå ´åˆã¯ã‚­ãƒ¼ã«å¯¾å¿œã™ã‚‹Cookieæƒ…å ±ã®ã¿å‰Šé™¤ã•ã‚Œã‚‹
+	 * @param key ã‚­ãƒ¼
+	 * @param valueList å€¤ã®ãƒªã‚¹ãƒˆ
+	 * @return çµæœ
 	 */
 	public boolean setCookie(String key, ArrayList<String> valueList) {
-		
-		// Cookie–³Œø‚à‚µ‚­‚ÍJavascriptƒIƒuƒWƒFƒNƒg‚ªæ“¾‚Å‚«‚Ä‚¢‚È‚¢ê‡
-		if ( !isCookie || win == null || doc == null ) {
-			return false;
-		}
-		
-		String param = "";
-		String values = getCookie();
-		if (values.trim().length() != 0) {
-			String[] data = values.split(";");
-			for (int i=0; i<data.length; i++) {
-				// Šù‚ÉCookie‚ª‚ ‚éê‡‚Íkey‚ÉŠY“–‚µ‚È‚¢î•ñ‚Ì‚İ‚ğˆø‚«Œp‚®
-				if (!data[i].split("=")[0].trim().equals(key)) {
-					param += data[i] + ";";
-				}
-			}
-		}
-		
-		if (valueList.size() != 0) {
-			param += key + "=";
-			for (int i=0; i<valueList.size(); i++) {
-				param += valueList.get(i);
-				if (i+1 < valueList.size()) {
-					param += ",";
-				}
-			}
-			param += ";";
-		}
-		
-		// Cookieî•ñXV
-		return updateCookie(param);
+	  return false;
+//		
+//		// Cookieç„¡åŠ¹ã‚‚ã—ãã¯Javascriptã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆãŒå–å¾—ã§ãã¦ã„ãªã„å ´åˆ
+//		if ( !isCookie || win == null || doc == null ) {
+//			return false;
+//		}
+//		
+//		String param = "";
+//		String values = getCookie();
+//		if (values.trim().length() != 0) {
+//			String[] data = values.split(";");
+//			for (int i=0; i<data.length; i++) {
+//				// æ—¢ã«CookieãŒã‚ã‚‹å ´åˆã¯keyã«è©²å½“ã—ãªã„æƒ…å ±ã®ã¿ã‚’å¼•ãç¶™ã
+//				if (!data[i].split("=")[0].trim().equals(key)) {
+//					param += data[i] + ";";
+//				}
+//			}
+//		}
+//		
+//		if (valueList.size() != 0) {
+//			param += key + "=";
+//			for (int i=0; i<valueList.size(); i++) {
+//				param += valueList.get(i);
+//				if (i+1 < valueList.size()) {
+//					param += ",";
+//				}
+//			}
+//			param += ";";
+//		}
+//		
+//		// Cookieæƒ…å ±æ›´æ–°
+//		return updateCookie(param);
 	}
 	
 	/**
-	 * Cookieî•ñXV
-	 * Cookie‚É•Û‘¶‚·‚éƒpƒ‰ƒ[ƒ^‚ª‚È‚¢ê‡‚ÍCookie‚ğ•Û‚µ‚È‚¢iŠù‚É‚ ‚éê‡‚Ííœj
-	 * @param param Cookie‚É•Û‘¶‚·‚éƒpƒ‰ƒ[ƒ^
-	 * @return Œ‹‰Ê
+	 * Cookieæƒ…å ±æ›´æ–°
+	 * Cookieã«ä¿å­˜ã™ã‚‹ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ãŒãªã„å ´åˆã¯Cookieã‚’ä¿æŒã—ãªã„ï¼ˆæ—¢ã«ã‚ã‚‹å ´åˆã¯å‰Šé™¤ï¼‰
+	 * @param param Cookieã«ä¿å­˜ã™ã‚‹ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿
+	 * @return çµæœ
 	 */
 	private boolean updateCookie(String param) {
-		try {
-			// Œ»İ‚Ü‚Å‚ÌŒo‰ßŠÔæ“¾iƒ~ƒŠ•bj
-			JSObject date = (JSObject)win.eval("new Date()");
-			Double time = Double.parseDouble(String.valueOf(date.call("getTime", null)));
-			
-			// —LŒøŠúŒÀ‚ğƒOƒŠƒjƒbƒW•W€‚ÅZo
-			if ( !param.equals("") ) {
-				time += ((double)expDate * 24d * 60d * 60d * 1000d);
-			} else {
-				time -= (double)expDate;
-			}
-			try {
-				time = Double.parseDouble(String.valueOf(date.call("setTime", new Object[]{time})));
-			}
-			catch (Exception e) {
-				time = Double.parseDouble(String.valueOf(date.eval("setTime(" + String.valueOf(time) + ")")));
-			}
-			String gmtTime = String.valueOf(date.call("toGMTString", null));
-			
-			// Cookieİ’èî•ñİ’èˆ—
-			String paramVal = cookieName + "=" + win.call("escape", new Object[]{param});
-			String timeVal = "expires=" + gmtTime;
-			String cookieVal = paramVal + "; " + timeVal;
-			doc.setMember("cookie", cookieVal);
-		}
-		catch (JSException jse) {
-			System.out.println("Unsupported javascript was used.");
-			System.out.println(JSUtil.getStackTrace(jse));
-			return false;
-		}
+//		try {
+//			// ç¾åœ¨ã¾ã§ã®çµŒéæ™‚é–“å–å¾—ï¼ˆãƒŸãƒªç§’ï¼‰
+//			JSObject date = (JSObject)win.eval("new Date()");
+//			Double time = Double.parseDouble(String.valueOf(date.call("getTime", null)));
+//			
+//			// æœ‰åŠ¹æœŸé™ã‚’ã‚°ãƒªãƒ‹ãƒƒã‚¸æ¨™æº–æ™‚ã§ç®—å‡º
+//			if ( !param.equals("") ) {
+//				time += ((double)expDate * 24d * 60d * 60d * 1000d);
+//			} else {
+//				time -= (double)expDate;
+//			}
+//			try {
+//				time = Double.parseDouble(String.valueOf(date.call("setTime", new Object[]{time})));
+//			}
+//			catch (Exception e) {
+//				time = Double.parseDouble(String.valueOf(date.eval("setTime(" + String.valueOf(time) + ")")));
+//			}
+//			String gmtTime = String.valueOf(date.call("toGMTString", null));
+//			
+//			// Cookieè¨­å®šæƒ…å ±è¨­å®šå‡¦ç†
+//			String paramVal = cookieName + "=" + win.call("escape", new Object[]{param});
+//			String timeVal = "expires=" + gmtTime;
+//			String cookieVal = paramVal + "; " + timeVal;
+//			doc.setMember("cookie", cookieVal);
+//		}
+//		catch (JSException jse) {
+//			System.out.println("Unsupported javascript was used.");
+//			System.out.println(JSUtil.getStackTrace(jse));
+//			return false;
+//		}
 		return true;
 	}
 	
 	/**
-	 * Cookieî•ñæ“¾
-	 * ‘ÎÛ‚Æ‚È‚éCookieî•ñ‚ğ‘S‚Äæ“¾‚·‚é
-	 * @return Cookieî•ñ
+	 * Cookieæƒ…å ±å–å¾—
+	 * å¯¾è±¡ã¨ãªã‚‹Cookieæƒ…å ±ã‚’å…¨ã¦å–å¾—ã™ã‚‹
+	 * @return Cookieæƒ…å ±
 	 */
 	private String getCookie() {
 		
-		String values = "";	// ‘ÎÛCookieî•ñ
-		try {
-			String tmpAllCookie = (String)doc.getMember("cookie");
-			if (tmpAllCookie == null) {
-				try {
-					tmpAllCookie = (String)doc.eval("cookie");
-				}
-				catch (JSException jse) {				
-				}
-				if (tmpAllCookie == null) {
-					return values;
-				}
-			}
-			String[] allCookie = tmpAllCookie.split(";");
-			String[] tmp;
-			for (int i=0; i<allCookie.length; i++) {
-				tmp = allCookie[i].split("=");
-				// ŠY“–‚·‚éCookieî•ñ‚Ìæ“¾
-				if (tmp[0].trim().equals(cookieName)) {
-					if (tmp.length == 2) {
-						try {
-							values = String.valueOf(win.eval("unescape('" +  tmp[1].trim() +"')"));
-						}
-						catch (JSException e) {
-							values = String.valueOf(win.call("unescape", new Object[]{tmp[1].trim()}));
-						}
-					}
-					break;
-				}
-			}
-		}
-		catch (JSException e) {
-			System.out.println(JSUtil.getStackTrace(e));
-			values = "";
-		}
+		String values = "";	// å¯¾è±¡Cookieæƒ…å ±
+//		try {
+//			String tmpAllCookie = (String)doc.getMember("cookie");
+//			if (tmpAllCookie == null) {
+//				try {
+//					tmpAllCookie = (String)doc.eval("cookie");
+//				}
+//				catch (JSException jse) {				
+//				}
+//				if (tmpAllCookie == null) {
+//					return values;
+//				}
+//			}
+//			String[] allCookie = tmpAllCookie.split(";");
+//			String[] tmp;
+//			for (int i=0; i<allCookie.length; i++) {
+//				tmp = allCookie[i].split("=");
+//				// è©²å½“ã™ã‚‹Cookieæƒ…å ±ã®å–å¾—
+//				if (tmp[0].trim().equals(cookieName)) {
+//					if (tmp.length == 2) {
+//						try {
+//							values = String.valueOf(win.eval("unescape('" +  tmp[1].trim() +"')"));
+//						}
+//						catch (JSException e) {
+//							values = String.valueOf(win.call("unescape", new Object[]{tmp[1].trim()}));
+//						}
+//					}
+//					break;
+//				}
+//			}
+//		}
+//		catch (JSException e) {
+//			System.out.println(JSUtil.getStackTrace(e));
+//			values = "";
+//		}
 		
 		return values;
 	}
 	
 	/**
-	 * Cookieî•ñæ“¾iƒL[w’èj
-	 * ‘ÎÛ‚Æ‚È‚éCookieî•ñ‚©‚çƒL[‚ÉŠY“–‚·‚é’l‚Ì‚İ‚ğæ“¾‚·‚é
-	 * @param key æ“¾‚µ‚½‚¢Cookieî•ñ‚ÌƒL[
-	 * @return Cookieî•ñ
+	 * Cookieæƒ…å ±å–å¾—ï¼ˆã‚­ãƒ¼æŒ‡å®šï¼‰
+	 * å¯¾è±¡ã¨ãªã‚‹Cookieæƒ…å ±ã‹ã‚‰ã‚­ãƒ¼ã«è©²å½“ã™ã‚‹å€¤ã®ã¿ã‚’å–å¾—ã™ã‚‹
+	 * @param key å–å¾—ã—ãŸã„Cookieæƒ…å ±ã®ã‚­ãƒ¼
+	 * @return Cookieæƒ…å ±
 	 */
 	public ArrayList<String> getCookie(String key) {
 		
 		ArrayList<String> valueList = new ArrayList<String>();
-		
-		// Cookie–³Œø‚à‚µ‚­‚ÍJavascriptƒIƒuƒWƒFƒNƒg‚ªæ“¾‚Å‚«‚Ä‚¢‚È‚¢ê‡
-		if ( !isCookie || win == null || doc == null ) {
-			return valueList;
-		}
-		
-		// ‘ÎÛCookieî•ñæ“¾
-		String values = getCookie();
-		
-		
-		// ƒL[‚É‘Î‚·‚é’l‚Ìæ“¾ˆ—
-		String val = "";
-		if (values.trim().length() != 0) {
-			String[] data = values.split(";");
-			String[] item;
-			for (int i=0; i<data.length; i++) {
-				item = data[i].split("=");
-				if (item[0].trim().equals(key)) {
-					if (item.length == 2) {
-						val = item[1].trim();
-					}
-					break;
-				}
-			}
-		}
-		String[] tmp = val.split(",");
-		for (int i=0; i<tmp.length; i++) {
-			if (!tmp[i].equals("")) {
-				valueList.add(tmp[i]);
-			}
-		}
+//		
+//		// Cookieç„¡åŠ¹ã‚‚ã—ãã¯Javascriptã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆãŒå–å¾—ã§ãã¦ã„ãªã„å ´åˆ
+//		if ( !isCookie || win == null || doc == null ) {
+//			return valueList;
+//		}
+//		
+//		// å¯¾è±¡Cookieæƒ…å ±å–å¾—
+//		String values = getCookie();
+//		
+//		
+//		// ã‚­ãƒ¼ã«å¯¾ã™ã‚‹å€¤ã®å–å¾—å‡¦ç†
+//		String val = "";
+//		if (values.trim().length() != 0) {
+//			String[] data = values.split(";");
+//			String[] item;
+//			for (int i=0; i<data.length; i++) {
+//				item = data[i].split("=");
+//				if (item[0].trim().equals(key)) {
+//					if (item.length == 2) {
+//						val = item[1].trim();
+//					}
+//					break;
+//				}
+//			}
+//		}
+//		String[] tmp = val.split(",");
+//		for (int i=0; i<tmp.length; i++) {
+//			if (!tmp[i].equals("")) {
+//				valueList.add(tmp[i]);
+//			}
+//		}
 		
 		return valueList;
 	}
