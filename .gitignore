@@ -14,3 +14,9 @@ hs_err_pid*
 # for maven structure.
 target/
 
+# for eclipse 
+
+.classpath
+.project
+.settings/
+
