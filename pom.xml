@@ -20,7 +20,7 @@
 		<url>https://github.com/MassBank/SpectrumSearch/issues</url>
 	</issueManagement>
 	<description>Search similar spectra on a peak-to-peak basis.
-Retrieves spectra similar to user’s spectrum in terms of the m/z value. This search is helpful to identify chemical compound by comparing similar spectra on a 3D-display.</description>
+Retrieves spectra similar to user's spectrum in terms of the m/z value. This search is helpful to identify chemical compound by comparing similar spectra on a 3D-display.</description>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
