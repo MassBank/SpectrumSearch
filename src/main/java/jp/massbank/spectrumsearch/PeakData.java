@@ -1,3 +1,4 @@
+package jp.massbank.spectrumsearch;
 /*******************************************************************************
  *
  * Copyright (C) 2008 JST-BIRD MassBank
