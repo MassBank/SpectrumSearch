@@ -18,33 +18,33 @@
  *
  *******************************************************************************
  *
- * ƒs[ƒNî•ñƒf[ƒ^ ƒNƒ‰ƒX
+ * ãƒ”ãƒ¼ã‚¯æƒ…å ±ãƒ‡ãƒ¼ã‚¿ ã‚¯ãƒ©ã‚¹
  *
  * ver 1.0.1 2009.12.15
  *
  ******************************************************************************/
 
 /**
- * ƒs[ƒNî•ñƒf[ƒ^ ƒNƒ‰ƒX
- * ƒXƒyƒNƒgƒ‹’PˆÊ‚ÅPeakî•ñ‚ğ•Û‚·‚éƒf[ƒ^ƒNƒ‰ƒX
+ * ãƒ”ãƒ¼ã‚¯æƒ…å ±ãƒ‡ãƒ¼ã‚¿ ã‚¯ãƒ©ã‚¹
+ * ã‚¹ãƒšã‚¯ãƒˆãƒ«å˜ä½ã§Peakæƒ…å ±ã‚’ä¿æŒã™ã‚‹ãƒ‡ãƒ¼ã‚¿ã‚¯ãƒ©ã‚¹
  */
 public class PeakData {
 	
-	/** ƒs[ƒN” */
+	/** ãƒ”ãƒ¼ã‚¯æ•° */
 	private int peakNum = 0;
 	
 	/** m/z */
 	private double[] mz;
 
-	/** ‹­“x */
+	/** å¼·åº¦ */
 	private int[] intensity;
 
-	/** ƒs[ƒN‘I‘ğƒtƒ‰ƒO */
+	/** ãƒ”ãƒ¼ã‚¯é¸æŠãƒ•ãƒ©ã‚° */
 	private boolean[] selectPeakFlag;
 
 	/**
-	 * ƒRƒ“ƒXƒgƒ‰ƒNƒ^
-	 * @param data m/z‚Æ‹­“x‚Ìƒ^ƒu‹æØ‚è•¶š—ñ‚ğŠi”[‚µ‚½”z—ñ
+	 * ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
+	 * @param data m/zã¨å¼·åº¦ã®ã‚¿ãƒ–åŒºåˆ‡ã‚Šæ–‡å­—åˆ—ã‚’æ ¼ç´ã—ãŸé…åˆ—
 	 */
 	public PeakData(String[] data) {
 		clear();
@@ -67,7 +67,7 @@ public class PeakData {
 	}
 
 	/**
-	 * ‰Šú‰»
+	 * åˆæœŸåŒ–
 	 */
 	public void clear() {
 		mz = null;
@@ -76,10 +76,10 @@ public class PeakData {
 	}
 	
 	/**
-	 * Å‘å‹­“xæ“¾
-	 * @param start ƒ}ƒXƒŒƒ“ƒW(m/z)ŠJn’l
-	 * @param end ƒ}ƒXƒŒƒ“ƒW(m/z)I—¹’l
-	 * @return ƒŒƒR[ƒh“à‚Ìw’è‚³‚ê‚½ƒ}ƒXƒŒƒ“ƒW(m/z)‚ÌŠÔ‚ÅÅ‘å‚Ì‹­“x
+	 * æœ€å¤§å¼·åº¦å–å¾—
+	 * @param start ãƒã‚¹ãƒ¬ãƒ³ã‚¸(m/z)é–‹å§‹å€¤
+	 * @param end ãƒã‚¹ãƒ¬ãƒ³ã‚¸(m/z)çµ‚äº†å€¤
+	 * @return ãƒ¬ã‚³ãƒ¼ãƒ‰å†…ã®æŒ‡å®šã•ã‚ŒãŸãƒã‚¹ãƒ¬ãƒ³ã‚¸(m/z)ã®é–“ã§æœ€å¤§ã®å¼·åº¦
 	 */
 	public int getMaxIntensity(double start, double end) {
 		int max = 0;
@@ -96,8 +96,8 @@ public class PeakData {
 	}
 
 	/**
-	 * m/zæ“¾
-	 * @param index ƒCƒ“ƒfƒbƒNƒX
+	 * m/zå–å¾—
+	 * @param index ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹
 	 * @return m/z
 	 */
 	public double getMz(int index) {
@@ -108,9 +108,9 @@ public class PeakData {
 	}
 
 	/**
-	 * Å‘åm/z‚ÆƒvƒŠƒJ[ƒT[‚Ì”äŠr
-	 * @param ƒvƒŠƒJ[ƒT[
-	 * @return Å‘åm/z‚ÆƒvƒŠƒJ[ƒT[‚Ì‘å‚«‚¢•û
+	 * æœ€å¤§m/zã¨ãƒ—ãƒªã‚«ãƒ¼ã‚µãƒ¼ã®æ¯”è¼ƒ
+	 * @param ãƒ—ãƒªã‚«ãƒ¼ã‚µãƒ¼
+	 * @return æœ€å¤§m/zã¨ãƒ—ãƒªã‚«ãƒ¼ã‚µãƒ¼ã®å¤§ãã„æ–¹
 	 */
 	public double compMaxMzPrecusor(String precursor) {
 		double mzMax;
@@ -130,9 +130,9 @@ public class PeakData {
 	}
 	
 	/**
-	 * ‹­“xæ“¾
-	 * @param index ƒCƒ“ƒfƒbƒNƒX
-	 * @return ‹­“x
+	 * å¼·åº¦å–å¾—
+	 * @param index ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹
+	 * @return å¼·åº¦
 	 */
 	public int getIntensity(int index) {
 		if (index < 0 || index >= peakNum) {
@@ -142,9 +142,9 @@ public class PeakData {
 	}
 
 	/**
-	 * ƒCƒ“ƒfƒbƒNƒXæ“¾
+	 * ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹å–å¾—
 	 * @param mz m/z
-	 * @return ƒCƒ“ƒfƒbƒNƒX
+	 * @return ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹
 	 */
 	public int getIndex(double mz) {
 		int i;
@@ -156,32 +156,32 @@ public class PeakData {
 	}
 	
 	/**
-	 * ƒs[ƒN‘I‘ğó‘Ôæ“¾
-	 * @param index ƒCƒ“ƒfƒbƒNƒX
-	 * @return ‘I‘ğó‘ÔitrueF‘I‘ğÏ, falseF–¢‘I‘ğj
+	 * ãƒ”ãƒ¼ã‚¯é¸æŠçŠ¶æ…‹å–å¾—
+	 * @param index ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹
+	 * @return é¸æŠçŠ¶æ…‹ï¼ˆtrueï¼šé¸æŠæ¸ˆ, falseï¼šæœªé¸æŠï¼‰
 	 */
 	public boolean isSelectPeakFlag(int index) {
 		return selectPeakFlag[index];
 	}
 
 	/**
-	 * ƒs[ƒN‘I‘ğó‘Ôİ’è
-	 * @param index ƒCƒ“ƒfƒbƒNƒX
-	 * @param flag ‘I‘ğó‘ÔitrueF‘I‘ğÏ, falseF–¢‘I‘ğj
+	 * ãƒ”ãƒ¼ã‚¯é¸æŠçŠ¶æ…‹è¨­å®š
+	 * @param index ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹
+	 * @param flag é¸æŠçŠ¶æ…‹ï¼ˆtrueï¼šé¸æŠæ¸ˆ, falseï¼šæœªé¸æŠï¼‰
 	 */
 	public void setSelectPeakFlag(int index, boolean flag) {
 		this.selectPeakFlag[index] = flag;
 	}
 
 	/**
-	 * ƒs[ƒN‘I‘ğó‘Ô‰Šú‰»
+	 * ãƒ”ãƒ¼ã‚¯é¸æŠçŠ¶æ…‹åˆæœŸåŒ–
 	 */
 	public void initSelectPeakFlag() {
 		this.selectPeakFlag = new boolean[peakNum];
 	}
 	/**
-	 * ‘I‘ğó‘Ôƒs[ƒN”æ“¾ 
-	 * @return int ‘I‘ğó‘Ôƒs[ƒN”
+	 * é¸æŠçŠ¶æ…‹ãƒ”ãƒ¼ã‚¯æ•°å–å¾— 
+	 * @return int é¸æŠçŠ¶æ…‹ãƒ”ãƒ¼ã‚¯æ•°
 	 */
 	public int getSelectPeakNum() {
 		int num = 0;
@@ -194,8 +194,8 @@ public class PeakData {
 	}
 
 	/**
-	 * ƒs[ƒN”æ“¾
-	 * @return ƒs[ƒN”
+	 * ãƒ”ãƒ¼ã‚¯æ•°å–å¾—
+	 * @return ãƒ”ãƒ¼ã‚¯æ•°
 	 */
 	public int getPeakNum() {
 		return peakNum;

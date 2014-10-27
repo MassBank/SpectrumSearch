@@ -18,7 +18,7 @@
  *
  *******************************************************************************
  *
- * ˆ—’†ƒƒbƒZ[ƒW•\¦ƒ_ƒCƒAƒƒO
+ * å‡¦ç†ä¸­ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸è¡¨ç¤ºãƒ€ã‚¤ã‚¢ãƒ­ã‚°
  *
  * ver 1.0.0 2010.11.10
  *
@@ -40,18 +40,18 @@ public class ProgressDialog extends JDialog {
 	}
 
 	public void setDialog(String msg) {
-		// ƒEƒCƒ“ƒhƒE‘•ü‚È‚µ
+		// ã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦è£…é£¾ãªã—
 		setUndecorated(true);
 
-		// ƒpƒlƒ‹ƒZƒbƒg
+		// ãƒ‘ãƒãƒ«ã‚»ãƒƒãƒˆ
 		JPanel panel = new JPanel();
-		panel.setBackground(new Color(0x0000FF));	//ƒpƒlƒ‹”wŒiF
+		panel.setBackground(new Color(0x0000FF));	//ãƒ‘ãƒãƒ«èƒŒæ™¯è‰²
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 
-		// ƒ‰ƒxƒ‹ƒZƒbƒg
+		// ãƒ©ãƒ™ãƒ«ã‚»ãƒƒãƒˆ
 		JLabel label = new JLabel();
 		label.setFont(new Font("Dialog", (Font.ITALIC|Font.BOLD), 22));
-		label.setForeground(Color.white);	//ƒtƒHƒ“ƒg‚ÌF
+		label.setForeground(Color.white);	//ãƒ•ã‚©ãƒ³ãƒˆã®è‰²
 		String text = "Searching...";
 		if ( !msg.equals("") ) {
 			text = msg;
@@ -59,16 +59,16 @@ public class ProgressDialog extends JDialog {
 		label.setText(text);
 		panel.add(label);
 
-		// ƒvƒƒOƒŒƒXƒo[ƒZƒbƒg
+		// ãƒ—ãƒ­ã‚°ãƒ¬ã‚¹ãƒãƒ¼ã‚»ãƒƒãƒˆ
 		UIManager.put("ProgressBar.repaintInterval", new Integer(20));
 		UIManager.put("ProgressBar.cycleTime", new Integer(1000));
 		JProgressBar progressBar = new JProgressBar();
-		progressBar.setIndeterminate(true);	// •sŠm’èƒ‚[ƒh
+		progressBar.setIndeterminate(true);	// ä¸ç¢ºå®šãƒ¢ãƒ¼ãƒ‰
 		panel.add(progressBar);
 		add(panel);
 		pack();
 
-		// ‰æ–Ê’†‰›•\¦
+		// ç”»é¢ä¸­å¤®è¡¨ç¤º
 		setLocationRelativeTo(null);
 	}
 }

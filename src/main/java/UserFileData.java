@@ -18,37 +18,37 @@
  *
  *******************************************************************************
  *
- * UserFileƒf[ƒ^ ƒNƒ‰ƒX
+ * UserFileãƒ‡ãƒ¼ã‚¿ ã‚¯ãƒ©ã‚¹
  *
  * ver 1.0.0 2008.12.05
  *
  ******************************************************************************/
 
 /**
- * UserFileƒf[ƒ^ ƒNƒ‰ƒX
+ * UserFileãƒ‡ãƒ¼ã‚¿ ã‚¯ãƒ©ã‚¹
  * 
- * UserFile“Ç‚İ‚İî•ñ‚ğŠi”[
+ * UserFileèª­ã¿è¾¼ã¿æƒ…å ±ã‚’æ ¼ç´
  */
 public class UserFileData {
 
 	/** ID */
 	private String id = "";
 	
-	/** ƒs[ƒNî•ñ */
+	/** ãƒ”ãƒ¼ã‚¯æƒ…å ± */
 	private String[] peaks = new String[]{"0\t0"};
 
-	/** ‰»‡•¨–¼ */
+	/** åŒ–åˆç‰©å */
 	private String name = "";
 
 	/**
-	 * ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+	 * ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	 */
 	public UserFileData() {
 	}
 
 	/**
-	 * ƒs[ƒNî•ñİ’è
-	 * @param ps ƒs[ƒNî•ñ
+	 * ãƒ”ãƒ¼ã‚¯æƒ…å ±è¨­å®š
+	 * @param ps ãƒ”ãƒ¼ã‚¯æƒ…å ±
 	 */
 	public void setPeaks(String[] ps) {
 		if (ps == null) {
@@ -58,31 +58,31 @@ public class UserFileData {
 	}
 
 	/**
-	 * ƒs[ƒNî•ñæ“¾
-	 * @return ƒs[ƒNî•ñ
+	 * ãƒ”ãƒ¼ã‚¯æƒ…å ±å–å¾—
+	 * @return ãƒ”ãƒ¼ã‚¯æƒ…å ±
 	 */
 	public String[] getPeaks() {
 		return peaks;
 	}
 
 	/**
-	 * ‰»‡•¨–¼İ’è
-	 * @param name ‰»‡•¨–¼
+	 * åŒ–åˆç‰©åè¨­å®š
+	 * @param name åŒ–åˆç‰©å
 	 */
 	public void setName(String name) {
 		this.name = name;
 	}
 
 	/**
-	 * ‰»‡•¨–¼æ“¾
-	 * @return ‰»‡•¨–¼
+	 * åŒ–åˆç‰©åå–å¾—
+	 * @return åŒ–åˆç‰©å
 	 */
 	public String getName() {
 		return name;
 	}
 
 	/**
-	 * IDæ“¾
+	 * IDå–å¾—
 	 * @return ID
 	 */
 	public String getId() {
@@ -90,7 +90,7 @@ public class UserFileData {
 	}
 
 	/**
-	 * IDİ’è
+	 * IDè¨­å®š
 	 * @param id ID
 	 */
 	public void setId(String id) {

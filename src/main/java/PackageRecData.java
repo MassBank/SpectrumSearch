@@ -18,7 +18,7 @@
  *
  *******************************************************************************
  *
- * ƒŒƒR[ƒhî•ñŠi”[ ƒNƒ‰ƒX
+ * ãƒ¬ã‚³ãƒ¼ãƒ‰æƒ…å ±æ ¼ç´ ã‚¯ãƒ©ã‚¹
  *
  * ver 1.0.4 2010.09.16
  *
@@ -27,72 +27,72 @@
 import java.awt.Color;
 
 /**
- * ƒŒƒR[ƒhî•ñŠi”[ ƒNƒ‰ƒX
+ * ãƒ¬ã‚³ãƒ¼ãƒ‰æƒ…å ±æ ¼ç´ ã‚¯ãƒ©ã‚¹
  * 
- * ƒXƒyƒNƒgƒ‹ˆêŠ‡•\¦—pƒŒƒR[ƒhî•ñƒf[ƒ^ƒNƒ‰ƒX
- * ƒŒƒR[ƒh’PˆÊ‚ÅPeakî•ñ‚ğ•Û‚·‚éƒf[ƒ^ƒNƒ‰ƒX
+ * ã‚¹ãƒšã‚¯ãƒˆãƒ«ä¸€æ‹¬è¡¨ç¤ºç”¨ãƒ¬ã‚³ãƒ¼ãƒ‰æƒ…å ±ãƒ‡ãƒ¼ã‚¿ã‚¯ãƒ©ã‚¹
+ * ãƒ¬ã‚³ãƒ¼ãƒ‰å˜ä½ã§Peakæƒ…å ±ã‚’ä¿æŒã™ã‚‹ãƒ‡ãƒ¼ã‚¿ã‚¯ãƒ©ã‚¹
  */
 public class PackageRecData {
 	
-	/** ƒs[ƒN•`‰æFí•Ê(•) */
+	/** ãƒ”ãƒ¼ã‚¯æç”»è‰²ç¨®åˆ¥(é»’) */
 	public static final int COLOR_TYPE_BLACK = 0;
 	
-	/** ƒs[ƒN•`‰æFí•Ê(Ô) */
+	/** ãƒ”ãƒ¼ã‚¯æç”»è‰²ç¨®åˆ¥(èµ¤) */
 	public static final int COLOR_TYPE_RED = 1;
 	
-	/** ƒs[ƒN•`‰æFí•Ê(ƒ}ƒ[ƒ“ƒ^) */
+	/** ãƒ”ãƒ¼ã‚¯æç”»è‰²ç¨®åˆ¥(ãƒã‚¼ãƒ³ã‚¿) */
 	public static final int COLOR_TYPE_MAGENTA = 2;
 	
-	/** ƒNƒGƒŠ[ƒŒƒR[ƒhƒtƒ‰ƒO */
+	/** ã‚¯ã‚¨ãƒªãƒ¼ãƒ¬ã‚³ãƒ¼ãƒ‰ãƒ•ãƒ©ã‚° */
 	private boolean queryRecord = false;
 	
-	/** ƒŠƒUƒ‹ƒgƒŒƒR[ƒhƒtƒ‰ƒO */
+	/** ãƒªã‚¶ãƒ«ãƒˆãƒ¬ã‚³ãƒ¼ãƒ‰ãƒ•ãƒ©ã‚° */
 	private boolean resultRecord = false;
 	
-	/** “‡ƒŒƒR[ƒhƒtƒ‰ƒO */
+	/** çµ±åˆãƒ¬ã‚³ãƒ¼ãƒ‰ãƒ•ãƒ©ã‚° */
 	private boolean integRecord = false;
 	
 	/** ID */
 	private String id;
 	
-	/** ‰»‡•¨–¼ */
+	/** åŒ–åˆç‰©å */
 	private String name;
 	
-	/** ƒTƒCƒg */
+	/** ã‚µã‚¤ãƒˆ */
 	private String site;
 	
-	/** ƒs[ƒN”(m/zA‹­“x‚Ì”) */
+	/** ãƒ”ãƒ¼ã‚¯æ•°(m/zã€å¼·åº¦ã®æ•°) */
 	private int peakNum;
 	
 	/** m/z */
 	private double[] mz;
 	
-	/** ‹­“x */
+	/** å¼·åº¦ */
 	private int[] intensity;
 	
-	/** ƒs[ƒN‘I‘ğƒtƒ‰ƒO */
+	/** ãƒ”ãƒ¼ã‚¯é¸æŠãƒ•ãƒ©ã‚° */
 	private boolean[] selectPeak;
 	
-	/** ƒvƒŠƒJ[ƒT[ */
+	/** ãƒ—ãƒªã‚«ãƒ¼ã‚µãƒ¼ */
 	private String precursor;
 	
-	/** ƒs[ƒN•`‰æFí•Ê */
+	/** ãƒ”ãƒ¼ã‚¯æç”»è‰²ç¨®åˆ¥ */
 	private int[] peakColorType;
 	
-	/** ”ñ•\¦ƒtƒ‰ƒO */
+	/** éè¡¨ç¤ºãƒ•ãƒ©ã‚° */
 	private boolean disable = false;
 	
-	/** ƒXƒRƒA */
+	/** ã‚¹ã‚³ã‚¢ */
 	private String score = " -";
 	
 	/**
-	 * ƒfƒtƒHƒ‹ƒgƒRƒ“ƒXƒgƒ‰ƒNƒ^
+	 * ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	 */
 	public PackageRecData() {
 	}
 	
 	/**
-	 * IDæ“¾
+	 * IDå–å¾—
 	 * @return ID
 	 */
 	public String getId() {
@@ -100,7 +100,7 @@ public class PackageRecData {
 	}
 
 	/**
-	 * IDİ’è
+	 * IDè¨­å®š
 	 * @param id ID
 	 */
 	public void setId(String id) {
@@ -108,9 +108,9 @@ public class PackageRecData {
 	}
 
 	/**
-	 * IDİ’è
-	 * @param s ID‚ªŠÜ‚Ü‚ê‚Ä‚¢‚é•¶š—ñ
-	 * @param findStr ID‚ğ’T‚·‚½‚ß‚Ì•¶š—ñ
+	 * IDè¨­å®š
+	 * @param s IDãŒå«ã¾ã‚Œã¦ã„ã‚‹æ–‡å­—åˆ—
+	 * @param findStr IDã‚’æ¢ã™ãŸã‚ã®æ–‡å­—åˆ—
 	 */
 	public void setId(String s, String findStr) {
 		int pos = s.indexOf(findStr);
@@ -125,9 +125,9 @@ public class PackageRecData {
 	}
 
 	/**
-	 * ƒs[ƒN•`‰æFí•Êæ“¾
-	 * @param index ƒCƒ“ƒfƒbƒNƒX
-	 * @return ƒs[ƒN•`‰æF
+	 * ãƒ”ãƒ¼ã‚¯æç”»è‰²ç¨®åˆ¥å–å¾—
+	 * @param index ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹
+	 * @return ãƒ”ãƒ¼ã‚¯æç”»è‰²
 	 */
 	public Color getPeakColor(int index) {
 		Color peakColor = Color.BLACK;
@@ -141,27 +141,27 @@ public class PackageRecData {
 	}
 	
 	/**
-	 * ƒs[ƒN•`‰æFí•Êæ“¾
-	 * @param index ƒCƒ“ƒfƒbƒNƒX
-	 * @return ƒs[ƒN•`‰æFí•Ê
+	 * ãƒ”ãƒ¼ã‚¯æç”»è‰²ç¨®åˆ¥å–å¾—
+	 * @param index ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹
+	 * @return ãƒ”ãƒ¼ã‚¯æç”»è‰²ç¨®åˆ¥
 	 */
 	public int getPeakColorType(int index) {
 		return peakColorType[index];
 	}
 
 	/**
-	 * ƒs[ƒN•`‰æFí•Êİ’è
-	 * @param index ƒCƒ“ƒfƒbƒNƒX
-	 * @param peakColorType ƒs[ƒN•`‰æFí•Ê
+	 * ãƒ”ãƒ¼ã‚¯æç”»è‰²ç¨®åˆ¥è¨­å®š
+	 * @param index ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹
+	 * @param peakColorType ãƒ”ãƒ¼ã‚¯æç”»è‰²ç¨®åˆ¥
 	 */
 	public void setPeakColorType(int index, int peakColorType) {
 		this.peakColorType[index] = peakColorType;
 	}
 	
 	/**
-	 * ƒs[ƒN•`‰æFí•Êİ’è(ˆêŠ‡)
-	 * @param index ƒCƒ“ƒfƒbƒNƒX
-	 * @param peakColorType ƒs[ƒN•`‰æFí•Ê
+	 * ãƒ”ãƒ¼ã‚¯æç”»è‰²ç¨®åˆ¥è¨­å®š(ä¸€æ‹¬)
+	 * @param index ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹
+	 * @param peakColorType ãƒ”ãƒ¼ã‚¯æç”»è‰²ç¨®åˆ¥
 	 */
 	public void setPeakColorType(int peakColorType) {
 		for (int i=0; i<peakNum; i++) { 
@@ -170,8 +170,8 @@ public class PackageRecData {
 	}
 	
 	/**
-	 * ƒqƒbƒgƒs[ƒN”æ“¾
-	 * @return ƒqƒbƒgƒs[ƒN”
+	 * ãƒ’ãƒƒãƒˆãƒ”ãƒ¼ã‚¯æ•°å–å¾—
+	 * @return ãƒ’ãƒƒãƒˆãƒ”ãƒ¼ã‚¯æ•°
 	 */
 	public String getHitPeakNum() {
 		if (!queryRecord) {
@@ -187,8 +187,8 @@ public class PackageRecData {
 	}
 	
 	/**
-	 * ƒ}ƒbƒ`ƒs[ƒN”æ“¾
-	 * @return ƒ}ƒbƒ`ƒs[ƒN”
+	 * ãƒãƒƒãƒãƒ”ãƒ¼ã‚¯æ•°å–å¾—
+	 * @return ãƒãƒƒãƒãƒ”ãƒ¼ã‚¯æ•°
 	 */
 	public String getMatchPeakNum() {
 		if (queryRecord) {
@@ -204,14 +204,14 @@ public class PackageRecData {
 	}
 	
 	/**
-	 * ‹­“xæ“¾
+	 * å¼·åº¦å–å¾—
 	 * @param mz m/z
-	 * @return ‹­“x
+	 * @return å¼·åº¦
 	 */
 	public int getIntensity(String mz) {
-		// ó‚¯æ‚Á‚½m/z‚Ì‹­“x‚ğ•Ô‹p‚·‚é
-		// ƒŒƒR[ƒh’†‚Ém/z‚ª“¯‚¶‚Å‹­“x‚ªˆÙ‚È‚éƒs[ƒN‚ª•¡”‘¶İ‚·‚éê‡‚ÍA
-		// ˆê”ÔÅ‰‚ÉŒ©‚Â‚©‚Á‚½m/z‚É‘Î‰‚·‚é‹­“x‚ğ•Ô‹p
+		// å—ã‘å–ã£ãŸm/zã®å¼·åº¦ã‚’è¿”å´ã™ã‚‹
+		// ãƒ¬ã‚³ãƒ¼ãƒ‰ä¸­ã«m/zãŒåŒã˜ã§å¼·åº¦ãŒç•°ãªã‚‹ãƒ”ãƒ¼ã‚¯ãŒè¤‡æ•°å­˜åœ¨ã™ã‚‹å ´åˆã¯ã€
+		// ä¸€ç•ªæœ€åˆã«è¦‹ã¤ã‹ã£ãŸm/zã«å¯¾å¿œã™ã‚‹å¼·åº¦ã‚’è¿”å´
 		int index = -1;
 		for (int i=0; i<this.mz.length; i++) {
 			if (String.valueOf(this.mz[i]).equals(mz)) {
@@ -223,28 +223,28 @@ public class PackageRecData {
 	}
 	
 	/**
-	 * ‹­“xæ“¾
-	 * @param index ƒCƒ“ƒfƒbƒNƒX
-	 * @return ‹­“x
+	 * å¼·åº¦å–å¾—
+	 * @param index ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹
+	 * @return å¼·åº¦
 	 */
 	public int getIntensity(int index) {
 		return intensity[index];
 	}
 
 	/**
-	 * ‹­“xİ’è
-	 * @param index ƒCƒ“ƒfƒbƒNƒX
-	 * @param intensity ‹­“x
+	 * å¼·åº¦è¨­å®š
+	 * @param index ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹
+	 * @param intensity å¼·åº¦
 	 */
 	public void setIntensity(int index, String intensity) {
 		this.intensity[index] = Integer.parseInt(intensity);
 	}
 
 	/**
-	 * Å‘å‹­“xæ“¾
-	 * @param start ƒ}ƒXƒŒƒ“ƒW(m/z)ŠJn’l
-	 * @param end ƒ}ƒXƒŒƒ“ƒW(m/z)I—¹’l
-	 * @return ƒŒƒR[ƒh“à‚Ìw’è‚³‚ê‚½ƒ}ƒXƒŒƒ“ƒW(m/z)‚ÌŠÔ‚ÅÅ‘å‚Ì‹­“x
+	 * æœ€å¤§å¼·åº¦å–å¾—
+	 * @param start ãƒã‚¹ãƒ¬ãƒ³ã‚¸(m/z)é–‹å§‹å€¤
+	 * @param end ãƒã‚¹ãƒ¬ãƒ³ã‚¸(m/z)çµ‚äº†å€¤
+	 * @return ãƒ¬ã‚³ãƒ¼ãƒ‰å†…ã®æŒ‡å®šã•ã‚ŒãŸãƒã‚¹ãƒ¬ãƒ³ã‚¸(m/z)ã®é–“ã§æœ€å¤§ã®å¼·åº¦
 	 */
 	public int getMaxIntensity(double start, double end) {
 		int max = 0;
@@ -260,12 +260,12 @@ public class PackageRecData {
 	}
 	
 	/**
-	 * m/z‘¶İŠm”F
+	 * m/zå­˜åœ¨ç¢ºèª
 	 * @param mz m/z
-	 * @return Œ‹‰Ê(m/z‚ª‘¶İFtrueAm/z‚ª‘¶İ‚µ‚È‚¢Ffalse)
+	 * @return çµæœ(m/zãŒå­˜åœ¨ï¼štrueã€m/zãŒå­˜åœ¨ã—ãªã„ï¼šfalse)
 	 */
 	public boolean checkMz(String mz) {
-		// ó‚¯æ‚Á‚½m/z‚ªƒŒƒR[ƒh’†‚É‘¶İ‚·‚é‚©‚ğŠm”F
+		// å—ã‘å–ã£ãŸm/zãŒãƒ¬ã‚³ãƒ¼ãƒ‰ä¸­ã«å­˜åœ¨ã™ã‚‹ã‹ã‚’ç¢ºèª
 		for (int i=0; i<this.mz.length; i++) {
 			if (String.valueOf(this.mz[i]).equals(mz)) {
 				return true;
@@ -275,8 +275,8 @@ public class PackageRecData {
 	}
 	
 	/**
-	 * m/zæ“¾
-	 * @param index ƒCƒ“ƒfƒbƒNƒX
+	 * m/zå–å¾—
+	 * @param index ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹
 	 * @return m/z
 	 */
 	public double getMz(int index) {
@@ -284,8 +284,8 @@ public class PackageRecData {
 	}
 
 	/**
-	 * m/zİ’è
-	 * @param index ƒCƒ“ƒfƒbƒNƒX
+	 * m/zè¨­å®š
+	 * @param index ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹
 	 * @param mz m/z
 	 */
 	public void setMz(int index, String mz) {
@@ -293,8 +293,8 @@ public class PackageRecData {
 	}
 	
 	/**
-	 * Å‘åm/z‚ÆƒvƒŠƒJ[ƒT[‚Ì”äŠr
-	 * @return Å‘åm/z‚ÆƒvƒŠƒJ[ƒT[‚Ì‘å‚«‚¢•û
+	 * æœ€å¤§m/zã¨ãƒ—ãƒªã‚«ãƒ¼ã‚µãƒ¼ã®æ¯”è¼ƒ
+	 * @return æœ€å¤§m/zã¨ãƒ—ãƒªã‚«ãƒ¼ã‚µãƒ¼ã®å¤§ãã„æ–¹
 	 */
 	public double compMaxMzPrecusor() {
 		double mzMax;
@@ -314,18 +314,18 @@ public class PackageRecData {
 	}
 	
 	/**
-	 * ƒs[ƒN‘I‘ğƒtƒ‰ƒOæ“¾
-	 * @param index ƒCƒ“ƒfƒbƒNƒX
-	 * @return ƒs[ƒN‘I‘ğƒtƒ‰ƒO
+	 * ãƒ”ãƒ¼ã‚¯é¸æŠãƒ•ãƒ©ã‚°å–å¾—
+	 * @param index ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹
+	 * @return ãƒ”ãƒ¼ã‚¯é¸æŠãƒ•ãƒ©ã‚°
 	 */
 	public boolean isSelectPeak(int index) {
 		return selectPeak[index];
 	}
 
 	/**
-	 * ƒs[ƒN‘I‘ğƒtƒ‰ƒOæ“¾
+	 * ãƒ”ãƒ¼ã‚¯é¸æŠãƒ•ãƒ©ã‚°å–å¾—
 	 * @param mz m/z
-	 * @return ƒs[ƒN‘I‘ğƒtƒ‰ƒO
+	 * @return ãƒ”ãƒ¼ã‚¯é¸æŠãƒ•ãƒ©ã‚°
 	 */
 	public boolean isSelectPeak(String mz) {
 		
@@ -345,18 +345,18 @@ public class PackageRecData {
 	}	
 	
 	/**
-	 * ƒs[ƒN‘I‘ğƒtƒ‰ƒOİ’è
-	 * @param index ƒCƒ“ƒfƒbƒNƒX
-	 * @param selectPeak ƒs[ƒN‘I‘ğƒtƒ‰ƒO
+	 * ãƒ”ãƒ¼ã‚¯é¸æŠãƒ•ãƒ©ã‚°è¨­å®š
+	 * @param index ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹
+	 * @param selectPeak ãƒ”ãƒ¼ã‚¯é¸æŠãƒ•ãƒ©ã‚°
 	 */
 	public void setSelectPeak(int index, boolean selectPeak) {
 		this.selectPeak[index] = selectPeak;
 	}
 	
 	/**
-	 * ƒs[ƒN‘I‘ğƒtƒ‰ƒO•ÏX
+	 * ãƒ”ãƒ¼ã‚¯é¸æŠãƒ•ãƒ©ã‚°å¤‰æ›´
 	 * @param mz m/z
-	 * @param status ƒs[ƒN‘I‘ğƒtƒ‰ƒO
+	 * @param status ãƒ”ãƒ¼ã‚¯é¸æŠãƒ•ãƒ©ã‚°
 	 */
 	public void setSelectPeak(String mz, boolean status) {
 		int index = -1;
@@ -372,32 +372,32 @@ public class PackageRecData {
 	}
 	
 	/**
-	 * ƒs[ƒN‘I‘ğƒtƒ‰ƒO‰Šú‰»
+	 * ãƒ”ãƒ¼ã‚¯é¸æŠãƒ•ãƒ©ã‚°åˆæœŸåŒ–
 	 */
 	public void initSelectPeak() {
 		this.selectPeak = new boolean[peakNum];
 	}
 	
 	/**
-	 * ‰»‡•¨–¼‚Ìæ“¾
-	 * @return ‰»‡•¨–¼
+	 * åŒ–åˆç‰©åã®å–å¾—
+	 * @return åŒ–åˆç‰©å
 	 */
 	public String getName() {
 		return name;
 	}
 
 	/**
-	 * ‰»‡•¨–¼‚Ìİ’è
-	 * @param name ‰»‡•¨–¼
+	 * åŒ–åˆç‰©åã®è¨­å®š
+	 * @param name åŒ–åˆç‰©å
 	 */
 	public void setName(String name) {
 		this.name = name;
 	}
 	
 	/**
-	 * ‰»‡•¨–¼‚Ìİ’è
-	 * @param s ‰»‡•¨–¼‚ªŠÜ‚Ü‚ê‚Ä‚¢‚é•¶š—ñ
-	 * @param findStr ‰»‡•¨–¼‚ğ’T‚·‚½‚ß‚Ì•¶š—ñ
+	 * åŒ–åˆç‰©åã®è¨­å®š
+	 * @param s åŒ–åˆç‰©åãŒå«ã¾ã‚Œã¦ã„ã‚‹æ–‡å­—åˆ—
+	 * @param findStr åŒ–åˆç‰©åã‚’æ¢ã™ãŸã‚ã®æ–‡å­—åˆ—
 	 */
 	public void setName(String s, String findStr) {
 		int pos = s.indexOf(findStr);
@@ -412,48 +412,48 @@ public class PackageRecData {
 	}
 
 	/**
-	 * ƒTƒCƒgæ“¾
-	 * @return ƒTƒCƒg
+	 * ã‚µã‚¤ãƒˆå–å¾—
+	 * @return ã‚µã‚¤ãƒˆ
 	 */
 	public String getSite() {
 		return site;
 	}
 
 	/**
-	 * ƒTƒCƒgİ’è
-	 * @param site ƒTƒCƒg
+	 * ã‚µã‚¤ãƒˆè¨­å®š
+	 * @param site ã‚µã‚¤ãƒˆ
 	 */
 	public void setSite(String site) {
 		this.site = site;
 	}
 	
 	/**
-	 * ƒvƒŠƒJ[ƒT[æ“¾
-	 * @return ƒvƒŠƒJ[ƒT[
+	 * ãƒ—ãƒªã‚«ãƒ¼ã‚µãƒ¼å–å¾—
+	 * @return ãƒ—ãƒªã‚«ãƒ¼ã‚µãƒ¼
 	 */
 	public String getPrecursor() {
 		return precursor;
 	}
 
 	/**
-	 * ƒvƒŠƒJ[ƒT[İ’è
-	 * @param precursor ƒvƒŠƒJ[ƒT[
+	 * ãƒ—ãƒªã‚«ãƒ¼ã‚µãƒ¼è¨­å®š
+	 * @param precursor ãƒ—ãƒªã‚«ãƒ¼ã‚µãƒ¼
 	 */
 	public void setPrecursor(String precursor) {
 		this.precursor = precursor;
 	}
 	
 	/**
-	 * ƒvƒŠƒJ[ƒT[İ’è
-	 * @param s ƒvƒŠƒJ[ƒT[‚ªŠÜ‚Ü‚ê‚Ä‚¢‚é•¶š—ñ
-	 * @param findStr ƒvƒŠƒJ[ƒT[‚ğ’T‚·‚½‚ß‚Ì•¶š—ñ
+	 * ãƒ—ãƒªã‚«ãƒ¼ã‚µãƒ¼è¨­å®š
+	 * @param s ãƒ—ãƒªã‚«ãƒ¼ã‚µãƒ¼ãŒå«ã¾ã‚Œã¦ã„ã‚‹æ–‡å­—åˆ—
+	 * @param findStr ãƒ—ãƒªã‚«ãƒ¼ã‚µãƒ¼ã‚’æ¢ã™ãŸã‚ã®æ–‡å­—åˆ—
 	 */
 	public void setPrecursor(String s, String findStr) {
 		int pos = s.indexOf(findStr);
 		int posNext = 0;
 		if ( pos >= 0 ) { 
 			posNext = s.indexOf( "\t", pos );
-			// IT-MS‘Î‰
+			// IT-MSå¯¾å¿œ
 			String[] precursors = s.substring( pos + findStr.length(), posNext ).split("/");
 			this.precursor = precursors[precursors.length - 1];
 		}
@@ -463,17 +463,17 @@ public class PackageRecData {
 	}
 
 	/**
-	 * ƒs[ƒN”æ“¾
-	 * @return ƒs[ƒN”
+	 * ãƒ”ãƒ¼ã‚¯æ•°å–å¾—
+	 * @return ãƒ”ãƒ¼ã‚¯æ•°
 	 */
 	public int getPeakNum() {
 		return peakNum;
 	}
 
 	/**
-	 * ƒs[ƒN”İ’è
-	 * “¯‚Ém/zA‹­“xAƒs[ƒN‘I‘ğƒtƒ‰ƒO‚Ì”z—ñ‚ğ‰Šú‰»
-	 * @param peakNum ƒs[ƒN”
+	 * ãƒ”ãƒ¼ã‚¯æ•°è¨­å®š
+	 * åŒæ™‚ã«m/zã€å¼·åº¦ã€ãƒ”ãƒ¼ã‚¯é¸æŠãƒ•ãƒ©ã‚°ã®é…åˆ—ã‚’åˆæœŸåŒ–
+	 * @param peakNum ãƒ”ãƒ¼ã‚¯æ•°
 	 */
 	public void setPeakNum(int peakNum) {
 		this.peakNum = peakNum;
@@ -484,10 +484,10 @@ public class PackageRecData {
 	}
 	
 	/**
-	 * w’èm/zƒCƒ“ƒfƒbƒNƒXæ“¾
-	 * w’è‚³‚ê‚½m/zˆÈã‚Ìm/z‚ªŠi”[‚³‚ê‚Ä‚¢‚éƒCƒ“ƒfƒbƒNƒX‚ğæ“¾‚·‚é
-	 * @param target m/zw’è’l
-	 * @return ƒCƒ“ƒfƒbƒNƒX
+	 * æŒ‡å®šm/zã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹å–å¾—
+	 * æŒ‡å®šã•ã‚ŒãŸm/zä»¥ä¸Šã®m/zãŒæ ¼ç´ã•ã‚Œã¦ã„ã‚‹ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã‚’å–å¾—ã™ã‚‹
+	 * @param target m/zæŒ‡å®šå€¤
+	 * @return ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹
 	 */
 	public int getIndex(double target) {
 		int index;
@@ -500,91 +500,91 @@ public class PackageRecData {
 	}
 
 	/**
-	 * ƒNƒGƒŠ[ƒŒƒR[ƒhƒtƒ‰ƒOæ“¾
-	 * @return ƒNƒGƒŠ[ƒŒƒR[ƒhƒtƒ‰ƒO(trueFƒNƒGƒŠ[AfalseFƒNƒGƒŠ[ˆÈŠO)
+	 * ã‚¯ã‚¨ãƒªãƒ¼ãƒ¬ã‚³ãƒ¼ãƒ‰ãƒ•ãƒ©ã‚°å–å¾—
+	 * @return ã‚¯ã‚¨ãƒªãƒ¼ãƒ¬ã‚³ãƒ¼ãƒ‰ãƒ•ãƒ©ã‚°(trueï¼šã‚¯ã‚¨ãƒªãƒ¼ã€falseï¼šã‚¯ã‚¨ãƒªãƒ¼ä»¥å¤–)
 	 */
 	public boolean isQueryRecord() {
 		return queryRecord;
 	}
 
 	/**
-	 * ƒNƒGƒŠ[ƒŒƒR[ƒhƒtƒ‰ƒOİ’è
-	 * @param queryRecord ƒNƒGƒŠ[ƒŒƒR[ƒhƒtƒ‰ƒO(trueFƒNƒGƒŠ[AfalseFƒNƒGƒŠ[ˆÈŠO)
+	 * ã‚¯ã‚¨ãƒªãƒ¼ãƒ¬ã‚³ãƒ¼ãƒ‰ãƒ•ãƒ©ã‚°è¨­å®š
+	 * @param queryRecord ã‚¯ã‚¨ãƒªãƒ¼ãƒ¬ã‚³ãƒ¼ãƒ‰ãƒ•ãƒ©ã‚°(trueï¼šã‚¯ã‚¨ãƒªãƒ¼ã€falseï¼šã‚¯ã‚¨ãƒªãƒ¼ä»¥å¤–)
 	 */
 	public void setQueryRecord(boolean queryRecord) {
 		this.queryRecord = queryRecord;
 	}
 
 	/**
-	 * ƒŠƒUƒ‹ƒgƒŒƒR[ƒhƒtƒ‰ƒOæ“¾
-	 * @return ƒŠƒUƒ‹ƒgƒŒƒR[ƒhƒtƒ‰ƒO(trueFƒŠƒUƒ‹ƒgAfalseFƒŠƒUƒ‹ƒgˆÈŠO)
+	 * ãƒªã‚¶ãƒ«ãƒˆãƒ¬ã‚³ãƒ¼ãƒ‰ãƒ•ãƒ©ã‚°å–å¾—
+	 * @return ãƒªã‚¶ãƒ«ãƒˆãƒ¬ã‚³ãƒ¼ãƒ‰ãƒ•ãƒ©ã‚°(trueï¼šãƒªã‚¶ãƒ«ãƒˆã€falseï¼šãƒªã‚¶ãƒ«ãƒˆä»¥å¤–)
 	 */
 	public boolean isResultRecord() {
 		return resultRecord;
 	}
 
 	/**
-	 * ƒŠƒUƒ‹ƒgƒŒƒR[ƒhƒtƒ‰ƒOİ’è
-	 * @param resultRecord ƒŠƒUƒ‹ƒgƒŒƒR[ƒhƒtƒ‰ƒO(trueFƒŠƒUƒ‹ƒgAfalseFƒŠƒUƒ‹ƒgˆÈŠO)
+	 * ãƒªã‚¶ãƒ«ãƒˆãƒ¬ã‚³ãƒ¼ãƒ‰ãƒ•ãƒ©ã‚°è¨­å®š
+	 * @param resultRecord ãƒªã‚¶ãƒ«ãƒˆãƒ¬ã‚³ãƒ¼ãƒ‰ãƒ•ãƒ©ã‚°(trueï¼šãƒªã‚¶ãƒ«ãƒˆã€falseï¼šãƒªã‚¶ãƒ«ãƒˆä»¥å¤–)
 	 */
 	public void setResultRecord(boolean resultRecord) {
 		this.resultRecord = resultRecord;
 	}
 	
 	/**
-	 * “‡ƒŒƒR[ƒhƒtƒ‰ƒOæ“¾
-	 * @return “‡ƒŒƒR[ƒhƒtƒ‰ƒO(trueF“‡ƒŒƒR[ƒhAfalseFƒ[ƒŒƒR[ƒh)
+	 * çµ±åˆãƒ¬ã‚³ãƒ¼ãƒ‰ãƒ•ãƒ©ã‚°å–å¾—
+	 * @return çµ±åˆãƒ¬ã‚³ãƒ¼ãƒ‰ãƒ•ãƒ©ã‚°(trueï¼šçµ±åˆãƒ¬ã‚³ãƒ¼ãƒ‰ã€falseï¼šãƒ­ãƒ¼ãƒ¬ã‚³ãƒ¼ãƒ‰)
 	 */
 	public boolean isIntegRecord() {
 		return integRecord;
 	}
 
 	/**
-	 * “‡ƒŒƒR[ƒhƒtƒ‰ƒOİ’è
-	 * @param integRecord “‡ƒŒƒR[ƒhƒtƒ‰ƒOitrueF“‡ƒŒƒR[ƒhAfalseF“‡ƒŒƒR[ƒh‚Å‚Í‚È‚¢j
+	 * çµ±åˆãƒ¬ã‚³ãƒ¼ãƒ‰ãƒ•ãƒ©ã‚°è¨­å®š
+	 * @param integRecord çµ±åˆãƒ¬ã‚³ãƒ¼ãƒ‰ãƒ•ãƒ©ã‚°ï¼ˆtrueï¼šçµ±åˆãƒ¬ã‚³ãƒ¼ãƒ‰ã€falseï¼šçµ±åˆãƒ¬ã‚³ãƒ¼ãƒ‰ã§ã¯ãªã„ï¼‰
 	 */
 	public void setIntegRecord(boolean integRecord) {
 		this.integRecord = integRecord;
 	}
 	
 	/**
-	 * “‡ƒŒƒR[ƒhƒtƒ‰ƒOİ’è
-	 * @param title ƒŒƒR[ƒhƒ^ƒCƒgƒ‹
+	 * çµ±åˆãƒ¬ã‚³ãƒ¼ãƒ‰ãƒ•ãƒ©ã‚°è¨­å®š
+	 * @param title ãƒ¬ã‚³ãƒ¼ãƒ‰ã‚¿ã‚¤ãƒˆãƒ«
 	 */
 	public void setIntegRecord(String title) {
-		// RECORD_TITLE‚É"MERGED"‚ªŠÜ‚Ü‚ê‚Ä‚¢‚½ê‡‚ÉA“‡ƒXƒyƒNƒgƒ‹‚Æ”»’f‚·‚é
+		// RECORD_TITLEã«"MERGED"ãŒå«ã¾ã‚Œã¦ã„ãŸå ´åˆã«ã€çµ±åˆã‚¹ãƒšã‚¯ãƒˆãƒ«ã¨åˆ¤æ–­ã™ã‚‹
 		if ( title.indexOf("MERGED") != -1 ) {
 			this.integRecord = true;
 		}
 	}
 	
 	/**
-	 * ”ñ•\¦ƒtƒ‰ƒOæ“¾
-	 * @return ”ñ•\¦ƒtƒ‰ƒO(trueF”ñ•\¦AfalseF•\¦)
+	 * éè¡¨ç¤ºãƒ•ãƒ©ã‚°å–å¾—
+	 * @return éè¡¨ç¤ºãƒ•ãƒ©ã‚°(trueï¼šéè¡¨ç¤ºã€falseï¼šè¡¨ç¤º)
 	 */
 	public boolean isDisable() {
 		return disable;
 	}
 
 	/**
-	 * ”ñ•\¦ƒtƒ‰ƒOİ’è
-	 * @param disable ”ñ•\¦ƒtƒ‰ƒO(trueF”ñ•\¦AfalseF•\¦)
+	 * éè¡¨ç¤ºãƒ•ãƒ©ã‚°è¨­å®š
+	 * @param disable éè¡¨ç¤ºãƒ•ãƒ©ã‚°(trueï¼šéè¡¨ç¤ºã€falseï¼šè¡¨ç¤º)
 	 */
 	public void setDisable(boolean disable) {
 		this.disable = disable;
 	}
 
 	/**
-	 * ƒXƒRƒAæ“¾
-	 * @return ƒXƒRƒA
+	 * ã‚¹ã‚³ã‚¢å–å¾—
+	 * @return ã‚¹ã‚³ã‚¢
 	 */
 	public String getScore() {
 		return score;
 	}
 
 	/**
-	 * ƒXƒRƒAİ’è
-	 * @param score ƒXƒRƒA
+	 * ã‚¹ã‚³ã‚¢è¨­å®š
+	 * @param score ã‚¹ã‚³ã‚¢
 	 */
 	public void setScore(String score) {
 		if (score.length() == 0) {

@@ -18,7 +18,7 @@
  *
  *******************************************************************************
  *
- * ƒXƒyƒNƒgƒ‹ˆêŠ‡•\¦ ƒNƒ‰ƒX
+ * ã‚¹ãƒšã‚¯ãƒˆãƒ«ä¸€æ‹¬è¡¨ç¤º ã‚¯ãƒ©ã‚¹
  *
  * ver 1.0.7 2011.08.10
  *
@@ -79,64 +79,64 @@ import javax.swing.table.DefaultTableModel;
 import massbank.MassBankCommon;
 
 /**
- * ƒXƒyƒNƒgƒ‹ˆêŠ‡•\¦ ƒNƒ‰ƒX
+ * ã‚¹ãƒšã‚¯ãƒˆãƒ«ä¸€æ‹¬è¡¨ç¤º ã‚¯ãƒ©ã‚¹
  */
 @SuppressWarnings("serial")
 public class PackageViewPanel extends JPanel {
 	
-	private final PackageSpecData specData;				// ƒXƒyƒNƒgƒ‹î•ñƒf[ƒ^ƒNƒ‰ƒX(blank final•Ï”)
+	private final PackageSpecData specData;				// ã‚¹ãƒšã‚¯ãƒˆãƒ«æƒ…å ±ãƒ‡ãƒ¼ã‚¿ã‚¯ãƒ©ã‚¹(blank finalå¤‰æ•°)
 	
-	private final int MARGIN = 15;						// —]”’
-	private final int INTENSITY_RANGE_MAX = 1000;			// Å‘å‹­“x
-	private final int MASS_RANGE_MIN = 5;					// Å¬ƒ}ƒXƒŒƒ“ƒW
+	private final int MARGIN = 15;						// ä½™ç™½
+	private final int INTENSITY_RANGE_MAX = 1000;			// æœ€å¤§å¼·åº¦
+	private final int MASS_RANGE_MIN = 5;					// æœ€å°ãƒã‚¹ãƒ¬ãƒ³ã‚¸
 	
-	private int width = 0;									// ‰æ–Ê•
-	private int height = 0;								// ‰æ–Ê‚
+	private int width = 0;									// ç”»é¢å¹…
+	private int height = 0;								// ç”»é¢é«˜
 	
-	private int maxMoveXPoint = 0;							// x²Å‘å‰Â“®’l
-	private int maxMoveYPoint = 0;							// y²Å‘å‰Â“®’l
-	private int minMoveXPoint = 0;							// x²Å¬‰Â“®’l
-	private int minMoveYPoint = 0;							// y²Å¬‰Â“®’l	
-	private int moveXPoint = 0;							// x²‰Â“®’l
-	private int moveYPoint = 0;							// y²‰Â“®’l
-	private int tmpMoveXPoint = -1;						// Œ»İ‚Ìx²‰Â“®’l(‘Ş”ğ—p)
-	private int tmpMoveYPoint = -1;						// Œ»İ‚Ìy²‰Â“®’l(‘Ş”ğ—p)
+	private int maxMoveXPoint = 0;							// xè»¸æœ€å¤§å¯å‹•å€¤
+	private int maxMoveYPoint = 0;							// yè»¸æœ€å¤§å¯å‹•å€¤
+	private int minMoveXPoint = 0;							// xè»¸æœ€å°å¯å‹•å€¤
+	private int minMoveYPoint = 0;							// yè»¸æœ€å°å¯å‹•å€¤	
+	private int moveXPoint = 0;							// xè»¸å¯å‹•å€¤
+	private int moveYPoint = 0;							// yè»¸å¯å‹•å€¤
+	private int tmpMoveXPoint = -1;						// ç¾åœ¨ã®xè»¸å¯å‹•å€¤(é€€é¿ç”¨)
+	private int tmpMoveYPoint = -1;						// ç¾åœ¨ã®yè»¸å¯å‹•å€¤(é€€é¿ç”¨)
 
 	private double massStart = 0;
 	private double massRange = 0;
 	private int massRangeMax = 0;
 	private int intensityRange = 0;
 	
-	private Point cursorPoint = null;						// ƒ}ƒEƒXƒJ[ƒ\ƒ‹ƒ|ƒCƒ“ƒg
+	private Point cursorPoint = null;						// ãƒã‚¦ã‚¹ã‚«ãƒ¼ã‚½ãƒ«ãƒã‚¤ãƒ³ãƒˆ
 	
-	private boolean underDrag = false;					// ƒhƒ‰ƒbƒO’†ƒtƒ‰ƒO
-	private Point fromPos = null;							// ƒhƒ‰ƒbƒOŠJnƒ|ƒCƒ“ƒg
-	private Point toPos = null;							// ƒhƒ‰ƒbƒOI—¹ƒ|ƒCƒ“ƒg
-	private boolean isInitRate = false;					// ‰Šú”{—¦ƒtƒ‰ƒO(true:–¢Šg‘åAfalse:Šg‘å’†)
+	private boolean underDrag = false;					// ãƒ‰ãƒ©ãƒƒã‚°ä¸­ãƒ•ãƒ©ã‚°
+	private Point fromPos = null;							// ãƒ‰ãƒ©ãƒƒã‚°é–‹å§‹ãƒã‚¤ãƒ³ãƒˆ
+	private Point toPos = null;							// ãƒ‰ãƒ©ãƒƒã‚°çµ‚äº†ãƒã‚¤ãƒ³ãƒˆ
+	private boolean isInitRate = false;					// åˆæœŸå€ç‡ãƒ•ãƒ©ã‚°(true:æœªæ‹¡å¤§ã€false:æ‹¡å¤§ä¸­)
 	
-	private Timer animationTimer = null;					// Šg‘åˆ——pƒ^ƒCƒ}[ƒIƒuƒWƒFƒNƒg
-	private Timer moveTimer = null;						// ƒOƒ‰ƒt‰Â“®—pƒ^ƒCƒ}[ƒIƒuƒWƒFƒNƒg
+	private Timer animationTimer = null;					// æ‹¡å¤§å‡¦ç†ç”¨ã‚¿ã‚¤ãƒãƒ¼ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ
+	private Timer moveTimer = null;						// ã‚°ãƒ©ãƒ•å¯å‹•ç”¨ã‚¿ã‚¤ãƒãƒ¼ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ
 	
-	private GridBagConstraints gbc = null;					// ƒŒƒCƒAƒEƒg§–ñƒIƒuƒWƒFƒNƒg
+	private GridBagConstraints gbc = null;					// ãƒ¬ã‚¤ã‚¢ã‚¦ãƒˆåˆ¶ç´„ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ
 	
-	private JButton leftMostBtn = null;					// ƒXƒyƒNƒgƒ‹ˆÚ“®ƒ{ƒ^ƒ“(Å¶)
-	private JButton leftBtn = null;						// ƒXƒyƒNƒgƒ‹ˆÚ“®ƒ{ƒ^ƒ“(¶)
-	private JButton rightBtn = null;						// ƒXƒyƒNƒgƒ‹ˆÚ“®ƒ{ƒ^ƒ“(‰E)
-	private JButton rightMostBtn = null;					// ƒXƒyƒNƒgƒ‹ˆÚ“®ƒ{ƒ^ƒ“(Å‰E)
+	private JButton leftMostBtn = null;					// ã‚¹ãƒšã‚¯ãƒˆãƒ«ç§»å‹•ãƒœã‚¿ãƒ³(æœ€å·¦)
+	private JButton leftBtn = null;						// ã‚¹ãƒšã‚¯ãƒˆãƒ«ç§»å‹•ãƒœã‚¿ãƒ³(å·¦)
+	private JButton rightBtn = null;						// ã‚¹ãƒšã‚¯ãƒˆãƒ«ç§»å‹•ãƒœã‚¿ãƒ³(å³)
+	private JButton rightMostBtn = null;					// ã‚¹ãƒšã‚¯ãƒˆãƒ«ç§»å‹•ãƒœã‚¿ãƒ³(æœ€å³)
 	
-	private JButton xAxisDown = null;						// x²ƒOƒ‰ƒt‰Â“®ƒ{ƒ^ƒ“(Down)
-	private JButton xAxisUp = null;						// x²ƒOƒ‰ƒt‰Â“®ƒ{ƒ^ƒ“(Up)
-	private JButton yAxisUp = null;						// y²ƒOƒ‰ƒt‰Â“®ƒ{ƒ^ƒ“(Up)
-	private JButton yAxisDown = null;						// y²ƒOƒ‰ƒt‰Â“®ƒ{ƒ^ƒ“(Down)
-	private JToggleButton mzDisp = null;					// show all m/zƒ{ƒ^ƒ“
-	private JToggleButton mzMatchDisp = null;				// show match m/zƒ{ƒ^ƒ“
-	private JToggleButton chgColor = null;					// change colorƒ{ƒ^ƒ“
-	private JToggleButton flat = null;						// flatƒ{ƒ^ƒ“
-	private JButton topAngleBtn = null;					// ƒI[ƒgƒAƒ“ƒOƒ‹ƒ{ƒ^ƒ“(top)
-	private JButton sideAngleBtn = null;					// ƒI[ƒgƒAƒ“ƒOƒ‹ƒ{ƒ^ƒ“(side)
+	private JButton xAxisDown = null;						// xè»¸ã‚°ãƒ©ãƒ•å¯å‹•ãƒœã‚¿ãƒ³(Down)
+	private JButton xAxisUp = null;						// xè»¸ã‚°ãƒ©ãƒ•å¯å‹•ãƒœã‚¿ãƒ³(Up)
+	private JButton yAxisUp = null;						// yè»¸ã‚°ãƒ©ãƒ•å¯å‹•ãƒœã‚¿ãƒ³(Up)
+	private JButton yAxisDown = null;						// yè»¸ã‚°ãƒ©ãƒ•å¯å‹•ãƒœã‚¿ãƒ³(Down)
+	private JToggleButton mzDisp = null;					// show all m/zãƒœã‚¿ãƒ³
+	private JToggleButton mzMatchDisp = null;				// show match m/zãƒœã‚¿ãƒ³
+	private JToggleButton chgColor = null;					// change colorãƒœã‚¿ãƒ³
+	private JToggleButton flat = null;						// flatãƒœã‚¿ãƒ³
+	private JButton topAngleBtn = null;					// ã‚ªãƒ¼ãƒˆã‚¢ãƒ³ã‚°ãƒ«ãƒœã‚¿ãƒ³(top)
+	private JButton sideAngleBtn = null;					// ã‚ªãƒ¼ãƒˆã‚¢ãƒ³ã‚°ãƒ«ãƒœã‚¿ãƒ³(side)
 
-	private JLabel statusKeyLbl = null;						// ƒXƒe[ƒ^ƒXƒ‰ƒxƒ‹(ƒL[)
-	private JLabel statusValLbl = null;						// ƒXƒe[ƒ^ƒXƒ‰ƒxƒ‹(’l)
+	private JLabel statusKeyLbl = null;						// ã‚¹ãƒ†ãƒ¼ã‚¿ã‚¹ãƒ©ãƒ™ãƒ«(ã‚­ãƒ¼)
+	private JLabel statusValLbl = null;						// ã‚¹ãƒ†ãƒ¼ã‚¿ã‚¹ãƒ©ãƒ™ãƒ«(å€¤)
 	
 	private final Color[] colorTable = new Color[]{
 			new Color(51, 102, 153),	// #336699
@@ -159,12 +159,12 @@ public class PackageViewPanel extends JPanel {
 			new Color(51, 51, 153),		// #333399
 			new Color(0, 51, 153),		// #003399
 			new Color(0, 102, 153)		// #006699
-			};												// Colorƒe[ƒuƒ‹(WebƒZ[ƒtƒJƒ‰[Only)
+			};												// Colorãƒ†ãƒ¼ãƒ–ãƒ«(Webã‚»ãƒ¼ãƒ•ã‚«ãƒ©ãƒ¼Only)
 	
-	private int recNum = 0;								// ƒŒƒR[ƒh”
-	private TableSorter recSorter = null;					// ƒŒƒR[ƒhƒŠƒXƒgƒe[ƒuƒ‹ƒ‚ƒfƒ‹
-	private JTable recTable = null;						// ƒŒƒR[ƒhƒŠƒXƒgƒe[ƒuƒ‹
-	private boolean initDispFlag = false;					// ‰Šú•\¦ƒtƒ‰ƒO
+	private int recNum = 0;								// ãƒ¬ã‚³ãƒ¼ãƒ‰æ•°
+	private TableSorter recSorter = null;					// ãƒ¬ã‚³ãƒ¼ãƒ‰ãƒªã‚¹ãƒˆãƒ†ãƒ¼ãƒ–ãƒ«ãƒ¢ãƒ‡ãƒ«
+	private JTable recTable = null;						// ãƒ¬ã‚³ãƒ¼ãƒ‰ãƒªã‚¹ãƒˆãƒ†ãƒ¼ãƒ–ãƒ«
+	private boolean initDispFlag = false;					// åˆæœŸè¡¨ç¤ºãƒ•ãƒ©ã‚°
 	
 	public static final String QUERY_RECORD = "Query";
 	public static final String RESULT_RECORD = "Result";
@@ -172,29 +172,29 @@ public class PackageViewPanel extends JPanel {
 	
 	public static final String TABLE_RECORD_LIST = "RecordList";
 	
-	private float tolVal = 0.3f;			// Tolerance“ü—Í’l
-	private boolean tolUnit = true;		// Tolerance’PˆÊ‘I‘ğ’litrueFunitAfalseFppmj
-	private int pressRowIndex = -1;		// ƒvƒŒƒX‚ÌsƒCƒ“ƒfƒbƒNƒX
-	private int releaseRowIndex = -1;		// ƒŠƒŠ[ƒX‚ÌsƒCƒ“ƒfƒbƒNƒX
-	private int dragRowIndex = -1;			// ƒhƒ‰ƒbƒO‚ÌsƒCƒ“ƒfƒbƒNƒX
-	private boolean isDragCancel = false;	// ƒhƒ‰ƒbƒOƒLƒƒƒ“ƒZƒ‹ƒtƒ‰ƒO
+	private float tolVal = 0.3f;			// Toleranceå…¥åŠ›å€¤
+	private boolean tolUnit = true;		// Toleranceå˜ä½é¸æŠå€¤ï¼ˆtrueï¼šunitã€falseï¼šppmï¼‰
+	private int pressRowIndex = -1;		// ãƒ—ãƒ¬ã‚¹æ™‚ã®è¡Œã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹
+	private int releaseRowIndex = -1;		// ãƒªãƒªãƒ¼ã‚¹æ™‚ã®è¡Œã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹
+	private int dragRowIndex = -1;			// ãƒ‰ãƒ©ãƒƒã‚°æ™‚ã®è¡Œã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹
+	private boolean isDragCancel = false;	// ãƒ‰ãƒ©ãƒƒã‚°ã‚­ãƒ£ãƒ³ã‚»ãƒ«ãƒ•ãƒ©ã‚°
 	
 	/**
-	 * ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+	 * ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	 */
 	public PackageViewPanel() {
 		
 		specData = new PackageSpecData();
 		
-		// ŠeƒŒƒ“ƒW‰Šú‰»
+		// å„ãƒ¬ãƒ³ã‚¸åˆæœŸåŒ–
 		initRange(true);
 		
-		// ƒRƒ“ƒ|[ƒlƒ“ƒg‚Ì”z’u
+		// ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆã®é…ç½®
 		initComponentLayout();
 	}
 	
 	/**
-	 * ƒŒƒR[ƒhî•ñ‰Šú‰»(‘SƒŒƒR[ƒh)
+	 * ãƒ¬ã‚³ãƒ¼ãƒ‰æƒ…å ±åˆæœŸåŒ–(å…¨ãƒ¬ã‚³ãƒ¼ãƒ‰)
 	 */
 	public void initAllRecInfo() {
 		specData.initAllData();
@@ -208,7 +208,7 @@ public class PackageViewPanel extends JPanel {
 	}
 	
 	/**
-	 * ƒŒƒR[ƒhî•ñ‰Šú‰»(ŒŸõŒ‹‰ÊƒŒƒR[ƒh‚Ì‚İ)
+	 * ãƒ¬ã‚³ãƒ¼ãƒ‰æƒ…å ±åˆæœŸåŒ–(æ¤œç´¢çµæœãƒ¬ã‚³ãƒ¼ãƒ‰ã®ã¿)
 	 */
 	public void initResultRecInfo() {
 		specData.initResultData();
@@ -223,8 +223,8 @@ public class PackageViewPanel extends JPanel {
 	}
 	
 	/**
-	 * ƒNƒGƒŠ[ƒŒƒR[ƒhî•ñ’Ç‰Á
-	 * @param recData ƒŒƒR[ƒhî•ñ
+	 * ã‚¯ã‚¨ãƒªãƒ¼ãƒ¬ã‚³ãƒ¼ãƒ‰æƒ…å ±è¿½åŠ 
+	 * @param recData ãƒ¬ã‚³ãƒ¼ãƒ‰æƒ…å ±
 	 */
 	public void addQueryRecInfo(PackageRecData recData) {
 		specData.initAllData();
@@ -232,10 +232,10 @@ public class PackageViewPanel extends JPanel {
 	}
 	
 	/**
-	 * ŒŸõŒ‹‰ÊƒŒƒR[ƒhî•ñ’Ç‰Á
-	 * @param recData ƒŒƒR[ƒhî•ñ
-	 * @param changeRecFlag ŒŸõŒ‹‰ÊƒŒƒR[ƒhî•ñ•ÏXƒtƒ‰ƒO
-	 * @param id ‘I‘ğƒŒƒR[ƒh‚ÌID
+	 * æ¤œç´¢çµæœãƒ¬ã‚³ãƒ¼ãƒ‰æƒ…å ±è¿½åŠ 
+	 * @param recData ãƒ¬ã‚³ãƒ¼ãƒ‰æƒ…å ±
+	 * @param changeRecFlag æ¤œç´¢çµæœãƒ¬ã‚³ãƒ¼ãƒ‰æƒ…å ±å¤‰æ›´ãƒ•ãƒ©ã‚°
+	 * @param id é¸æŠãƒ¬ã‚³ãƒ¼ãƒ‰ã®ID
 	 */
 	public void addResultRecInfo(PackageRecData recData, boolean changeRecFlag) {
 		if (changeRecFlag) {
@@ -245,11 +245,11 @@ public class PackageViewPanel extends JPanel {
 	}
 	
 	/**
-	 * ƒŒƒR[ƒhî•ñ’Ç‰ÁŒãˆ—
-	 * ƒŒƒR[ƒhî•ñ’Ç‰ÁŒã‚É•K‚¸ŒÄ‚ÔB
-	 * @param isQuery ƒNƒGƒŠ[ƒŒƒR[ƒhî•ñ’Ç‰ÁŒãƒtƒ‰ƒO(trueFƒNƒGƒŠ[’Ç‰ÁŒãAfalseFŒ‹‰Ê’Ç‰ÁŒã)
-	 * @param selectedId ‘I‘ğƒŒƒR[ƒhID
-	 * @param sortKey ƒ\[ƒgƒL[‚Æ‚·‚éƒJƒ‰ƒ€–¼
+	 * ãƒ¬ã‚³ãƒ¼ãƒ‰æƒ…å ±è¿½åŠ å¾Œå‡¦ç†
+	 * ãƒ¬ã‚³ãƒ¼ãƒ‰æƒ…å ±è¿½åŠ å¾Œã«å¿…ãšå‘¼ã¶ã€‚
+	 * @param isQuery ã‚¯ã‚¨ãƒªãƒ¼ãƒ¬ã‚³ãƒ¼ãƒ‰æƒ…å ±è¿½åŠ å¾Œãƒ•ãƒ©ã‚°(trueï¼šã‚¯ã‚¨ãƒªãƒ¼è¿½åŠ å¾Œã€falseï¼šçµæœè¿½åŠ å¾Œ)
+	 * @param selectedId é¸æŠãƒ¬ã‚³ãƒ¼ãƒ‰ID
+	 * @param sortKey ã‚½ãƒ¼ãƒˆã‚­ãƒ¼ã¨ã™ã‚‹ã‚«ãƒ©ãƒ å
 	 */
 	public void addRecInfoAfter(boolean isQuery, String selectedId, int sortKey) {
 		recNum = specData.getRecNum();
@@ -271,14 +271,14 @@ public class PackageViewPanel extends JPanel {
 	}
 	
 	/**
-	 * ƒŒƒR[ƒhƒŠƒXƒgƒe[ƒuƒ‹‚ÌƒŒƒR[ƒh‘I‘ğó‘Ôİ’è
-	 * @param selectionQuery ƒNƒGƒŠ[ƒŒƒR[ƒhƒtƒ‰ƒO(trueFƒNƒGƒŠ[ƒŒƒR[ƒhAfalseFƒNƒGƒŠ[ƒŒƒR[ƒhˆÈŠO)
-	 * @param selectionId ‘I‘ğƒŒƒR[ƒhID
+	 * ãƒ¬ã‚³ãƒ¼ãƒ‰ãƒªã‚¹ãƒˆãƒ†ãƒ¼ãƒ–ãƒ«ã®ãƒ¬ã‚³ãƒ¼ãƒ‰é¸æŠçŠ¶æ…‹è¨­å®š
+	 * @param selectionQuery ã‚¯ã‚¨ãƒªãƒ¼ãƒ¬ã‚³ãƒ¼ãƒ‰ãƒ•ãƒ©ã‚°(trueï¼šã‚¯ã‚¨ãƒªãƒ¼ãƒ¬ã‚³ãƒ¼ãƒ‰ã€falseï¼šã‚¯ã‚¨ãƒªãƒ¼ãƒ¬ã‚³ãƒ¼ãƒ‰ä»¥å¤–)
+	 * @param selectionId é¸æŠãƒ¬ã‚³ãƒ¼ãƒ‰ID
 	 */
 	public void setTblSelection(boolean selectionQuery, String selectionId) {
 		int idCol = recTable.getColumnModel().getColumnIndex(SearchPage.COL_LABEL_ID);
 		int typeCol = recTable.getColumnModel().getColumnIndex(SearchPage.COL_LABEL_TYPE);
-		// Šù‚É‘I‘ğ‚³‚ê‚Ä‚¢‚ê‚Îˆ—‚µ‚È‚¢
+		// æ—¢ã«é¸æŠã•ã‚Œã¦ã„ã‚Œã°å‡¦ç†ã—ãªã„
 		String selectedQuery = String.valueOf(recTable.getValueAt(recTable.getSelectedRow(), typeCol));
 		String selectedId = String.valueOf(recTable.getValueAt(recTable.getSelectedRow(), idCol));
 
@@ -288,7 +288,7 @@ public class PackageViewPanel extends JPanel {
 			return;
 		}
 		
-		// ‘I‘ğˆ—
+		// é¸æŠå‡¦ç†
 		for (int i=0; i<recTable.getRowCount(); i++) {
 			if ((selectionQuery == recTable.getValueAt(i, typeCol).equals(QUERY_RECORD)
 					|| selectionQuery == recTable.getValueAt(i, typeCol).equals(QUERY_RECORD + INTEGRATE_RECORD))
@@ -300,9 +300,9 @@ public class PackageViewPanel extends JPanel {
 	}
 	
 	/**
-	 * Tolerance“ü—Í’lİ’è
-	 * @param val tolerance’l
-	 * @param unit Tolerance’PˆÊitrueFunitAfalseFppmj
+	 * Toleranceå…¥åŠ›å€¤è¨­å®š
+	 * @param val toleranceå€¤
+	 * @param unit Toleranceå˜ä½ï¼ˆtrueï¼šunitã€falseï¼šppmï¼‰
 	 */
 	public void setTolerance(String val, boolean unit) {
 		this.tolVal = Float.parseFloat(val);
@@ -310,10 +310,10 @@ public class PackageViewPanel extends JPanel {
 	}
 	
 	/**
-	 * massRangeMaxİ’è
-	 * ƒŒƒR[ƒh”‚É•ÏX‚ª‚ ‚Á‚½ê‡‚ÉŒÄ‚Ô‚ÆA
-	 * Œ»İ‚ÌƒŒƒR[ƒhî•ñ‚Åˆê”Ô‘å‚«‚¢m/z‚ğ‚ÂƒXƒyƒNƒgƒ‹‚Ìm/z‚ª•\¦‚Å‚«‚é‚æ‚¤‚É
-	 * ƒXƒyƒNƒgƒ‹‚Ìƒ}ƒXƒŒƒ“ƒW‚ğİ’è‚·‚éB
+	 * massRangeMaxè¨­å®š
+	 * ãƒ¬ã‚³ãƒ¼ãƒ‰æ•°ã«å¤‰æ›´ãŒã‚ã£ãŸå ´åˆã«å‘¼ã¶ã¨ã€
+	 * ç¾åœ¨ã®ãƒ¬ã‚³ãƒ¼ãƒ‰æƒ…å ±ã§ä¸€ç•ªå¤§ãã„m/zã‚’æŒã¤ã‚¹ãƒšã‚¯ãƒˆãƒ«ã®m/zãŒè¡¨ç¤ºã§ãã‚‹ã‚ˆã†ã«
+	 * ã‚¹ãƒšã‚¯ãƒˆãƒ«ã®ãƒã‚¹ãƒ¬ãƒ³ã‚¸ã‚’è¨­å®šã™ã‚‹ã€‚
 	 */
 	private void setMassRangeMax() {
 		massRangeMax = 0;
@@ -321,10 +321,10 @@ public class PackageViewPanel extends JPanel {
 		int tmpMassRange = 0;
 		for (int i=0; i<recNum; i++) {
 			recData = specData.getRecInfo(i);
-			// m/z‚ÌÅ‘å’l‚ğ100‚ÌˆÊ(®”‘æ2ˆÊ)‚ÅØ‚èã‚°‚½’l‚ğƒŒƒ“ƒW‚Æ‚·‚é
+			// m/zã®æœ€å¤§å€¤ã‚’100ã®ä½(æ•´æ•°ç¬¬2ä½)ã§åˆ‡ã‚Šä¸Šã’ãŸå€¤ã‚’ãƒ¬ãƒ³ã‚¸ã¨ã™ã‚‹
 			tmpMassRange = new BigDecimal(
 					String.valueOf(recData.compMaxMzPrecusor())).setScale(-2, BigDecimal.ROUND_UP).intValue();
-			// m/z‚ÌÅ‘å’l‚ª100‚ÅŠ„‚èØ‚ê‚éê‡‚ÍƒŒƒ“ƒW‚ğ+100‚·‚é
+			// m/zã®æœ€å¤§å€¤ãŒ100ã§å‰²ã‚Šåˆ‡ã‚Œã‚‹å ´åˆã¯ãƒ¬ãƒ³ã‚¸ã‚’+100ã™ã‚‹
 			if (recData.compMaxMzPrecusor() % 100d == 0d) {
 				tmpMassRange += 100;
 			}
@@ -335,8 +335,8 @@ public class PackageViewPanel extends JPanel {
 	}
 	
 	/**
-	 * ŠeƒŒƒ“ƒW‰Šú‰»
-	 * @param initAngle ƒAƒ“ƒOƒ‹‰Šú‰»ƒtƒ‰ƒOitrueF‰Šú‰»AfalseF•Ûj
+	 * å„ãƒ¬ãƒ³ã‚¸åˆæœŸåŒ–
+	 * @param initAngle ã‚¢ãƒ³ã‚°ãƒ«åˆæœŸåŒ–ãƒ•ãƒ©ã‚°ï¼ˆtrueï¼šåˆæœŸåŒ–ã€falseï¼šä¿æŒï¼‰
 	 */
 	private void initRange(boolean initAngle) {
 
@@ -350,61 +350,61 @@ public class PackageViewPanel extends JPanel {
 	}
 	
 	/**
-	 * ƒRƒ“ƒ|[ƒlƒ“ƒg”z’u
-	 * ƒRƒ“ƒ|[ƒlƒ“ƒg‚ÌƒŒƒCƒAƒEƒg‚ğw’è‚µ‚Ä”z’u‚·‚éB
+	 * ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆé…ç½®
+	 * ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆã®ãƒ¬ã‚¤ã‚¢ã‚¦ãƒˆã‚’æŒ‡å®šã—ã¦é…ç½®ã™ã‚‹ã€‚
 	 */
 	private void initComponentLayout() {
 		
-		// ƒ}ƒEƒXƒJ[ƒ\ƒ‹İ’è
+		// ãƒã‚¦ã‚¹ã‚«ãƒ¼ã‚½ãƒ«è¨­å®š
 		PackageViewPanel.this.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 		
-		// ƒŒƒCƒAƒEƒgw’è
+		// ãƒ¬ã‚¤ã‚¢ã‚¦ãƒˆæŒ‡å®š
 		setLayout(new BorderLayout());
 		GridBagLayout gbl = new GridBagLayout();
 		
-		// ƒXƒyƒNƒgƒ‹•\¦ƒyƒCƒ“
+		// ã‚¹ãƒšã‚¯ãƒˆãƒ«è¡¨ç¤ºãƒšã‚¤ãƒ³
 		SpectrumPlotPane plotPane = new SpectrumPlotPane();
 		plotPane.setMinimumSize(new Dimension(0, 180));
 		plotPane.repaint();
-		gbc = new GridBagConstraints();						// ƒŒƒCƒAƒEƒg§–ñ‰Šú‰»
-		gbc.fill = GridBagConstraints.BOTH;					// ‚’¼A…•½ƒTƒCƒY‚Ì•ÏX‚ğ‹–‰Â
-		gbc.weightx = 1;									// —]•ª‚Ì…•½ƒXƒy[ƒX‚ğ•ª”z
-		gbc.weighty = 1;									// —]•ª‚Ì‚’¼ƒXƒy[ƒX‚ğ•ª”z
-		gbc.gridwidth = GridBagConstraints.REMAINDER;		// —ñÅŒã‚ÌƒRƒ“ƒ|[ƒlƒ“ƒg‚Éw’è
+		gbc = new GridBagConstraints();						// ãƒ¬ã‚¤ã‚¢ã‚¦ãƒˆåˆ¶ç´„åˆæœŸåŒ–
+		gbc.fill = GridBagConstraints.BOTH;					// å‚ç›´ã€æ°´å¹³ã‚µã‚¤ã‚ºã®å¤‰æ›´ã‚’è¨±å¯
+		gbc.weightx = 1;									// ä½™åˆ†ã®æ°´å¹³ã‚¹ãƒšãƒ¼ã‚¹ã‚’åˆ†é…
+		gbc.weighty = 1;									// ä½™åˆ†ã®å‚ç›´ã‚¹ãƒšãƒ¼ã‚¹ã‚’åˆ†é…
+		gbc.gridwidth = GridBagConstraints.REMAINDER;		// åˆ—æœ€å¾Œã®ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆã«æŒ‡å®š
 		gbl.setConstraints(plotPane, gbc);
 		
-		// ƒ{ƒ^ƒ“ƒyƒCƒ“
+		// ãƒœã‚¿ãƒ³ãƒšã‚¤ãƒ³
 		ButtonPane btnPane = new ButtonPane();
 		btnPane.setMinimumSize(new Dimension(0, 44));
 		btnPane.setLayout( new FlowLayout(FlowLayout.LEFT, 0, 0) );
-		gbc = new GridBagConstraints();						// ƒŒƒCƒAƒEƒg§–ñ‰Šú‰»
-		gbc.fill = GridBagConstraints.HORIZONTAL;			// …•½ƒTƒCƒY‚Ì•ÏX‚Ì‚İ‚ğ‹–‰Â
-		gbc.weightx = 1;									// —]•ª‚Ì…•½ƒXƒy[ƒX‚ğ•ª”z
-		gbc.weighty = 0;									// —]•ª‚Ì‚’¼ƒXƒy[ƒX‚ğ•ª”z‚µ‚È‚¢
-		gbc.gridwidth = GridBagConstraints.REMAINDER;		// —ñÅŒã‚ÌƒRƒ“ƒ|[ƒlƒ“ƒg‚Éw’è
+		gbc = new GridBagConstraints();						// ãƒ¬ã‚¤ã‚¢ã‚¦ãƒˆåˆ¶ç´„åˆæœŸåŒ–
+		gbc.fill = GridBagConstraints.HORIZONTAL;			// æ°´å¹³ã‚µã‚¤ã‚ºã®å¤‰æ›´ã®ã¿ã‚’è¨±å¯
+		gbc.weightx = 1;									// ä½™åˆ†ã®æ°´å¹³ã‚¹ãƒšãƒ¼ã‚¹ã‚’åˆ†é…
+		gbc.weighty = 0;									// ä½™åˆ†ã®å‚ç›´ã‚¹ãƒšãƒ¼ã‚¹ã‚’åˆ†é…ã—ãªã„
+		gbc.gridwidth = GridBagConstraints.REMAINDER;		// åˆ—æœ€å¾Œã®ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆã«æŒ‡å®š
 		gbl.setConstraints(btnPane, gbc);
 		
-		// ƒXƒe[ƒ^ƒXƒ‰ƒxƒ‹
+		// ã‚¹ãƒ†ãƒ¼ã‚¿ã‚¹ãƒ©ãƒ™ãƒ«
 		statusKeyLbl = new JLabel(" ");
-		gbc = new GridBagConstraints();						// ƒŒƒCƒAƒEƒg§–ñ‰Šú‰»
-		gbc.fill = GridBagConstraints.HORIZONTAL;			// …•½ƒTƒCƒY‚Ì•ÏX‚Ì‚İ‚ğ‹–‰Â
-		gbc.weightx = 0;									// —]•ª‚Ì…•½ƒXƒy[ƒX‚ğ•ª”z‚µ‚È‚¢
-		gbc.weighty = 0;									// —]•ª‚Ì‚’¼ƒXƒy[ƒX‚ğ•ª”z‚µ‚È‚¢
-		gbc.gridheight = GridBagConstraints.REMAINDER;		// sÅŒã‚ÌƒRƒ“ƒ|[ƒlƒ“ƒg‚Éw’è
-		gbc.insets = new Insets(4, 4, 4, 4);				// ŠO‘¤ƒpƒfƒBƒ“ƒOw’è
+		gbc = new GridBagConstraints();						// ãƒ¬ã‚¤ã‚¢ã‚¦ãƒˆåˆ¶ç´„åˆæœŸåŒ–
+		gbc.fill = GridBagConstraints.HORIZONTAL;			// æ°´å¹³ã‚µã‚¤ã‚ºã®å¤‰æ›´ã®ã¿ã‚’è¨±å¯
+		gbc.weightx = 0;									// ä½™åˆ†ã®æ°´å¹³ã‚¹ãƒšãƒ¼ã‚¹ã‚’åˆ†é…ã—ãªã„
+		gbc.weighty = 0;									// ä½™åˆ†ã®å‚ç›´ã‚¹ãƒšãƒ¼ã‚¹ã‚’åˆ†é…ã—ãªã„
+		gbc.gridheight = GridBagConstraints.REMAINDER;		// è¡Œæœ€å¾Œã®ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆã«æŒ‡å®š
+		gbc.insets = new Insets(4, 4, 4, 4);				// å¤–å´ãƒ‘ãƒ‡ã‚£ãƒ³ã‚°æŒ‡å®š
 		gbl.setConstraints(statusKeyLbl, gbc);
 		statusValLbl = new JLabel(" ");
 		statusValLbl.setForeground(new Color(0, 139, 139));
-		gbc = new GridBagConstraints();						// ƒŒƒCƒAƒEƒg§–ñ‰Šú‰»
-		gbc.fill = GridBagConstraints.HORIZONTAL;			// …•½ƒTƒCƒY‚Ì•ÏX‚Ì‚İ‚ğ‹–‰Â
-		gbc.weightx = 1;									// —]•ª‚Ì…•½ƒXƒy[ƒX‚ğ•ª”z
-		gbc.weighty = 0;									// —]•ª‚Ì‚’¼ƒXƒy[ƒX‚ğ•ª”z‚µ‚È‚¢
-		gbc.gridwidth = GridBagConstraints.REMAINDER;		// —ñÅŒã‚ÌƒRƒ“ƒ|[ƒlƒ“ƒg‚Éw’è
-		gbc.gridheight = GridBagConstraints.REMAINDER;		// sÅŒã‚ÌƒRƒ“ƒ|[ƒlƒ“ƒg‚Éw’è
-		gbc.insets = new Insets(4, 4, 4, 4);				// ŠO‘¤ƒpƒfƒBƒ“ƒOw’è
+		gbc = new GridBagConstraints();						// ãƒ¬ã‚¤ã‚¢ã‚¦ãƒˆåˆ¶ç´„åˆæœŸåŒ–
+		gbc.fill = GridBagConstraints.HORIZONTAL;			// æ°´å¹³ã‚µã‚¤ã‚ºã®å¤‰æ›´ã®ã¿ã‚’è¨±å¯
+		gbc.weightx = 1;									// ä½™åˆ†ã®æ°´å¹³ã‚¹ãƒšãƒ¼ã‚¹ã‚’åˆ†é…
+		gbc.weighty = 0;									// ä½™åˆ†ã®å‚ç›´ã‚¹ãƒšãƒ¼ã‚¹ã‚’åˆ†é…ã—ãªã„
+		gbc.gridwidth = GridBagConstraints.REMAINDER;		// åˆ—æœ€å¾Œã®ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆã«æŒ‡å®š
+		gbc.gridheight = GridBagConstraints.REMAINDER;		// è¡Œæœ€å¾Œã®ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆã«æŒ‡å®š
+		gbc.insets = new Insets(4, 4, 4, 4);				// å¤–å´ãƒ‘ãƒ‡ã‚£ãƒ³ã‚°æŒ‡å®š
 		gbl.setConstraints(statusValLbl, gbc);
 		
-		// •\¦ƒpƒlƒ‹’Ç‰Á
+		// è¡¨ç¤ºãƒ‘ãƒãƒ«è¿½åŠ 
 		JPanel dispPanel = new JPanel();
 		dispPanel.setLayout(gbl);
 		dispPanel.add(plotPane);
@@ -413,13 +413,13 @@ public class PackageViewPanel extends JPanel {
 		dispPanel.add(statusValLbl);	
 		add(dispPanel);
 		
-		// ƒŒƒR[ƒhƒŠƒXƒgƒyƒCƒ“’Ç‰Á
+		// ãƒ¬ã‚³ãƒ¼ãƒ‰ãƒªã‚¹ãƒˆãƒšã‚¤ãƒ³è¿½åŠ 
 		recTable = createRecListTable();
 		JScrollPane recListPane = new JScrollPane(recTable);
 		recListPane.addMouseListener(new PaneMouseListener());
 		recListPane.setMinimumSize(new Dimension(0, 100));
 		
-		// PackageViewPanelƒyƒCƒ“’Ç‰Á
+		// PackageViewPanelãƒšã‚¤ãƒ³è¿½åŠ 
 		JSplitPane pkgPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, dispPanel, recListPane);
 		pkgPane.setMinimumSize(new Dimension(350, 0));
 		pkgPane.setDividerLocation((int)(SearchPage.initAppletHight * 0.7));
@@ -428,8 +428,8 @@ public class PackageViewPanel extends JPanel {
 	}
 	
 	/**
-	 * ƒŒƒR[ƒhƒŠƒXƒgƒe[ƒuƒ‹ì¬
-	 * @return ƒŒƒR[ƒhƒŠƒXƒgƒe[ƒuƒ‹
+	 * ãƒ¬ã‚³ãƒ¼ãƒ‰ãƒªã‚¹ãƒˆãƒ†ãƒ¼ãƒ–ãƒ«ä½œæˆ
+	 * @return ãƒ¬ã‚³ãƒ¼ãƒ‰ãƒªã‚¹ãƒˆãƒ†ãƒ¼ãƒ–ãƒ«
 	 */
 	private JTable createRecListTable() {
 		
@@ -438,14 +438,14 @@ public class PackageViewPanel extends JPanel {
 			@Override
 			public boolean isCellEditable(int row, int column) {
 				super.isCellEditable(row, column);
-				// ƒZƒ‹•ÒW‚ğ•s‰Â‚Æ‚·‚é
+				// ã‚»ãƒ«ç·¨é›†ã‚’ä¸å¯ã¨ã™ã‚‹
 				return false;
 			}
 			
 			@Override
 			public void setValueAt(Object value, int row, int col) {
 				super.setValueAt(value, row, col);
-				// ƒ`ƒFƒbƒNƒ{ƒbƒNƒX‚ª•ÒW‚³‚ê‚½ê‡‚ÉÄ•`‰æ‚ğs‚¤
+				// ãƒã‚§ãƒƒã‚¯ãƒœãƒƒã‚¯ã‚¹ãŒç·¨é›†ã•ã‚ŒãŸå ´åˆã«å†æç”»ã‚’è¡Œã†
 				if (recTable.getColumnName(col).equals(SearchPage.COL_LABEL_DISABLE)) {
 					PackageRecData recData = specData.getRecInfo(row);
 					recData.setDisable(Boolean.parseBoolean(String.valueOf(recTable.getValueAt(row, col))));
@@ -454,7 +454,7 @@ public class PackageViewPanel extends JPanel {
 					
 					int hitCol = recTable.getColumnModel().getColumnIndex(SearchPage.COL_LABEL_HIT);
 					for (int i=0; i<recTable.getRowCount(); i++) {
-						// •ÒW‚³‚ê‚½ƒŒƒR[ƒh‚É‚æ‚Á‚ÄHitƒJƒ‰ƒ€‚Ì’l‚ğƒAƒbƒvƒf[ƒg‚·‚é
+						// ç·¨é›†ã•ã‚ŒãŸãƒ¬ã‚³ãƒ¼ãƒ‰ã«ã‚ˆã£ã¦Hitã‚«ãƒ©ãƒ ã®å€¤ã‚’ã‚¢ãƒƒãƒ—ãƒ‡ãƒ¼ãƒˆã™ã‚‹
 						setValueAt(specData.getRecInfo(i).getHitPeakNum(), i, hitCol);
 					}
 				}
@@ -467,7 +467,7 @@ public class PackageViewPanel extends JPanel {
 				Graphics2D g2 = (Graphics2D)g;
 				Rectangle2D area = new Rectangle2D.Float();
 				
-				// ƒhƒ‰ƒbƒO‚Éƒhƒ‰ƒbƒOæ“h‚è‚Â‚Ô‚µ•\¦
+				// ãƒ‰ãƒ©ãƒƒã‚°æ™‚ã«ãƒ‰ãƒ©ãƒƒã‚°å…ˆå¡—ã‚Šã¤ã¶ã—è¡¨ç¤º
 				if (!isSortStatus() && dragRowIndex >= 0) {
 					
 					g2.setPaint(Color.RED);
@@ -477,11 +477,11 @@ public class PackageViewPanel extends JPanel {
 					g2.fill(area);
 				}
 				
-				// change color‚Ìê‡‚ÍƒI[ƒ_[ƒJƒ‰ƒ€‚Ìs‚ğ“h‚è‚Â‚Ô‚µ•\¦
+				// change colorã®å ´åˆã¯ã‚ªãƒ¼ãƒ€ãƒ¼ã‚«ãƒ©ãƒ ã®è¡Œã‚’å¡—ã‚Šã¤ã¶ã—è¡¨ç¤º
 				if (chgColor.isSelected()) {
 					
 					for (int i=0; i<recTable.getRowCount(); i++) {
-						// ”ñ•\¦‚Ìê‡‚ÍF‚Ã‚¯‚µ‚È‚¢
+						// éè¡¨ç¤ºã®å ´åˆã¯è‰²ã¥ã‘ã—ãªã„
 						if (Boolean.parseBoolean(String.valueOf(getValueAt(i, getColumnModel().getColumnIndex(SearchPage.COL_LABEL_DISABLE))))) {
 							continue;
 						}
@@ -499,16 +499,16 @@ public class PackageViewPanel extends JPanel {
 		t.setRowSelectionAllowed(true);
 		t.setColumnSelectionAllowed(false);
 		t.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-		t.addMouseListener(new TblMouseListener());						// ƒŠƒXƒi[’Ç‰Á
-		t.addMouseMotionListener(new TblMouseMotionListener());			// ƒŠƒXƒi[’Ç‰Á
-		t.addKeyListener(new TblKeyListener());							// ƒL[ƒŠƒXƒi[’Ç‰Á
-		t.setDefaultRenderer(Object.class, new TblRenderer());			// ƒIƒŠƒWƒiƒ‹ƒŒƒ“ƒ_ƒ‰[
+		t.addMouseListener(new TblMouseListener());						// ãƒªã‚¹ãƒŠãƒ¼è¿½åŠ 
+		t.addMouseMotionListener(new TblMouseMotionListener());			// ãƒªã‚¹ãƒŠãƒ¼è¿½åŠ 
+		t.addKeyListener(new TblKeyListener());							// ã‚­ãƒ¼ãƒªã‚¹ãƒŠãƒ¼è¿½åŠ 
+		t.setDefaultRenderer(Object.class, new TblRenderer());			// ã‚ªãƒªã‚¸ãƒŠãƒ«ãƒ¬ãƒ³ãƒ€ãƒ©ãƒ¼
 		ListSelectionModel lm = t.getSelectionModel();
 		lm.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		lm.addListSelectionListener(new LmSelectionListener());
 
 		
-		// ƒJƒ‰ƒ€ƒZƒbƒg
+		// ã‚«ãƒ©ãƒ ã‚»ãƒƒãƒˆ
 		String[] columnLabel = {
 				SearchPage.COL_LABEL_ORDER, SearchPage.COL_LABEL_TYPE, SearchPage.COL_LABEL_NAME,
 				SearchPage.COL_LABEL_MATCH, SearchPage.COL_LABEL_ID, SearchPage.COL_LABEL_DISABLE, 
@@ -517,7 +517,7 @@ public class PackageViewPanel extends JPanel {
 		DefaultTableModel model = (DefaultTableModel)recSorter.getTableModel();
 		model.setColumnIdentifiers(columnLabel);
 
-		// —ñ•ƒZƒbƒg
+		// åˆ—å¹…ã‚»ãƒƒãƒˆ
 		t.getColumn(t.getColumnName(0)).setPreferredWidth(36);
 		t.getColumn(t.getColumnName(1)).setPreferredWidth(75);
 		t.getColumn(t.getColumnName(2)).setPreferredWidth(360);
@@ -534,13 +534,13 @@ public class PackageViewPanel extends JPanel {
 	}
 	
 	/**
-	 * ƒŒƒR[ƒhƒŠƒXƒgƒe[ƒuƒ‹ƒf[ƒ^İ’è
-	 * @param selectedQuery ƒNƒGƒŠ[ƒŒƒR[ƒh‘I‘ğƒtƒ‰ƒO(trueFƒNƒGƒŠ[’Ç‰ÁŒãAfalseFŒ‹‰Ê’Ç‰ÁŒã)
-	 * @param id ‘I‘ğƒŒƒR[ƒh‚ÌID
+	 * ãƒ¬ã‚³ãƒ¼ãƒ‰ãƒªã‚¹ãƒˆãƒ†ãƒ¼ãƒ–ãƒ«ãƒ‡ãƒ¼ã‚¿è¨­å®š
+	 * @param selectedQuery ã‚¯ã‚¨ãƒªãƒ¼ãƒ¬ã‚³ãƒ¼ãƒ‰é¸æŠãƒ•ãƒ©ã‚°(trueï¼šã‚¯ã‚¨ãƒªãƒ¼è¿½åŠ å¾Œã€falseï¼šçµæœè¿½åŠ å¾Œ)
+	 * @param id é¸æŠãƒ¬ã‚³ãƒ¼ãƒ‰ã®ID
 	 */
 	private void setTblData(boolean selectedQuery, String selectedId) {
 		
-		// ƒ\[ƒg‰ğœ
+		// ã‚½ãƒ¼ãƒˆè§£é™¤
 		for (int i=0; i<recTable.getColumnCount(); i++) {
 			recSorter.setSortingStatus(i, TableSorter.NOT_SORTED);
 		}
@@ -558,7 +558,7 @@ public class PackageViewPanel extends JPanel {
 		for (int i=0; i<recNum; i++) {
 			recData = specData.getRecInfo(i);
 			
-			// ƒŒƒR[ƒhî•ñ¶¬
+			// ãƒ¬ã‚³ãƒ¼ãƒ‰æƒ…å ±ç”Ÿæˆ
 			recordData = new Object[dataModel.getColumnCount()];
 			recordData[0] = String.valueOf(number--);
 			if (recData.isQueryRecord()) {
@@ -585,19 +585,19 @@ public class PackageViewPanel extends JPanel {
 			recordData[9] = String.valueOf(recData.getPeakNum());
 			recordData[10] = recData.getPrecursor();
 			
-			// ƒe[ƒuƒ‹‚Ö‚ÌƒŒƒR[ƒh’Ç‰Á
+			// ãƒ†ãƒ¼ãƒ–ãƒ«ã¸ã®ãƒ¬ã‚³ãƒ¼ãƒ‰è¿½åŠ 
 			dataModel.addRow(recordData);
 			
 			if (selectedQuery == recData.isQueryRecord() && selectedId.equals(recData.getId())) {
-				// ƒNƒGƒŠ[DBƒ^ƒuADB Hitƒ^ƒu‚Å‚Ì‘I‘ğƒŒƒR[ƒh‚ğ‰Šú‘I‘ğ
+				// ã‚¯ã‚¨ãƒªãƒ¼DBã‚¿ãƒ–ã€DB Hitã‚¿ãƒ–ã§ã®é¸æŠãƒ¬ã‚³ãƒ¼ãƒ‰ã‚’åˆæœŸé¸æŠ
 				recTable.setRowSelectionInterval(i, i);
 			}
 		}
 	}
 	
 	/**
-	 * ƒŒƒR[ƒhƒŠƒXƒgƒe[ƒuƒ‹•\¦ó‘ÔˆêŠ‡İ’è
-	 * @param disable •\¦ó‘Ô(trueF•\¦AfalseF”ñ•\¦)
+	 * ãƒ¬ã‚³ãƒ¼ãƒ‰ãƒªã‚¹ãƒˆãƒ†ãƒ¼ãƒ–ãƒ«è¡¨ç¤ºçŠ¶æ…‹ä¸€æ‹¬è¨­å®š
+	 * @param disable è¡¨ç¤ºçŠ¶æ…‹(trueï¼šè¡¨ç¤ºã€falseï¼šéè¡¨ç¤º)
 	 */
 	private void setTblDispStatus(boolean disable) {
     	if (recTable.getRowCount() > 0) {
@@ -609,9 +609,9 @@ public class PackageViewPanel extends JPanel {
 	}
 	
 	/**
-	 * ƒŒƒR[ƒhƒŠƒXƒgƒe[ƒuƒ‹ƒ\[ƒgó‘Ôæ“¾
-	 * ƒŒƒR[ƒhƒŠƒXƒgƒe[ƒuƒ‹‚Ì‚¢‚¸‚ê‚©‚ÌƒJƒ‰ƒ€‚ªƒ\[ƒg‚³‚ê‚Ä‚¢‚é‚©‚ğæ“¾‚·‚éB
-	 * @return ƒ\[ƒgó‘Ô(trueFƒ\[ƒg’†AfaleFƒfƒtƒHƒ‹ƒg)
+	 * ãƒ¬ã‚³ãƒ¼ãƒ‰ãƒªã‚¹ãƒˆãƒ†ãƒ¼ãƒ–ãƒ«ã‚½ãƒ¼ãƒˆçŠ¶æ…‹å–å¾—
+	 * ãƒ¬ã‚³ãƒ¼ãƒ‰ãƒªã‚¹ãƒˆãƒ†ãƒ¼ãƒ–ãƒ«ã®ã„ãšã‚Œã‹ã®ã‚«ãƒ©ãƒ ãŒã‚½ãƒ¼ãƒˆã•ã‚Œã¦ã„ã‚‹ã‹ã‚’å–å¾—ã™ã‚‹ã€‚
+	 * @return ã‚½ãƒ¼ãƒˆçŠ¶æ…‹(trueï¼šã‚½ãƒ¼ãƒˆä¸­ã€faleï¼šãƒ‡ãƒ•ã‚©ãƒ«ãƒˆ)
 	 */
 	private boolean isSortStatus() {
     	if (recTable.getRowCount() > 0) {
@@ -627,8 +627,8 @@ public class PackageViewPanel extends JPanel {
 	}
 	
 	/**
-	 * ƒŒƒR[ƒhƒŠƒXƒg—pƒ|ƒbƒvƒAƒbƒv•\¦
-	 * @param e ƒ}ƒEƒXƒCƒxƒ“ƒg
+	 * ãƒ¬ã‚³ãƒ¼ãƒ‰ãƒªã‚¹ãƒˆç”¨ãƒãƒƒãƒ—ã‚¢ãƒƒãƒ—è¡¨ç¤º
+	 * @param e ãƒã‚¦ã‚¹ã‚¤ãƒ™ãƒ³ãƒˆ
 	 */
 	private void recListPopup(MouseEvent e) {
 		final int selRow = recTable.getSelectedRow();
@@ -667,7 +667,7 @@ public class PackageViewPanel extends JPanel {
 			item3.setEnabled(false);
 		}
 		
-		// ƒ|ƒbƒvƒAƒbƒv•\¦
+		// ãƒãƒƒãƒ—ã‚¢ãƒƒãƒ—è¡¨ç¤º
 		JPopupMenu showRecPopup = new JPopupMenu();
 		showRecPopup.add(item1);
 		showRecPopup.add(sep);
@@ -677,17 +677,17 @@ public class PackageViewPanel extends JPanel {
 	}
 	
 	/**
-	 * m/z‚Ì•\¦—pƒtƒH[ƒ}ƒbƒg
-	 * ‰æ–Ê•\¦—p‚Ém/z‚ÌŒ…”‚ğ‡‚í‚¹‚Ä•Ô‹p‚·‚é
-	 * @param mass ƒtƒH[ƒ}ƒbƒg‘ÎÛ‚Ìm/z
-	 * @param isForce Œ…”‹­§“ˆêƒtƒ‰ƒOitrue:0–„‚ß‚ÆØÌ‚Ä‚ğs‚¤Afalse:ØÌ‚Ä‚Ì‚İs‚¤j
-	 * @return ƒtƒH[ƒ}ƒbƒgŒã‚Ìm/z
+	 * m/zã®è¡¨ç¤ºç”¨ãƒ•ã‚©ãƒ¼ãƒãƒƒãƒˆ
+	 * ç”»é¢è¡¨ç¤ºç”¨ã«m/zã®æ¡æ•°ã‚’åˆã‚ã›ã¦è¿”å´ã™ã‚‹
+	 * @param mass ãƒ•ã‚©ãƒ¼ãƒãƒƒãƒˆå¯¾è±¡ã®m/z
+	 * @param isForce æ¡æ•°å¼·åˆ¶çµ±ä¸€ãƒ•ãƒ©ã‚°ï¼ˆtrue:0åŸ‹ã‚ã¨åˆ‡æ¨ã¦ã‚’è¡Œã†ã€false:åˆ‡æ¨ã¦ã®ã¿è¡Œã†ï¼‰
+	 * @return ãƒ•ã‚©ãƒ¼ãƒãƒƒãƒˆå¾Œã®m/z
 	 */
 	private String formatMass(double mass, boolean isForce) {
 		final int ZERO_DIGIT = 4;
 		String massStr = String.valueOf(mass);
 		if (isForce) {
-			// ‹­§“I‚É‘S‚Ä‚ÌŒ…‚ğ“ˆê‚·‚éi0–„‚ß‚ÆØÌ‚Ä‚ğs‚¤j
+			// å¼·åˆ¶çš„ã«å…¨ã¦ã®æ¡ã‚’çµ±ä¸€ã™ã‚‹ï¼ˆ0åŸ‹ã‚ã¨åˆ‡æ¨ã¦ã‚’è¡Œã†ï¼‰
 			if (massStr.indexOf(".") == -1) {
 				massStr += ".0000";
 			}
@@ -709,7 +709,7 @@ public class PackageViewPanel extends JPanel {
 			}
 		}
 		else {
-			// Œ…‚ğ’´‚¦‚éê‡‚Ì‚İŒ…‚ğ“ˆê‚·‚éiØÌ‚Ä‚Ì‚İs‚¤j
+			// æ¡ã‚’è¶…ãˆã‚‹å ´åˆã®ã¿æ¡ã‚’çµ±ä¸€ã™ã‚‹ï¼ˆåˆ‡æ¨ã¦ã®ã¿è¡Œã†ï¼‰
 			if (massStr.indexOf(".") != -1) {
 				String [] tmpMzStr = massStr.split("\\.");
 				if (tmpMzStr[1].length() > ZERO_DIGIT) {
@@ -721,24 +721,24 @@ public class PackageViewPanel extends JPanel {
 	}
 	
 	/**
-	 * Colorƒe[ƒuƒ‹‚©‚ç‚ÌFæ“¾
-	 * Colorƒe[ƒuƒ‹‚©‚çF‚ğæ“¾‚µ‚Ä•Ô‹pB
-	 * Colorƒe[ƒuƒ‹“à‚ÌF‚ğg‚¢‚Ü‚í‚·B
-	 * @param index ƒCƒ“ƒfƒbƒNƒX
-	 * @return ColorƒIƒuƒWƒFƒNƒg
+	 * Colorãƒ†ãƒ¼ãƒ–ãƒ«ã‹ã‚‰ã®è‰²å–å¾—
+	 * Colorãƒ†ãƒ¼ãƒ–ãƒ«ã‹ã‚‰è‰²ã‚’å–å¾—ã—ã¦è¿”å´ã€‚
+	 * Colorãƒ†ãƒ¼ãƒ–ãƒ«å†…ã®è‰²ã‚’ä½¿ã„ã¾ã‚ã™ã€‚
+	 * @param index ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹
+	 * @return Colorã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ
 	 */
 	private Color getColor(int index) {
 		return colorTable[index % colorTable.length];
 	}
 
 	/**
-	 * ‘Sƒ{ƒ^ƒ“—LŒø–³Œø§Œä
-	 * @param enable —LŒø–³Œø
+	 * å…¨ãƒœã‚¿ãƒ³æœ‰åŠ¹ç„¡åŠ¹åˆ¶å¾¡
+	 * @param enable æœ‰åŠ¹ç„¡åŠ¹
 	 */
 	private void allBtnCtrl(boolean enable) {
 		
 		if (enable) {
-			// ƒXƒyƒNƒgƒ‹ˆÚ“®ƒ{ƒ^ƒ“
+			// ã‚¹ãƒšã‚¯ãƒˆãƒ«ç§»å‹•ãƒœã‚¿ãƒ³
 			if (!isInitRate) {
 				leftMostBtn.setEnabled(true);
 				leftBtn.setEnabled(true);
@@ -776,8 +776,8 @@ public class PackageViewPanel extends JPanel {
 	}
 	
 	/**
-	 * ƒŒƒR[ƒhƒy[ƒW•\¦
-	 * @param selectIndex ‘I‘ğsƒCƒ“ƒfƒbƒNƒX
+	 * ãƒ¬ã‚³ãƒ¼ãƒ‰ãƒšãƒ¼ã‚¸è¡¨ç¤º
+	 * @param selectIndex é¸æŠè¡Œã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹
 	 */
 	private void showRecordPage(int selectIndex) {
 		String id = specData.getRecInfo(selectIndex).getId();
@@ -794,47 +794,47 @@ public class PackageViewPanel extends JPanel {
 	}
 	
 	/**
-	 * ƒXƒyƒNƒgƒ‹•\¦ƒyƒCƒ“
-	 * PackageViewPanel‚ÌƒCƒ“ƒi[ƒNƒ‰ƒX
+	 * ã‚¹ãƒšã‚¯ãƒˆãƒ«è¡¨ç¤ºãƒšã‚¤ãƒ³
+	 * PackageViewPanelã®ã‚¤ãƒ³ãƒŠãƒ¼ã‚¯ãƒ©ã‚¹
 	 */
 	class SpectrumPlotPane extends JPanel implements MouseListener, MouseMotionListener {
 				
-		private long lastClickedTime = 0;									// ÅŒã‚ÉƒNƒŠƒbƒN‚µ‚½ŠÔ
+		private long lastClickedTime = 0;									// æœ€å¾Œã«ã‚¯ãƒªãƒƒã‚¯ã—ãŸæ™‚é–“
 		
-		private boolean isDrag = false;									// ƒhƒ‰ƒbƒOƒCƒxƒ“ƒg—LŒø–³Œøƒtƒ‰ƒO
-		private int[] dragArea = null;									// ƒhƒ‰ƒbƒO”ÍˆÍ•Û—p
+		private boolean isDrag = false;									// ãƒ‰ãƒ©ãƒƒã‚°ã‚¤ãƒ™ãƒ³ãƒˆæœ‰åŠ¹ç„¡åŠ¹ãƒ•ãƒ©ã‚°
+		private int[] dragArea = null;									// ãƒ‰ãƒ©ãƒƒã‚°ç¯„å›²ä¿æŒç”¨
 		
-		private final String LT = "LeftTop";								// ¶ã‚ğ•\‚·’è”
-		private final String LB = "LeftBottom";							// ¶‰º‚ğ•\‚·’è”
-		private final String RT = "RightTop";								// ‰Eã‚ğ•\‚·’è”
-		private final String RB = "RightBottom";							// ‰E‰º‚ğ•\‚·’è”
+		private final String LT = "LeftTop";								// å·¦ä¸Šã‚’è¡¨ã™å®šæ•°
+		private final String LB = "LeftBottom";							// å·¦ä¸‹ã‚’è¡¨ã™å®šæ•°
+		private final String RT = "RightTop";								// å³ä¸Šã‚’è¡¨ã™å®šæ•°
+		private final String RB = "RightBottom";							// å³ä¸‹ã‚’è¡¨ã™å®šæ•°
 		
 		private HashMap<String, Point> prevGraphArea = 
-			new HashMap<String, Point>(4);									// ˆê”Ôè‘O‚ÌƒOƒ‰ƒtƒGƒŠƒA”ÍˆÍ•Û—p
+			new HashMap<String, Point>(4);									// ä¸€ç•ªæ‰‹å‰ã®ã‚°ãƒ©ãƒ•ã‚¨ãƒªã‚¢ç¯„å›²ä¿æŒç”¨
 		
-		private final Color gridColor1 = Color.LIGHT_GRAY;					// ƒOƒŠƒbƒhƒƒCƒ“F
-		private final Color gridColor2 = new Color(235, 235, 235);		// ƒOƒŠƒbƒhƒTƒuF
-		private final Color graphColorBack = new Color(248, 248, 253);	// ƒOƒ‰ƒt”w–ÊF
-		private final Color graphColorSide = new Color(240, 240, 255);	// ƒOƒ‰ƒt‘¤–ÊF
-		private final Color graphColorBottom = new Color(250, 250, 250);	// ƒOƒ‰ƒt’ê–ÊF
+		private final Color gridColor1 = Color.LIGHT_GRAY;					// ã‚°ãƒªãƒƒãƒ‰ãƒ¡ã‚¤ãƒ³è‰²
+		private final Color gridColor2 = new Color(235, 235, 235);		// ã‚°ãƒªãƒƒãƒ‰ã‚µãƒ–è‰²
+		private final Color graphColorBack = new Color(248, 248, 253);	// ã‚°ãƒ©ãƒ•èƒŒé¢è‰²
+		private final Color graphColorSide = new Color(240, 240, 255);	// ã‚°ãƒ©ãƒ•å´é¢è‰²
+		private final Color graphColorBottom = new Color(250, 250, 250);	// ã‚°ãƒ©ãƒ•åº•é¢è‰²
 		
-		private final Color selectRecColor = new Color(153, 51, 255);		// ƒŒƒR[ƒh‘I‘ğF
-		private final Color onCursorColor = Color.BLUE;					// ƒJ[ƒ\ƒ‹ãF
+		private final Color selectRecColor = new Color(153, 51, 255);		// ãƒ¬ã‚³ãƒ¼ãƒ‰é¸æŠè‰²
+		private final Color onCursorColor = Color.BLUE;					// ã‚«ãƒ¼ã‚½ãƒ«ä¸Šè‰²
 		
-		private double xscale = 0d;											// x²•ûŒüŠg‘å—¦
-		private double yscale = 0d;											// y²•ûŒüŠg‘å—¦
+		private double xscale = 0d;											// xè»¸æ–¹å‘æ‹¡å¤§ç‡
+		private double yscale = 0d;											// yè»¸æ–¹å‘æ‹¡å¤§ç‡
 		
-		private int marginTop = MARGIN;									// ã•”—]”’
-		private int marginRight = MARGIN;									// ‰E•”—]”’
+		private int marginTop = MARGIN;									// ä¸Šéƒ¨ä½™ç™½
+		private int marginRight = MARGIN;									// å³éƒ¨ä½™ç™½
 		
-		private JPopupMenu contextPopup = null;							// ƒRƒ“ƒeƒLƒXƒgƒ|ƒbƒvƒAƒbƒvƒƒjƒ…[
-		private JPopupMenu selectPopup = null;				 				// ƒs[ƒN‘I‘ğƒ|ƒbƒvƒAƒbƒvƒƒjƒ…[
+		private JPopupMenu contextPopup = null;							// ã‚³ãƒ³ãƒ†ã‚­ã‚¹ãƒˆãƒãƒƒãƒ—ã‚¢ãƒƒãƒ—ãƒ¡ãƒ‹ãƒ¥ãƒ¼
+		private JPopupMenu selectPopup = null;				 				// ãƒ”ãƒ¼ã‚¯é¸æŠãƒãƒƒãƒ—ã‚¢ãƒƒãƒ—ãƒ¡ãƒ‹ãƒ¥ãƒ¼
 		
-		private ArrayList<String> overCursorMz = null;						// ƒJ[ƒ\ƒ‹ãƒs[ƒNm/zƒŠƒXƒg
+		private ArrayList<String> overCursorMz = null;						// ã‚«ãƒ¼ã‚½ãƒ«ä¸Šãƒ”ãƒ¼ã‚¯m/zãƒªã‚¹ãƒˆ
 		
 		
 		/**
-		 * ƒfƒtƒHƒ‹ƒgƒRƒ“ƒXƒgƒ‰ƒNƒ^
+		 * ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 		 */
 		public SpectrumPlotPane() {
 			cursorPoint = new Point();
@@ -843,8 +843,8 @@ public class PackageViewPanel extends JPanel {
 		}
 		
 		/**
-		 * x²–Ú·‚è•ŒvZ
-		 * @param range ƒ}ƒXƒŒƒ“ƒW
+		 * xè»¸ç›®ç››ã‚Šå¹…è¨ˆç®—
+		 * @param range ãƒã‚¹ãƒ¬ãƒ³ã‚¸
 		 */
 		private int stepCalc(int range) {
 			
@@ -870,11 +870,11 @@ public class PackageViewPanel extends JPanel {
 		}
 		
 		/**
-		 * ƒOƒ‰ƒt‚ÌƒAƒ“ƒOƒ‹‚ÉŠÖ‚·‚éİ’è
+		 * ã‚°ãƒ©ãƒ•ã®ã‚¢ãƒ³ã‚°ãƒ«ã«é–¢ã™ã‚‹è¨­å®š
 		 */
 		private void setAngleProperty() {
 			
-			// ‰Šú•\¦ƒAƒ“ƒOƒ‹İ’è
+			// åˆæœŸè¡¨ç¤ºã‚¢ãƒ³ã‚°ãƒ«è¨­å®š
 			if (initDispFlag) {
 				if (recNum <= 1 ) {
 					maxMoveXPoint = 0;
@@ -886,7 +886,7 @@ public class PackageViewPanel extends JPanel {
 					return;
 				}
 				
-				// x²‰Šú‰Â“®’l
+				// xè»¸åˆæœŸå¯å‹•å€¤
 				if (width == 0) {
 					moveXPoint = 0;
 				}
@@ -894,7 +894,7 @@ public class PackageViewPanel extends JPanel {
 					moveXPoint = (int)((width - (MARGIN * 2)) * 0.2) / (recNum - 1);
 				}
 				
-				// y²‰Šú‰Â“®’l
+				// yè»¸åˆæœŸå¯å‹•å€¤
 				if (height == 0) {
 					moveYPoint = 0;
 				}
@@ -906,7 +906,7 @@ public class PackageViewPanel extends JPanel {
 			}
 			
 			
-			// x²Å‘å‹y‚ÑÅ¬‰Â“®’l‚Ìİ’è
+			// xè»¸æœ€å¤§åŠã³æœ€å°å¯å‹•å€¤ã®è¨­å®š
 			if (recNum > 1) {
 				maxMoveXPoint = (int)((width - (MARGIN * 2)) * 0.8) / (recNum - 1);
 				if (0 > maxMoveXPoint) {
@@ -923,7 +923,7 @@ public class PackageViewPanel extends JPanel {
 				minMoveXPoint = 0;
 			}
 				
-			// x²‰Â“®’l‚Ì”ÍˆÍƒ`ƒFƒbƒN
+			// xè»¸å¯å‹•å€¤ã®ç¯„å›²ãƒã‚§ãƒƒã‚¯
 			if (moveXPoint > maxMoveXPoint) {
 				moveXPoint = maxMoveXPoint;
 			}
@@ -934,7 +934,7 @@ public class PackageViewPanel extends JPanel {
 				}
 			}
 
-			// y²Å‘å‹y‚ÑÅ¬‰Â“®’l‚Ìİ’è
+			// yè»¸æœ€å¤§åŠã³æœ€å°å¯å‹•å€¤ã®è¨­å®š
 			if (recNum > 1) {
 				maxMoveYPoint = (int)((height - (MARGIN * 2)) * 0.9) / (recNum - 1);
 				if (0 > maxMoveYPoint) {
@@ -951,7 +951,7 @@ public class PackageViewPanel extends JPanel {
 				minMoveYPoint = 0;
 			}
 				
-			// y²‰Â“®’l‚Ì”ÍˆÍƒ`ƒFƒbƒN
+			// yè»¸å¯å‹•å€¤ã®ç¯„å›²ãƒã‚§ãƒƒã‚¯
 			if (moveYPoint > maxMoveYPoint) {
 				moveYPoint = maxMoveYPoint;
 			}
@@ -964,7 +964,7 @@ public class PackageViewPanel extends JPanel {
 		}
 		
 		/**
-		 * ƒXƒe[ƒ^ƒXƒ‰ƒxƒ‹•¶š—ñİ’è
+		 * ã‚¹ãƒ†ãƒ¼ã‚¿ã‚¹ãƒ©ãƒ™ãƒ«æ–‡å­—åˆ—è¨­å®š
 		 */
 		private void setStatusLabel() {
 			if (specData.getSelectedPeakNum() != 0) {
@@ -983,7 +983,7 @@ public class PackageViewPanel extends JPanel {
 		}
 		
 		/**
-		 * ƒyƒCƒ“ƒgƒRƒ“ƒ|[ƒlƒ“ƒg
+		 * ãƒšã‚¤ãƒ³ãƒˆã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆ
 		 * @see javax.swing.JComponent#paintComponent(java.awt.Graphics)
 		 */
 		public void paintComponent(Graphics g) {
@@ -991,31 +991,31 @@ public class PackageViewPanel extends JPanel {
 			super.paintComponent(g);
 			
 			final FontUIResource font1 = new FontUIResource(
-					g.getFont().getFamily(),g.getFont().getStyle(),14);	// ƒtƒHƒ“ƒg1
+					g.getFont().getFamily(),g.getFont().getStyle(),14);	// ãƒ•ã‚©ãƒ³ãƒˆ1
 			final FontUIResource font2 = new FontUIResource(
-					g.getFont().getFamily(),g.getFont().getStyle(),9);	// ƒtƒHƒ“ƒg2
+					g.getFont().getFamily(),g.getFont().getStyle(),9);	// ãƒ•ã‚©ãƒ³ãƒˆ2
 			final FontUIResource font3 = new FontUIResource(
-					g.getFont().getFamily(),g.getFont().getStyle(),12);	// ƒtƒHƒ“ƒg3
+					g.getFont().getFamily(),g.getFont().getStyle(),12);	// ãƒ•ã‚©ãƒ³ãƒˆ3
 			
-			// ‰æ–ÊƒTƒCƒYÄİ’è
+			// ç”»é¢ã‚µã‚¤ã‚ºå†è¨­å®š
 			width = getWidth();
 			height = getHeight();
 			
-			// ƒOƒ‰ƒt‚Ì‰Â“®‚ÉŠÖ‚·‚éİ’è‚ÌÄİ’èi‰æ–ÊƒŠƒTƒCƒY‚É‘Î‰‚·‚é‚½‚ß‚Ìˆ—j
+			// ã‚°ãƒ©ãƒ•ã®å¯å‹•ã«é–¢ã™ã‚‹è¨­å®šã®å†è¨­å®šï¼ˆç”»é¢ãƒªã‚µã‚¤ã‚ºã«å¯¾å¿œã™ã‚‹ãŸã‚ã®å‡¦ç†ï¼‰
 			setAngleProperty();
 			
-			// •`‰æƒGƒŠƒA‘S‘Ì‚Ì”wŒi•`‰æ
+			// æç”»ã‚¨ãƒªã‚¢å…¨ä½“ã®èƒŒæ™¯æç”»
 			g.setColor(Color.WHITE);
 			g.fillRect(0, 0, width, height);
 			
-			// x²•ûŒüŠg‘å—¦‚ÌZo
+			// xè»¸æ–¹å‘æ‹¡å¤§ç‡ã®ç®—å‡º
 //			xscale = (width - 2.0f * MARGIN) / massRange;
 			xscale = (width - (2.0d * MARGIN) - ((recNum-1) * moveXPoint)) / massRange;
 			if (xscale < 0d) {
 				xscale = 0d;
 			}
 			
-			// y²•ûŒüŠg‘å—¦‚ÌZo
+			// yè»¸æ–¹å‘æ‹¡å¤§ç‡ã®ç®—å‡º
 //			float yscale = (height - (float)(MARGIN +marginTop) ) / intensityRange;
 			yscale = (height - (double)(MARGIN + marginTop + (recNum-1) * moveYPoint) ) / intensityRange;
 			if (yscale < 0d) {
@@ -1025,20 +1025,20 @@ public class PackageViewPanel extends JPanel {
 			int tmpMarginTop = 0;
 			int tmpMarginRight = 0;
 			
-			int baseX = 0;			// x²‚Æy²‚ÌŒğ“_‚ÌxÀ•W
-			int baseY = 0;			// x²‚Æy²‚ÌŒğ“_‚ÌyÀ•W
-			int nextBaseX = 0;		// ŸƒŒƒR[ƒh‚Ìx²‚Æy²‚ÌŒğ“_‚ÌxÀ•W
-			int nextBaseY = 0;		// ŸƒŒƒR[ƒh‚Ìx²‚Æy²‚ÌŒğ“_‚ÌyÀ•W
+			int baseX = 0;			// xè»¸ã¨yè»¸ã®äº¤ç‚¹ã®xåº§æ¨™
+			int baseY = 0;			// xè»¸ã¨yè»¸ã®äº¤ç‚¹ã®yåº§æ¨™
+			int nextBaseX = 0;		// æ¬¡ãƒ¬ã‚³ãƒ¼ãƒ‰ã®xè»¸ã¨yè»¸ã®äº¤ç‚¹ã®xåº§æ¨™
+			int nextBaseY = 0;		// æ¬¡ãƒ¬ã‚³ãƒ¼ãƒ‰ã®xè»¸ã¨yè»¸ã®äº¤ç‚¹ã®yåº§æ¨™
 			
 			int loopCount = ((recNum != 0) ? recNum : (recNum + 1));
 			
-			// ƒOƒ‰ƒt”wŒiF‚ğ•`‰æ
-			int[] sideXPlots = new int[4];		// ƒOƒ‰ƒt‘¤–Ê—px²
-			int[] sideYPlots = new int[4];		// ƒOƒ‰ƒt‘¤–Ê—py²
-			int[] backXPlots = new int[4];		// ƒOƒ‰ƒt”w–Ê—px²
-			int[] backYPlots = new int[4];		// ƒOƒ‰ƒt”w–Ê—py²
-			int[] bottomXPlots = new int[4];	// ƒOƒ‰ƒt’ê–Ê—px²
-			int[] bottomYPlots = new int[4];	// ƒOƒ‰ƒt’ê–Ê—py²
+			// ã‚°ãƒ©ãƒ•èƒŒæ™¯è‰²ã‚’æç”»
+			int[] sideXPlots = new int[4];		// ã‚°ãƒ©ãƒ•å´é¢ç”¨xè»¸
+			int[] sideYPlots = new int[4];		// ã‚°ãƒ©ãƒ•å´é¢ç”¨yè»¸
+			int[] backXPlots = new int[4];		// ã‚°ãƒ©ãƒ•èƒŒé¢ç”¨xè»¸
+			int[] backYPlots = new int[4];		// ã‚°ãƒ©ãƒ•èƒŒé¢ç”¨yè»¸
+			int[] bottomXPlots = new int[4];	// ã‚°ãƒ©ãƒ•åº•é¢ç”¨xè»¸
+			int[] bottomYPlots = new int[4];	// ã‚°ãƒ©ãƒ•åº•é¢ç”¨yè»¸
 			for (int i=0; i<loopCount; i++) {
 				
 				baseX = MARGIN + (loopCount-1-i) * moveXPoint;
@@ -1089,17 +1089,17 @@ public class PackageViewPanel extends JPanel {
 				}
 			}
 			g.setColor(graphColorBack);
-			g.fillPolygon(backXPlots, backYPlots, 4);		// ”w–Ê
+			g.fillPolygon(backXPlots, backYPlots, 4);		// èƒŒé¢
 			
 			g.setColor(graphColorSide);
-			g.fillPolygon(sideXPlots, sideYPlots, 4);		// ‘¤–Ê
+			g.fillPolygon(sideXPlots, sideYPlots, 4);		// å´é¢
 			
 			g.setColor(graphColorBottom);
-			g.fillPolygon(bottomXPlots, bottomYPlots, 4);	// ’ê–Ê
+			g.fillPolygon(bottomXPlots, bottomYPlots, 4);	// åº•é¢
 			
 			
 			
-			// ƒOƒ‰ƒtƒOƒŠƒbƒh•`‰æ
+			// ã‚°ãƒ©ãƒ•ã‚°ãƒªãƒƒãƒ‰æç”»
 			g.setFont(font2);
 			for (int i=0; i<loopCount; i++) {
  				g.setColor(Color.LIGHT_GRAY);
@@ -1122,10 +1122,10 @@ public class PackageViewPanel extends JPanel {
 				int step = stepCalc((int)massRange);
 				int start = (step - (int)massStart % step) % step;
 				
-				// x²
+				// xè»¸
 				for (int j=start; j<(int)massRange; j+=step) {
 					g.setColor(gridColor2);
-					// x²‚ğŠî€‚ÉƒOƒ‰ƒt”w–Êy²ƒOƒŠƒbƒh•`‰æ
+					// xè»¸ã‚’åŸºæº–ã«ã‚°ãƒ©ãƒ•èƒŒé¢yè»¸ã‚°ãƒªãƒƒãƒ‰æç”»
 					if ( i == 0 ) {
 						g.drawLine(baseX + (int)(j * xscale),
 								   baseY,
@@ -1133,7 +1133,7 @@ public class PackageViewPanel extends JPanel {
 								   tmpMarginTop);
 					}
 					
-					// x²‚ğŠî€‚ÉƒOƒ‰ƒt’ê–Êz²ƒOƒŠƒbƒh•`‰æ
+					// xè»¸ã‚’åŸºæº–ã«ã‚°ãƒ©ãƒ•åº•é¢zè»¸ã‚°ãƒªãƒƒãƒ‰æç”»
 					if ( i != (loopCount-1) ) {
 						g.drawLine(baseX + (int)(j * xscale),
 								   baseY,
@@ -1142,13 +1142,13 @@ public class PackageViewPanel extends JPanel {
 					}
 					
 					g.setColor(gridColor1);
-					// ƒOƒ‰ƒtŠî€x²–Ú·‚è•`‰æ
+					// ã‚°ãƒ©ãƒ•åŸºæº–xè»¸ç›®ç››ã‚Šæç”»
 					g.drawLine(baseX + (int)(j * xscale),
 							   baseY,
 							   baseX + (int)(j * xscale),
 							   baseY + 2);
 					
-					// ƒOƒ‰ƒtŠî€x²‚Ö‚Ìm/z•¶š—ñ•`‰æ
+					// ã‚°ãƒ©ãƒ•åŸºæº–xè»¸ã¸ã®m/zæ–‡å­—åˆ—æç”»
 					if (i == (loopCount-1)) {
 						g.drawString(formatMass(j + massStart, true),
 									 baseX + (int)(j * xscale) - 5,
@@ -1156,10 +1156,10 @@ public class PackageViewPanel extends JPanel {
 					}
 				}
 				
-				// y²
+				// yè»¸
 				for (int j=0; j<=intensityRange; j += intensityRange / 5) {
 					g.setColor(gridColor2);
-					// y²‚ğŠî€‚ÉƒOƒ‰ƒt”w–Êx²ƒOƒŠƒbƒh•`‰æ
+					// yè»¸ã‚’åŸºæº–ã«ã‚°ãƒ©ãƒ•èƒŒé¢xè»¸ã‚°ãƒªãƒƒãƒ‰æç”»
 					if ( i == 0 ) {
 						g.drawLine(baseX,
 								   baseY - (int)(j * yscale),
@@ -1167,7 +1167,7 @@ public class PackageViewPanel extends JPanel {
 								   baseY - (int)(j * yscale));
 					}
 					
-					// y²‚ğŠî€‚ÉƒOƒ‰ƒt‘¤–Êz²ƒOƒŠƒbƒh•`‰æ
+					// yè»¸ã‚’åŸºæº–ã«ã‚°ãƒ©ãƒ•å´é¢zè»¸ã‚°ãƒªãƒƒãƒ‰æç”»
 					if ( i != (loopCount-1) ) {
 						g.drawLine(baseX,
 								   baseY - (int)(j * yscale),
@@ -1176,13 +1176,13 @@ public class PackageViewPanel extends JPanel {
 					}
 					
 					g.setColor(gridColor1);
-					// ƒOƒ‰ƒtŠî€y²–Ú·‚è•`‰æ
+					// ã‚°ãƒ©ãƒ•åŸºæº–yè»¸ç›®ç››ã‚Šæç”»
 					g.drawLine(baseX - 2,
 							   baseY - (int)(j * yscale),
 							   baseX,
 							   baseY - (int)(j * yscale));
 					
-					// ƒOƒ‰ƒtŠî€y²‚Ö‚Ì‹­“x•¶š—ñ•`‰æ
+					// ã‚°ãƒ©ãƒ•åŸºæº–yè»¸ã¸ã®å¼·åº¦æ–‡å­—åˆ—æç”»
 					if (i == (loopCount-1)) {
 						g.drawString(String.valueOf(j),	
 									 0,
@@ -1191,13 +1191,13 @@ public class PackageViewPanel extends JPanel {
 				}
 				
 				
-				// å—vƒOƒŠƒbƒh•`‰æ
+				// ä¸»è¦ã‚°ãƒªãƒƒãƒ‰æç”»
 				g.setColor(gridColor1);
 				if ( i != (loopCount-1) ) {
 					g.drawLine(baseX,
 							   baseY,
 							   nextBaseX,
-							   nextBaseY);									// z²
+							   nextBaseY);									// zè»¸
 				}
 				if (recTable != null && i == recTable.getSelectedRow()) {
 					g.setColor(selectRecColor.darker());
@@ -1205,11 +1205,11 @@ public class PackageViewPanel extends JPanel {
 				else {
 					g.setColor(gridColor1);
 				}
-				g.drawLine(baseX, tmpMarginTop, baseX, baseY);				// y²
-				g.drawLine(baseX, baseY, width - tmpMarginRight, baseY);	// x²
+				g.drawLine(baseX, tmpMarginTop, baseX, baseY);				// yè»¸
+				g.drawLine(baseX, baseY, width - tmpMarginRight, baseY);	// xè»¸
 				
 				
-				// ˆê”Ôè‘O‚ÌƒOƒ‰ƒtƒGƒŠƒA‚Ì”ÍˆÍ‚ğ•Û
+				// ä¸€ç•ªæ‰‹å‰ã®ã‚°ãƒ©ãƒ•ã‚¨ãƒªã‚¢ã®ç¯„å›²ã‚’ä¿æŒ
 				if (i == (recNum-1)) {
 					prevGraphArea.put(LB, new Point(baseX, baseY));
 					prevGraphArea.put(LT, new Point(baseX, tmpMarginTop));
@@ -1217,32 +1217,32 @@ public class PackageViewPanel extends JPanel {
 					prevGraphArea.put(RB, new Point(width - tmpMarginRight, baseY));					
 				}
 				
-				// ƒ}ƒEƒX‚Åƒhƒ‰ƒbƒO‚µ‚½—Ìˆæ‚ğ‰©F‚Ì—§‘Ì‚ÅˆÍ‚Ş
+				// ãƒã‚¦ã‚¹ã§ãƒ‰ãƒ©ãƒƒã‚°ã—ãŸé ˜åŸŸã‚’é»„è‰²ã®ç«‹ä½“ã§å›²ã‚€
 				if (i == (recNum-1) && underDrag) {
 					
 					int xpos = Math.min(fromPos.x, toPos.x);
 					int dragWidth = Math.abs(fromPos.x - toPos.x);
 					
 					
-					// ƒhƒ‰ƒbƒO”ÍˆÍ‚ğ—§‘Ì‚Å•`‰æ
+					// ãƒ‰ãƒ©ãƒƒã‚°ç¯„å›²ã‚’ç«‹ä½“ã§æç”»
 					g.setXORMode(Color.WHITE);
 					g.setColor(Color.YELLOW);
 					g.fillPolygon(
 							new int[]{xpos+dragWidth, xpos+dragWidth, xpos, xpos},
 							new int[]{tmpMarginTop, baseY, baseY, tmpMarginTop},
-							4);	// ³–Ê
+							4);	// æ­£é¢
 					g.setColor(new Color(255, 255, 90));
 					g.fillPolygon(
 							new int[]{xpos+dragWidth, xpos+dragWidth+((recNum-1)*moveXPoint), xpos+((recNum-1)*moveXPoint), xpos},
 							new int[]{tmpMarginTop, tmpMarginTop-((recNum-1)*moveYPoint), tmpMarginTop-((recNum-1)*moveYPoint), tmpMarginTop},
-							4);	// “V–Ê
+							4);	// å¤©é¢
 					g.setColor(new Color(225, 225, 0));
 					g.fillPolygon(
 							new int[]{xpos+dragWidth, xpos+dragWidth+((recNum-1)*moveXPoint), xpos+dragWidth+((recNum-1)*moveXPoint), xpos+dragWidth},
 							new int[]{tmpMarginTop, tmpMarginTop-((recNum-1)*moveYPoint), baseY-((recNum-1)*moveYPoint), baseY},
-							4);	// ‘¤–Ê
+							4);	// å´é¢
 					
-					// ’ÊíŒ©‚¦‚È‚¢—§‘Ì‚Ì‹«ŠEü‚ğ•`‰æ
+					// é€šå¸¸è¦‹ãˆãªã„ç«‹ä½“ã®å¢ƒç•Œç·šã‚’æç”»
 					g.setPaintMode();
 					g.setColor(new Color(200, 200, 0));
 					g.drawLine(
@@ -1250,36 +1250,36 @@ public class PackageViewPanel extends JPanel {
 							tmpMarginTop-((recNum-1)*moveYPoint),
 							xpos+((recNum-1)*moveXPoint),
 							baseY-((recNum-1)*moveYPoint)
-							);	// y²
+							);	// yè»¸
 					g.drawLine(
 							xpos+((recNum-1)*moveXPoint), 
 							baseY-((recNum-1)*moveYPoint),
 							xpos, 
 							baseY
-							);	// z²
+							);	// zè»¸
 					g.drawLine(
 							xpos+((recNum-1)*moveXPoint), 
 							baseY-((recNum-1)*moveYPoint), 
 							xpos+dragWidth+((recNum-1)*moveXPoint), 
 							baseY-((recNum-1)*moveYPoint)
-							);	// x²
+							);	// xè»¸
 					
-					// —§‘Ì‚Ì‹«ŠEü‚ğ•`‰æ
+					// ç«‹ä½“ã®å¢ƒç•Œç·šã‚’æç”»
 					g.setColor(new Color(150, 150, 0));
 					g.drawPolygon(
 							new int[]{xpos + dragWidth,xpos+dragWidth, xpos, xpos},
 							new int[]{tmpMarginTop, baseY, baseY, tmpMarginTop},
-							4);	// ³–Ê
+							4);	// æ­£é¢
 					g.drawPolygon(
 							new int[]{xpos+dragWidth, xpos+dragWidth+((recNum-1)*moveXPoint), xpos+((recNum-1)*moveXPoint), xpos},
 							new int[]{tmpMarginTop, tmpMarginTop-((recNum-1)*moveYPoint), tmpMarginTop-((recNum-1)*moveYPoint), tmpMarginTop},
-							4);	// “V–Ê
+							4);	// å¤©é¢
 					g.drawPolygon(
 							new int[]{xpos+dragWidth, xpos+dragWidth+((recNum-1)*moveXPoint), xpos+dragWidth+((recNum-1)*moveXPoint), xpos+dragWidth},
 							new int[]{tmpMarginTop, tmpMarginTop-((recNum-1)*moveYPoint), baseY-((recNum-1)*moveYPoint), baseY},
-							4);	// ‘¤–Ê
+							4);	// å´é¢
 					
-					// ƒhƒ‰ƒbƒO”ÍˆÍ‚ğ•Û
+					// ãƒ‰ãƒ©ãƒƒã‚°ç¯„å›²ã‚’ä¿æŒ
 					dragArea = new int[]{xpos, xpos + dragWidth};
 				}
 			}
@@ -1288,8 +1288,8 @@ public class PackageViewPanel extends JPanel {
 			PackageRecData recData = null;
 			overCursorMz = new ArrayList<String>();
 			
-			// ƒJ[ƒ\ƒ‹ƒ‰ƒCƒ“•\¦ˆ—
-			ArrayList<ArrayList<String>> cursorLineXInfo = new ArrayList<ArrayList<String>>();		// ƒŒƒR[ƒh–ˆ‚ÌƒJ[ƒ\ƒ‹ƒ‰ƒCƒ“xÀ•Wî•ñ
+			// ã‚«ãƒ¼ã‚½ãƒ«ãƒ©ã‚¤ãƒ³è¡¨ç¤ºå‡¦ç†
+			ArrayList<ArrayList<String>> cursorLineXInfo = new ArrayList<ArrayList<String>>();		// ãƒ¬ã‚³ãƒ¼ãƒ‰æ¯ã®ã‚«ãƒ¼ã‚½ãƒ«ãƒ©ã‚¤ãƒ³xåº§æ¨™æƒ…å ±
 			for (int i=0; i<recNum; i++) {
 				
 				recData = specData.getRecInfo(i);
@@ -1309,7 +1309,7 @@ public class PackageViewPanel extends JPanel {
 				int step = stepCalc((int)massRange);
 				int start = (step - (int)massStart % step) % step;
 				
-				// ƒs[ƒN‚ª‚È‚¢ê‡
+				// ãƒ”ãƒ¼ã‚¯ãŒãªã„å ´åˆ
 				if ( recData.getPeakNum() == 0 ) {
 					continue;
 				}
@@ -1327,7 +1327,7 @@ public class PackageViewPanel extends JPanel {
 					y = baseY - (int)(its * yscale);
 					w = (int)(xscale / 8);
 					
-					// •`‰æƒpƒ‰ƒ[ƒ^i•j’²®
+					// æç”»ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ï¼ˆå¹…ï¼‰èª¿æ•´
 					if (w < 2) {
 						w = 2;
 					}
@@ -1335,13 +1335,13 @@ public class PackageViewPanel extends JPanel {
 						w = 3;
 					}
 					
-					// y²‚æ‚è¶‘¤‚É‚Í•`‰æ‚µ‚È‚¢‚æ‚¤‚É’²®
+					// yè»¸ã‚ˆã‚Šå·¦å´ã«ã¯æç”»ã—ãªã„ã‚ˆã†ã«èª¿æ•´
 					if(baseX > x) {
 						w = (w - (baseX - x) > 0) ? (w - (baseX - x)) : 1;
 						x = baseX + 1;
 					}
 					
-					// ‘I‘ğÏƒs[ƒN‚Å‚ ‚é‚©‚ğ”»’è
+					// é¸æŠæ¸ˆãƒ”ãƒ¼ã‚¯ã§ã‚ã‚‹ã‹ã‚’åˆ¤å®š
 					if (specData.getSelectedPeakNum() != 0) {
 						Iterator<Double> ite = specData.getSelectedPeakList().iterator();
 						while (ite.hasNext()) {
@@ -1350,7 +1350,7 @@ public class PackageViewPanel extends JPanel {
 								break;
 							}
 						}
-						// ƒJ[ƒ\ƒ‹ƒ‰ƒCƒ“•`‰æ
+						// ã‚«ãƒ¼ã‚½ãƒ«ãƒ©ã‚¤ãƒ³æç”»
 						if ( isSelectedLine ) {
 							g.setColor(Color.CYAN.darker().darker());
 							g.drawLine(
@@ -1358,39 +1358,39 @@ public class PackageViewPanel extends JPanel {
 									baseY,
 									x + (i * moveXPoint),
 									baseY - (i * moveYPoint)
-									);											// ƒJ[ƒ\ƒ‹ƒs[ƒN‚æ‚è‰œ
+									);											// ã‚«ãƒ¼ã‚½ãƒ«ãƒ”ãƒ¼ã‚¯ã‚ˆã‚Šå¥¥
 							g.drawLine(
 									x,
 									baseY,
 									x - ((recNum - 1 - i) * moveXPoint),
 									baseY + ((recNum - 1 - i) * moveYPoint)
-									);											// ƒJ[ƒ\ƒ‹ƒs[ƒN‚æ‚èè‘O
+									);											// ã‚«ãƒ¼ã‚½ãƒ«ãƒ”ãƒ¼ã‚¯ã‚ˆã‚Šæ‰‹å‰
 							g.drawLine(
 									x - ((recNum - 1 - i) * moveXPoint),
 									baseY + ((recNum - 1 - i) * moveYPoint),
 									x - ((recNum - 1 - i) * moveXPoint) - 2,
 									baseY + ((recNum - 1 - i) * moveYPoint) + 6
-									);											// ƒJ[ƒ\ƒ‹ƒ‰ƒCƒ“–Úˆó
+									);											// ã‚«ãƒ¼ã‚½ãƒ«ãƒ©ã‚¤ãƒ³ç›®å°
 							g.drawLine(
 									x - ((recNum - 1 - i) * moveXPoint),
 									baseY + ((recNum - 1 - i) * moveYPoint),
 									x - ((recNum - 1 - i) * moveXPoint) + 2,
 									baseY + ((recNum - 1 - i) * moveYPoint) + 6
-									);											// ƒJ[ƒ\ƒ‹ƒ‰ƒCƒ“–Úˆó
+									);											// ã‚«ãƒ¼ã‚½ãƒ«ãƒ©ã‚¤ãƒ³ç›®å°
 						}
 					}
 					
 					
-					// Šg‘åˆ—’†‚Íˆ—‚µ‚È‚¢
+					// æ‹¡å¤§å‡¦ç†ä¸­ã¯å‡¦ç†ã—ãªã„
 					if (animationTimer == null || !animationTimer.isRunning()) {
 						
-						// ƒJ[ƒ\ƒ‹‚ÌêŠiX/YÀ•Wj‚ªPeak‚Ì•`‰æƒGƒŠƒA‚ÉŠÜ‚Ü‚ê‚Ä‚¢‚éê‡				
+						// ã‚«ãƒ¼ã‚½ãƒ«ã®å ´æ‰€ï¼ˆX/Yåº§æ¨™ï¼‰ãŒPeakã®æç”»ã‚¨ãƒªã‚¢ã«å«ã¾ã‚Œã¦ã„ã‚‹å ´åˆ				
 						if ((cursorPoint.x >= x 
 								&& cursorPoint.x <= (x + w) 
 								&& cursorPoint.y >= y
 								&& cursorPoint.y <= baseY)) {
 							
-							ArrayList<String> cursorLineX = new ArrayList<String>();	// ƒŒƒR[ƒh–ˆ‚ÌƒJ[ƒ\ƒ‹ƒ‰ƒCƒ“xÀ•W
+							ArrayList<String> cursorLineX = new ArrayList<String>();	// ãƒ¬ã‚³ãƒ¼ãƒ‰æ¯ã®ã‚«ãƒ¼ã‚½ãƒ«ãƒ©ã‚¤ãƒ³xåº§æ¨™
 							for (int k=0; k<recNum; k++) {
 								
 								if (k <= i) {
@@ -1402,34 +1402,34 @@ public class PackageViewPanel extends JPanel {
 							}
 							cursorLineXInfo.add(cursorLineX);
 							
-							// ƒJ[ƒ\ƒ‹ƒ‰ƒCƒ“•`‰æ
+							// ã‚«ãƒ¼ã‚½ãƒ«ãƒ©ã‚¤ãƒ³æç”»
 							if ( !isSelectedLine ) {
-								// ‘I‘ğÏƒs[ƒN‚Å‚È‚¢ê‡‚É•`‰æ
+								// é¸æŠæ¸ˆãƒ”ãƒ¼ã‚¯ã§ãªã„å ´åˆã«æç”»
 								g.setColor(onCursorColor.darker());
 								g.drawLine(
 										x,
 										baseY,
 										x + (i * moveXPoint),
 										baseY - (i * moveYPoint)
-										);											// ƒJ[ƒ\ƒ‹ƒs[ƒN‚æ‚è‰œ
+										);											// ã‚«ãƒ¼ã‚½ãƒ«ãƒ”ãƒ¼ã‚¯ã‚ˆã‚Šå¥¥
 								g.drawLine(
 										x,
 										baseY,
 										x - ((recNum - 1 - i) * moveXPoint),
 										baseY + ((recNum - 1 - i) * moveYPoint)
-										);											// ƒJ[ƒ\ƒ‹ƒs[ƒN‚æ‚èè‘O
+										);											// ã‚«ãƒ¼ã‚½ãƒ«ãƒ”ãƒ¼ã‚¯ã‚ˆã‚Šæ‰‹å‰
 								g.drawLine(
 										x - ((recNum - 1 - i) * moveXPoint),
 										baseY + ((recNum - 1 - i) * moveYPoint),
 										x - ((recNum - 1 - i) * moveXPoint) - 2,
 										baseY + ((recNum - 1 - i) * moveYPoint) + 6
-										);											// ƒJ[ƒ\ƒ‹ƒ‰ƒCƒ“–Úˆó
+										);											// ã‚«ãƒ¼ã‚½ãƒ«ãƒ©ã‚¤ãƒ³ç›®å°
 								g.drawLine(
 										x - ((recNum - 1 - i) * moveXPoint),
 										baseY + ((recNum - 1 - i) * moveYPoint),
 										x - ((recNum - 1 - i) * moveXPoint) + 2,
 										baseY + ((recNum - 1 - i) * moveYPoint) + 6
-										);											// ƒJ[ƒ\ƒ‹ƒ‰ƒCƒ“–Úˆó
+										);											// ã‚«ãƒ¼ã‚½ãƒ«ãƒ©ã‚¤ãƒ³ç›®å°
 							}
 							
 							overCursorMz.add(String.valueOf(mz));
@@ -1439,7 +1439,7 @@ public class PackageViewPanel extends JPanel {
 			}	// end for
 			
 			
-			// ƒs[ƒN•`‰æ
+			// ãƒ”ãƒ¼ã‚¯æç”»
 			for (int i=0; i<recNum; i++) {
 				
 				recData = specData.getRecInfo(i);
@@ -1466,7 +1466,7 @@ public class PackageViewPanel extends JPanel {
 				int step = stepCalc((int)massRange);
 				int start = (step - (int)massStart % step) % step;
 				
-				// ƒs[ƒN‚ª‚È‚¢ê‡
+				// ãƒ”ãƒ¼ã‚¯ãŒãªã„å ´åˆ
 				if ( recData.getPeakNum() == 0 ) {
 					continue;
 				}
@@ -1478,8 +1478,8 @@ public class PackageViewPanel extends JPanel {
 				end = recData.getIndex(massStart + massRange);
 				for (int j=start; j<end; j++) {
 					boolean isSelectedLine = false;
-					boolean isOnLine = false;						// ƒ}ƒEƒXƒJ[ƒ\ƒ‹ƒ‰ƒCƒ“ãƒs[ƒNƒtƒ‰ƒO
-					boolean isDragArea = false;					// ƒhƒ‰ƒbƒO”ÍˆÍ“àƒtƒ‰ƒO
+					boolean isOnLine = false;						// ãƒã‚¦ã‚¹ã‚«ãƒ¼ã‚½ãƒ«ãƒ©ã‚¤ãƒ³ä¸Šãƒ”ãƒ¼ã‚¯ãƒ•ãƒ©ã‚°
+					boolean isDragArea = false;					// ãƒ‰ãƒ©ãƒƒã‚°ç¯„å›²å†…ãƒ•ãƒ©ã‚°
 					
 					mz = recData.getMz(j);
 					its = recData.getIntensity(j);
@@ -1490,12 +1490,12 @@ public class PackageViewPanel extends JPanel {
 					w = (int)(xscale / 8);
 					h = (int)(its * yscale);
 					
-					// •`‰æƒpƒ‰ƒ[ƒ^i‚‚³AˆÊ’uj’²®
+					// æç”»ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ï¼ˆé«˜ã•ã€ä½ç½®ï¼‰èª¿æ•´
 					if (h == 0) {
 						y -= 1;
 						h = 1;
 					}
-					// •`‰æƒpƒ‰ƒ[ƒ^i•j’²®
+					// æç”»ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ï¼ˆå¹…ï¼‰èª¿æ•´
 					if (w < 2) {
 						w = 2;
 					}
@@ -1503,7 +1503,7 @@ public class PackageViewPanel extends JPanel {
 						w = 3;
 					}
 					
-					// y²‚æ‚è¶‘¤‚É‚Í•`‰æ‚µ‚È‚¢‚æ‚¤‚É’²®
+					// yè»¸ã‚ˆã‚Šå·¦å´ã«ã¯æç”»ã—ãªã„ã‚ˆã†ã«èª¿æ•´
 					if(baseX > x) {
 						w = (w - (baseX - x) > 0) ? (w - (baseX - x)) : 1;
 						x = baseX + 1;
@@ -1512,9 +1512,9 @@ public class PackageViewPanel extends JPanel {
 					
 					boolean inPeakArea = false;
 					
-					// Šg‘åˆ—’†‚Íˆ—‚µ‚È‚¢
+					// æ‹¡å¤§å‡¦ç†ä¸­ã¯å‡¦ç†ã—ãªã„
 					if (animationTimer == null || !animationTimer.isRunning()) {
-						// ƒ}ƒEƒXƒJ[ƒ\ƒ‹ƒ‰ƒCƒ“‚ÌêŠiX/YÀ•Wj‚ªPeak‚Ì•`‰æƒGƒŠƒA‚ÉŠÜ‚Ü‚ê‚Ä‚¢‚é‚©‚ğ”»’è	
+						// ãƒã‚¦ã‚¹ã‚«ãƒ¼ã‚½ãƒ«ãƒ©ã‚¤ãƒ³ã®å ´æ‰€ï¼ˆX/Yåº§æ¨™ï¼‰ãŒPeakã®æç”»ã‚¨ãƒªã‚¢ã«å«ã¾ã‚Œã¦ã„ã‚‹ã‹ã‚’åˆ¤å®š	
 						for (int k=0; k<cursorLineXInfo.size(); k++) {
 							
 							if (Integer.parseInt(String.valueOf(cursorLineXInfo.get(k).get(i))) == x) {
@@ -1523,7 +1523,7 @@ public class PackageViewPanel extends JPanel {
 							}
 						}
 						
-						// ‚³‚ç‚ÉAƒGƒŠƒA“à‚Ìê‡‚ÍƒJ[ƒ\ƒ‹ãPeak‚Ìm/z‚Æ“¯‚¶‚©‚ğ”»’è
+						// ã•ã‚‰ã«ã€ã‚¨ãƒªã‚¢å†…ã®å ´åˆã¯ã‚«ãƒ¼ã‚½ãƒ«ä¸ŠPeakã®m/zã¨åŒã˜ã‹ã‚’åˆ¤å®š
 						if (inPeakArea) {
 							for (int k=0; k<overCursorMz.size(); k++) {
 								if (Double.parseDouble(overCursorMz.get(k)) == mz) {
@@ -1534,7 +1534,7 @@ public class PackageViewPanel extends JPanel {
 						}
 					}
 					
-					// ‘I‘ğÏƒs[ƒNm/z‚Å‚ ‚é‚©‚Ì”»’è
+					// é¸æŠæ¸ˆãƒ”ãƒ¼ã‚¯m/zã§ã‚ã‚‹ã‹ã®åˆ¤å®š
 					if (specData.getSelectedPeakNum() != 0) {
 						Iterator<Double> ite = specData.getSelectedPeakList().iterator();
 						while (ite.hasNext()) {
@@ -1545,7 +1545,7 @@ public class PackageViewPanel extends JPanel {
 						}
 					}
 					
-					// ƒhƒ‰ƒbƒO”ÍˆÍ‚Ì’†‚ÉPeak‚ªŠÜ‚Ü‚ê‚Ä‚¢‚é‚©‚ğ”»’è
+					// ãƒ‰ãƒ©ãƒƒã‚°ç¯„å›²ã®ä¸­ã«PeakãŒå«ã¾ã‚Œã¦ã„ã‚‹ã‹ã‚’åˆ¤å®š
 					if ( underDrag ) {
 						if ( dragArea[0] + ((recNum-1-i) * moveXPoint) <= (x + w) 
 								&& dragArea[1] + ((recNum-1-i) * moveXPoint) >= x) {
@@ -1555,15 +1555,15 @@ public class PackageViewPanel extends JPanel {
 					}
 					
 					
-					// ƒs[ƒN•`‰æ
+					// ãƒ”ãƒ¼ã‚¯æç”»
 					g.setPaintMode();
 					if (isSelectedLine) {
-						g.setColor(Color.CYAN.darker());						// ƒ‰ƒCƒ“ƒs[ƒN‘I‘ğ‚ÌF
+						g.setColor(Color.CYAN.darker());						// ãƒ©ã‚¤ãƒ³ãƒ”ãƒ¼ã‚¯é¸æŠæ™‚ã®è‰²
 					}
 					else if (isOnLine) {
-						g.setColor(onCursorColor);								// ƒ‰ƒCƒ“ã‚ÌF
+						g.setColor(onCursorColor);								// ãƒ©ã‚¤ãƒ³ä¸Šã®è‰²
 					}
-					else if ( isDragArea ) {									// ƒhƒ‰ƒbƒO”ÍˆÍ“à‚ÌF
+					else if ( isDragArea ) {									// ãƒ‰ãƒ©ãƒƒã‚°ç¯„å›²å†…ã®è‰²
 						if (!chgColor.isSelected() && recData.getPeakColor(j).equals(Color.RED)) {
 							g.setColor(Color.MAGENTA);
 						}
@@ -1575,16 +1575,16 @@ public class PackageViewPanel extends JPanel {
 						}
 					}
 					else if (chgColor.isSelected()) {
-						g.setColor(getColor(i));								// ƒI[ƒgƒJƒ‰[•ÏX‚ÌF
+						g.setColor(getColor(i));								// ã‚ªãƒ¼ãƒˆã‚«ãƒ©ãƒ¼å¤‰æ›´æ™‚ã®è‰²
 					}
 					else if (y < tmpMarginTop) {
-						g.setColor(Color.GRAY);									// ’Êí‚ÌF(ƒs[ƒN‚ªƒOƒ‰ƒt“à‚É‚¨‚³‚Ü‚Á‚Ä‚¢‚È‚¢ê‡)
+						g.setColor(Color.GRAY);									// é€šå¸¸æ™‚ã®è‰²(ãƒ”ãƒ¼ã‚¯ãŒã‚°ãƒ©ãƒ•å†…ã«ãŠã•ã¾ã£ã¦ã„ãªã„å ´åˆ)
 					}
 					else {
-						g.setColor(recData.getPeakColor(j));					// ’Êí‚ÌF
+						g.setColor(recData.getPeakColor(j));					// é€šå¸¸æ™‚ã®è‰²
 					}
-					// ƒs[ƒN‚Ì•`‰æ‚Åƒs[ƒN‚Ì‹­“x‚ª‚‚¢‚½‚ß‚ÉƒOƒ‰ƒt“à‚É‚¨‚³‚Ü‚è‚«‚ç‚È‚¢ê‡‚ÍA
-					// ƒOƒ‰ƒt“à‚É•`‰æ‚Å‚«‚é‹­“x‚Ü‚Å•`‰æ‚·‚éB
+					// ãƒ”ãƒ¼ã‚¯ã®æç”»ã§ãƒ”ãƒ¼ã‚¯ã®å¼·åº¦ãŒé«˜ã„ãŸã‚ã«ã‚°ãƒ©ãƒ•å†…ã«ãŠã•ã¾ã‚Šãã‚‰ãªã„å ´åˆã¯ã€
+					// ã‚°ãƒ©ãƒ•å†…ã«æç”»ã§ãã‚‹å¼·åº¦ã¾ã§æç”»ã™ã‚‹ã€‚
 					if (y >= tmpMarginTop) {
 						g.fill3DRect(x, y, w, h, true);
 					}
@@ -1593,7 +1593,7 @@ public class PackageViewPanel extends JPanel {
 					}
 					
 					
-					// m/z’l‚ğ•`‰æ
+					// m/zå€¤ã‚’æç”»
 					g.setFont(font2);
 					boolean isMzDraw = false;
 					if ( isSelectedLine ) {
@@ -1637,15 +1637,15 @@ public class PackageViewPanel extends JPanel {
 						isMzDraw = true;
 					}
 					
-					// ƒOƒ‰ƒt“à‚É•`‰æ‚Å‚«‚éê‡‚Ì‚İ•`‰æ
+					// ã‚°ãƒ©ãƒ•å†…ã«æç”»ã§ãã‚‹å ´åˆã®ã¿æç”»
 					if (isMzDraw && y >= tmpMarginTop) {
 						g.drawString(formatMass(mz, false), x, y);
 					}
 					
 					
-					// ƒs[ƒN‚Ì‹­“x•\¦
+					// ãƒ”ãƒ¼ã‚¯ã®å¼·åº¦è¡¨ç¤º
 					if (isOnLine || isSelectedLine) {
-						// ‹­“x‚Ì•`‰æˆÊ’u‚ªƒOƒ‰ƒt“à(Œ»İ‚ÌÅ‘å‹­“xˆÈ‰º)‚Ìê‡
+						// å¼·åº¦ã®æç”»ä½ç½®ãŒã‚°ãƒ©ãƒ•å†…(ç¾åœ¨ã®æœ€å¤§å¼·åº¦ä»¥ä¸‹)ã®å ´åˆ
 						if (y >= tmpMarginTop) {
 							g.setColor(onCursorColor);
 							if ( isSelectedLine ) {
@@ -1655,7 +1655,7 @@ public class PackageViewPanel extends JPanel {
 									baseX + 4, 
 									y, 
 									baseX - 4, 
-									y);					// ‹­“x–Ú·‚è
+									y);					// å¼·åº¦ç›®ç››ã‚Š
 							g.setColor(Color.GRAY);
 							g.setFont(font2);
 							if (isOnLine) {
@@ -1664,23 +1664,23 @@ public class PackageViewPanel extends JPanel {
 							}
 							g.drawString(String.valueOf(recData.getIntensity(j)),
 									baseX + 5,
-									y - 1);				// ‹­“x
+									y - 1);				// å¼·åº¦
 						}
 					}
 				}	// end for
 				
-				// ƒvƒŠƒJ[ƒT[m/z‚ÉOŠpƒ}[ƒN•t‚¯
+				// ãƒ—ãƒªã‚«ãƒ¼ã‚µãƒ¼m/zã«ä¸‰è§’ãƒãƒ¼ã‚¯ä»˜ã‘
 				if ( recData != null
 						&& !recData.getPrecursor().equals("") ) {
 					
 					double pre = Double.parseDouble(recData.getPrecursor());
 					int preX = baseX + (int)((pre - massStart) * xscale) - (int)Math.floor(xscale / 8);
 
-					// ƒvƒŠƒJ[ƒT[m/z‚ªƒOƒ‰ƒt“à‚Ìê‡‚Ì‚İ•`‰æ
+					// ãƒ—ãƒªã‚«ãƒ¼ã‚µãƒ¼m/zãŒã‚°ãƒ©ãƒ•å†…ã®å ´åˆã®ã¿æç”»
 					if ( preX >= baseX 
 							&& preX <= width - tmpMarginRight ) {
 						
-						// ƒvƒŠƒJ[ƒT[OŠp‚Ì•`‰æŠp“x‚ğƒOƒ‰ƒt‚Ì‰Â“®‚É‚ ‚í‚¹‚Ä•ÏX
+						// ãƒ—ãƒªã‚«ãƒ¼ã‚µãƒ¼ä¸‰è§’ã®æç”»è§’åº¦ã‚’ã‚°ãƒ©ãƒ•ã®å¯å‹•ã«ã‚ã‚ã›ã¦å¤‰æ›´
 						int maxGraphWidth = width - (MARGIN * 2);
 						int nowGraphWidth = width - tmpMarginRight - baseX;
 						int maxMovePreX = 7;
@@ -1703,7 +1703,7 @@ public class PackageViewPanel extends JPanel {
 		
 
 		/**
-		 * ƒ}ƒEƒXƒvƒŒƒXƒCƒxƒ“ƒg
+		 * ãƒã‚¦ã‚¹ãƒ—ãƒ¬ã‚¹ã‚¤ãƒ™ãƒ³ãƒˆ
 		 * @see java.awt.event.MouseListener#mousePressed(java.awt.event.MouseEvent)
 		 */
 		public void mousePressed(MouseEvent e) {
@@ -1719,10 +1719,10 @@ public class PackageViewPanel extends JPanel {
 				return;
 			}
 			
-			// ¶ƒ{ƒ^ƒ“‚Ìê‡
+			// å·¦ãƒœã‚¿ãƒ³ã®å ´åˆ
 			if ( SwingUtilities.isLeftMouseButton(e) ) {
 				
-				// ˆê”Ôè‘O‚ÌƒOƒ‰ƒt‚Ì¶’[A‰E’[‚É‚¨‚³‚Ü‚é”ÍˆÍ“à‚Å‚ÌƒCƒxƒ“ƒg‚Ìê‡
+				// ä¸€ç•ªæ‰‹å‰ã®ã‚°ãƒ©ãƒ•ã®å·¦ç«¯ã€å³ç«¯ã«ãŠã•ã¾ã‚‹ç¯„å›²å†…ã§ã®ã‚¤ãƒ™ãƒ³ãƒˆã®å ´åˆ
 				if (e.getPoint().x >= prevGraphArea.get(LT).x
 						&& e.getPoint().x <= prevGraphArea.get(RT).x) {
 					
@@ -1732,7 +1732,7 @@ public class PackageViewPanel extends JPanel {
 					isDrag = false;
 				}
 				
-				// ƒhƒ‰ƒbƒOƒCƒxƒ“ƒg—LŒø‚Ìê‡
+				// ãƒ‰ãƒ©ãƒƒã‚°ã‚¤ãƒ™ãƒ³ãƒˆæœ‰åŠ¹ã®å ´åˆ
 				if ( isDrag ) {
 					if(animationTimer != null && animationTimer.isRunning()) {
 						return;
@@ -1741,9 +1741,9 @@ public class PackageViewPanel extends JPanel {
 				}
 			}
 			
-			// ‰Eƒ{ƒ^ƒ“‚Ìê‡
+			// å³ãƒœã‚¿ãƒ³ã®å ´åˆ
 			if ( !SwingUtilities.isRightMouseButton(e) ) {
-				// ƒ\[ƒgƒƒjƒ…[•\¦‘Î‰
+				// ã‚½ãƒ¼ãƒˆãƒ¡ãƒ‹ãƒ¥ãƒ¼è¡¨ç¤ºæ™‚å¯¾å¿œ
 				if (contextPopup != null && !contextPopup.isVisible()) {
 					cursorPoint = e.getPoint();
 					PackageViewPanel.this.repaint();
@@ -1753,7 +1753,7 @@ public class PackageViewPanel extends JPanel {
 		}
 		
 		/**
-		 * ƒ}ƒEƒXƒhƒ‰ƒbƒOƒCƒxƒ“ƒg
+		 * ãƒã‚¦ã‚¹ãƒ‰ãƒ©ãƒƒã‚°ã‚¤ãƒ™ãƒ³ãƒˆ
 		 * @see java.awt.event.MouseMotionListener#mouseDragged(java.awt.event.MouseEvent)
 		 */
 		public void mouseDragged(MouseEvent e) {
@@ -1769,10 +1769,10 @@ public class PackageViewPanel extends JPanel {
 				return;
 			}
 			
-			// ¶ƒ{ƒ^ƒ“‚Ìê‡
+			// å·¦ãƒœã‚¿ãƒ³ã®å ´åˆ
 			if ( SwingUtilities.isLeftMouseButton(e) ) {
 				
-				// ƒhƒ‰ƒbƒOƒCƒxƒ“ƒg—LŒø‚Ìê‡
+				// ãƒ‰ãƒ©ãƒƒã‚°ã‚¤ãƒ™ãƒ³ãƒˆæœ‰åŠ¹ã®å ´åˆ
 				if ( isDrag ) {
 
 					cursorPoint = new Point();
@@ -1787,7 +1787,7 @@ public class PackageViewPanel extends JPanel {
 		}
 
 		/**
-		 * ƒ}ƒEƒXƒŠƒŠ[ƒXƒCƒxƒ“ƒg
+		 * ãƒã‚¦ã‚¹ãƒªãƒªãƒ¼ã‚¹ã‚¤ãƒ™ãƒ³ãƒˆ
 		 * @see java.awt.event.MouseListener#mouseReleased(java.awt.event.MouseEvent)
 		 */
 		public void mouseReleased(MouseEvent e) {
@@ -1799,14 +1799,14 @@ public class PackageViewPanel extends JPanel {
 				return;
 			}
 			
-			// ¶ƒ{ƒ^ƒ“‚Ìê‡
+			// å·¦ãƒœã‚¿ãƒ³ã®å ´åˆ
 			if ( SwingUtilities.isLeftMouseButton(e) ) {
 				
 				if (recNum == 0) {
 					return;
 				}
 				
-				// ƒhƒ‰ƒbƒOƒCƒxƒ“ƒg—LŒø‚Ìê‡
+				// ãƒ‰ãƒ©ãƒƒã‚°ã‚¤ãƒ™ãƒ³ãƒˆæœ‰åŠ¹ã®å ´åˆ
 				if ( isDrag ) {
 				
 					if (!underDrag || (animationTimer != null && animationTimer.isRunning())) {
@@ -1823,12 +1823,12 @@ public class PackageViewPanel extends JPanel {
 						}
 						else {
 							if (specData != null) {
-								// ƒ}ƒEƒXƒJ[ƒ\ƒ‹İ’è
+								// ãƒã‚¦ã‚¹ã‚«ãƒ¼ã‚½ãƒ«è¨­å®š
 								PackageViewPanel.this.setCursor(new Cursor(Cursor.WAIT_CURSOR));
 								
 								isInitRate = false;
 								
-								// ƒXƒyƒNƒgƒ‹ˆÚ“®ƒ{ƒ^ƒ“‚Ìg—p‚ğ§ŒÀ
+								// ã‚¹ãƒšã‚¯ãƒˆãƒ«ç§»å‹•ãƒœã‚¿ãƒ³ã®ä½¿ç”¨ã‚’åˆ¶é™
 								leftMostBtn.setEnabled(true);
 								leftBtn.setEnabled(true);
 								rightBtn.setEnabled(true);
@@ -1845,16 +1845,16 @@ public class PackageViewPanel extends JPanel {
 							}
 						}
 					}
-					// Šg‘åˆ—Œã‚Ìƒ}ƒEƒXƒJ[ƒ\ƒ‹ƒ|ƒWƒVƒ‡ƒ“•\¦
+					// æ‹¡å¤§å‡¦ç†å¾Œã®ãƒã‚¦ã‚¹ã‚«ãƒ¼ã‚½ãƒ«ãƒã‚¸ã‚·ãƒ§ãƒ³è¡¨ç¤º
 					cursorPoint = e.getPoint();
 				}
 			}
-			// ‰Eƒ{ƒ^ƒ“‚Ìê‡
+			// å³ãƒœã‚¿ãƒ³ã®å ´åˆ
 			else if ( SwingUtilities.isRightMouseButton(e) ) {
 				
 				if (!underDrag) {
 					
-					// ƒ|ƒbƒvƒAƒbƒvƒƒjƒ…[ƒCƒ“ƒXƒ^ƒ“ƒX¶¬
+					// ãƒãƒƒãƒ—ã‚¢ãƒƒãƒ—ãƒ¡ãƒ‹ãƒ¥ãƒ¼ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ç”Ÿæˆ
 					contextPopup = new JPopupMenu();
 					
 					JMenuItem item1 = null;
@@ -1876,14 +1876,14 @@ public class PackageViewPanel extends JPanel {
 						item2.setEnabled(true);
 					}
 				
-					// ƒ|ƒbƒvƒAƒbƒvƒƒjƒ…[•\¦
+					// ãƒãƒƒãƒ—ã‚¢ãƒƒãƒ—ãƒ¡ãƒ‹ãƒ¥ãƒ¼è¡¨ç¤º
 					contextPopup.show( e.getComponent(), e.getX(), e.getY() );
 				}
 			}
 		}
 
 		/**
-		 * ƒ}ƒEƒXƒNƒŠƒbƒNƒCƒxƒ“ƒg
+		 * ãƒã‚¦ã‚¹ã‚¯ãƒªãƒƒã‚¯ã‚¤ãƒ™ãƒ³ãƒˆ
 		 * @see java.awt.event.MouseListener#mouseClicked(java.awt.event.MouseEvent)
 		 */
 		public void mouseClicked(MouseEvent e) {
@@ -1895,40 +1895,40 @@ public class PackageViewPanel extends JPanel {
 				return;
 			}
 			
-			// ¶ƒ{ƒ^ƒ“‚Ìê‡
+			// å·¦ãƒœã‚¿ãƒ³ã®å ´åˆ
 			if ( SwingUtilities.isLeftMouseButton(e) ) {
 				
 				if (recNum == 0) {
 					return;
 				}
 				
-				// ƒNƒŠƒbƒNŠÔŠuZo
+				// ã‚¯ãƒªãƒƒã‚¯é–“éš”ç®—å‡º
 				long interSec = (e.getWhen() - lastClickedTime);
 				lastClickedTime = e.getWhen();
 				
-				// ƒ_ƒuƒ‹ƒNƒŠƒbƒN‚Ìê‡iƒNƒŠƒbƒNŠÔŠu280ƒ~ƒŠ•bˆÈ“àj
+				// ãƒ€ãƒ–ãƒ«ã‚¯ãƒªãƒƒã‚¯ã®å ´åˆï¼ˆã‚¯ãƒªãƒƒã‚¯é–“éš”280ãƒŸãƒªç§’ä»¥å†…ï¼‰
 				if(interSec <= 280){
 					
-					// Šg‘åˆ—
+					// æ‹¡å¤§å‡¦ç†
 					fromPos = toPos = null;
 					initRange(false);
 					
-					// ƒXƒyƒNƒgƒ‹ˆÚ“®ƒ{ƒ^ƒ“‚Ìg—p‚ğ§ŒÀ
+					// ã‚¹ãƒšã‚¯ãƒˆãƒ«ç§»å‹•ãƒœã‚¿ãƒ³ã®ä½¿ç”¨ã‚’åˆ¶é™
 					leftMostBtn.setEnabled(false);
 					leftBtn.setEnabled(false);
 					rightBtn.setEnabled(false);
 					rightMostBtn.setEnabled(false);
 				}
-				// ƒVƒ“ƒOƒ‹ƒNƒŠƒbƒN‚Ìê‡iƒNƒŠƒbƒNŠÔŠu281ƒ~ƒŠ•bˆÈãj
+				// ã‚·ãƒ³ã‚°ãƒ«ã‚¯ãƒªãƒƒã‚¯ã®å ´åˆï¼ˆã‚¯ãƒªãƒƒã‚¯é–“éš”281ãƒŸãƒªç§’ä»¥ä¸Šï¼‰
 				else {
 					
-					Point clickPoint = e.getPoint();			// ƒNƒŠƒbƒNƒ|ƒCƒ“ƒg
+					Point clickPoint = e.getPoint();			// ã‚¯ãƒªãƒƒã‚¯ãƒã‚¤ãƒ³ãƒˆ
 					
 					int tmpMarginTop = 0;
 					int tmpMarginRight = 0;
 					
-					int baseX = 0;			// x²‚Æy²‚ÌŒğ“_‚ÌxÀ•W
-					int baseY = 0;			// x²‚Æy²‚ÌŒğ“_‚ÌyÀ•W
+					int baseX = 0;			// xè»¸ã¨yè»¸ã®äº¤ç‚¹ã®xåº§æ¨™
+					int baseY = 0;			// xè»¸ã¨yè»¸ã®äº¤ç‚¹ã®yåº§æ¨™
 
 					PackageRecData recData = null;
 					
@@ -1953,7 +1953,7 @@ public class PackageViewPanel extends JPanel {
 						int step = stepCalc((int)massRange);
 						int start = (step - (int)massStart % step) % step;
 						
-						// ƒs[ƒN‚ª‚È‚¢ê‡
+						// ãƒ”ãƒ¼ã‚¯ãŒãªã„å ´åˆ
 						if ( recData.getPeakNum() == 0 ) {
 							continue;
 						}
@@ -1970,7 +1970,7 @@ public class PackageViewPanel extends JPanel {
 							y = baseY - (int)(its * yscale);
 							w = (int)(xscale / 8);
 							
-							// •`‰æƒpƒ‰ƒ[ƒ^i•j’²®
+							// æç”»ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ï¼ˆå¹…ï¼‰èª¿æ•´
 							if (w < 2) {
 								w = 2;
 							}
@@ -1978,13 +1978,13 @@ public class PackageViewPanel extends JPanel {
 								w = 3;
 							}
 							
-							// y²‚æ‚è¶‘¤‚É‚Í•`‰æ‚µ‚È‚¢‚æ‚¤‚É’²®
+							// yè»¸ã‚ˆã‚Šå·¦å´ã«ã¯æç”»ã—ãªã„ã‚ˆã†ã«èª¿æ•´
 							if(baseX > x) {
 								w = (w - (baseX - x) > 0) ? (w - (baseX - x)) : 1;
 								x = baseX + 1;
 							}
 							
-							// ƒNƒŠƒbƒN‚µ‚½êŠ‚ªiX/YÀ•Wj‚ªPeak‚Ì•`‰æƒGƒŠƒA‚ÉŠÜ‚Ü‚ê‚Ä‚¢‚éê‡
+							// ã‚¯ãƒªãƒƒã‚¯ã—ãŸå ´æ‰€ãŒï¼ˆX/Yåº§æ¨™ï¼‰ãŒPeakã®æç”»ã‚¨ãƒªã‚¢ã«å«ã¾ã‚Œã¦ã„ã‚‹å ´åˆ
 							if (clickPoint.x >= x 
 									&& clickPoint.x <= (x + w) 
 									&& clickPoint.y >= y
@@ -1996,16 +1996,16 @@ public class PackageViewPanel extends JPanel {
 					}	// end for
 					
 					
-					// ƒNƒŠƒbƒNƒ|ƒCƒ“ƒg‚ÉPeak‚ª1‚Â‚Ìê‡
+					// ã‚¯ãƒªãƒƒã‚¯ãƒã‚¤ãƒ³ãƒˆã«PeakãŒ1ã¤ã®å ´åˆ
 					if (tmpClickMzList.size() == 1) {
 						
 						String mz = String.valueOf(tmpClickMzList.iterator().next());
 						
 						if (!specData.containsSelectedPeak(mz)) {
 							if (specData.getSelectedPeakNum() < MassBankCommon.PEAK_SEARCH_PARAM_NUM) {
-								// ‘I‘ğÏƒs[ƒN‚Ì•Û
+								// é¸æŠæ¸ˆãƒ”ãƒ¼ã‚¯ã®ä¿æŒ
 								specData.addSelectedPeakList(mz);
-								// ‘I‘ğó‘Ô‚ğİ’è
+								// é¸æŠçŠ¶æ…‹ã‚’è¨­å®š
 								for (int i=0; i<recNum; i++) {
 									recData = specData.getRecInfo(i);
 									recData.setSelectPeak(mz, true);
@@ -2020,9 +2020,9 @@ public class PackageViewPanel extends JPanel {
 							}
 						}
 						else {
-							// ‘I‘ğÏƒs[ƒN‚Ì•Û‰ğœ
+							// é¸æŠæ¸ˆãƒ”ãƒ¼ã‚¯ã®ä¿æŒè§£é™¤
 							specData.removeSelectedPeakList(mz);
-							// ‘I‘ğó‘Ô‚ğ‰ğœ
+							// é¸æŠçŠ¶æ…‹ã‚’è§£é™¤
 							for (int i=0; i<recNum; i++) {
 								recData = specData.getRecInfo(i);
 								recData.setSelectPeak(mz, false);
@@ -2031,9 +2031,9 @@ public class PackageViewPanel extends JPanel {
 						setStatusLabel();
 						PackageViewPanel.this.repaint();
 					}
-					// ƒNƒŠƒbƒNƒ|ƒCƒ“ƒg‚ÉPeak‚ª2‚ÂˆÈã‚Ìê‡
+					// ã‚¯ãƒªãƒƒã‚¯ãƒã‚¤ãƒ³ãƒˆã«PeakãŒ2ã¤ä»¥ä¸Šã®å ´åˆ
 					else if (tmpClickMzList.size() >= 2) {
-						// ƒ|ƒbƒvƒAƒbƒvƒƒjƒ…[ƒCƒ“ƒXƒ^ƒ“ƒX¶¬
+						// ãƒãƒƒãƒ—ã‚¢ãƒƒãƒ—ãƒ¡ãƒ‹ãƒ¥ãƒ¼ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ç”Ÿæˆ
 						selectPopup = new JPopupMenu();
 						JMenuItem item = null;
 						
@@ -2046,12 +2046,12 @@ public class PackageViewPanel extends JPanel {
 							
 							if (specData.getSelectedPeakNum() >= MassBankCommon.PEAK_SEARCH_PARAM_NUM
 									&& !specData.containsSelectedPeak(mz)) {
-								// Peak‘I‘ğ”‚ªMAX‚Ìê‡A‘I‘ğÏ‚İPeakˆÈŠO‚Í‘I‘ğ•s‰Â‚ğİ’è
+								// Peaké¸æŠæ•°ãŒMAXã®å ´åˆã€é¸æŠæ¸ˆã¿Peakä»¥å¤–ã¯é¸æŠä¸å¯ã‚’è¨­å®š
 								item.setEnabled(false);
 							}
 						}
 						
-						// ƒ|ƒbƒvƒAƒbƒvƒƒjƒ…[•\¦
+						// ãƒãƒƒãƒ—ã‚¢ãƒƒãƒ—ãƒ¡ãƒ‹ãƒ¥ãƒ¼è¡¨ç¤º
 						selectPopup.show( e.getComponent(), e.getX(), e.getY() );
 					}
 				}
@@ -2059,21 +2059,21 @@ public class PackageViewPanel extends JPanel {
 		}
 		
 		/**
-		 * ƒ}ƒEƒXƒGƒ“ƒ^[ƒCƒxƒ“ƒg
+		 * ãƒã‚¦ã‚¹ã‚¨ãƒ³ã‚¿ãƒ¼ã‚¤ãƒ™ãƒ³ãƒˆ
 		 * @see java.awt.event.MouseListener#mouseClicked(java.awt.event.MouseEvent)
 		 */
 		public void mouseEntered(MouseEvent e) {
 		}
 		
 		/**
-		 * ƒ}ƒEƒXƒCƒOƒWƒbƒgƒCƒxƒ“ƒg
+		 * ãƒã‚¦ã‚¹ã‚¤ã‚°ã‚¸ãƒƒãƒˆã‚¤ãƒ™ãƒ³ãƒˆ
 		 * @see java.awt.event.MouseListener#mouseClicked(java.awt.event.MouseEvent)
 		 */
 		public void mouseExited(MouseEvent e) {
 		}
 		
 		/**
-		 * ƒ}ƒEƒXƒ€[ƒuƒCƒxƒ“ƒg
+		 * ãƒã‚¦ã‚¹ãƒ ãƒ¼ãƒ–ã‚¤ãƒ™ãƒ³ãƒˆ
 		 * @see java.awt.event.MouseMotionListener#mouseClicked(java.awt.event.MouseEvent)
 		 */
 		public void mouseMoved(MouseEvent e) {
@@ -2089,19 +2089,19 @@ public class PackageViewPanel extends JPanel {
 				return;
 			}
 			
-			// ƒ|ƒbƒvƒAƒbƒvƒƒjƒ…[‚ª•\¦‚³‚ê‚Ä‚¢‚é‚ÍƒCƒxƒ“ƒg‚ğˆ—‚µ‚È‚¢
+			// ãƒãƒƒãƒ—ã‚¢ãƒƒãƒ—ãƒ¡ãƒ‹ãƒ¥ãƒ¼ãŒè¡¨ç¤ºã•ã‚Œã¦ã„ã‚‹æ™‚ã¯ã‚¤ãƒ™ãƒ³ãƒˆã‚’å‡¦ç†ã—ãªã„
 			if ((contextPopup == null || (contextPopup != null && !contextPopup.isVisible()))
 					&& (selectPopup == null || (selectPopup != null && !selectPopup.isVisible()))) {
 				
-				// ƒ}ƒEƒXƒJ[ƒ\ƒ‹ƒ|ƒCƒ“ƒg
+				// ãƒã‚¦ã‚¹ã‚«ãƒ¼ã‚½ãƒ«ãƒã‚¤ãƒ³ãƒˆ
 				cursorPoint = e.getPoint();
 				PackageViewPanel.this.repaint();
 			}
 		}
 		
 		/**
-		 * Šg‘åˆ—‚ğƒAƒjƒ[ƒVƒ‡ƒ“‰»‚·‚éƒNƒ‰ƒX
-		 * PlotPane‚ÌƒCƒ“ƒi[ƒNƒ‰ƒX
+		 * æ‹¡å¤§å‡¦ç†ã‚’ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³åŒ–ã™ã‚‹ã‚¯ãƒ©ã‚¹
+		 * PlotPaneã®ã‚¤ãƒ³ãƒŠãƒ¼ã‚¯ãƒ©ã‚¹
 		 */
 		class AnimationTimer implements ActionListener {
 			private final int LOOP = 15;
@@ -2114,16 +2114,16 @@ public class PackageViewPanel extends JPanel {
 			private int movex;
 
 			/**
-			 * ƒRƒ“ƒXƒgƒ‰ƒNƒ^
-			 * @param from ƒhƒ‰ƒbƒOŠJnˆÊ’u
-			 * @param to ƒhƒ‰ƒbƒOI—¹ˆÊ’u
+			 * ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
+			 * @param from ãƒ‰ãƒ©ãƒƒã‚°é–‹å§‹ä½ç½®
+			 * @param to ãƒ‰ãƒ©ãƒƒã‚°çµ‚äº†ä½ç½®
 			 */
 			public AnimationTimer(int from, int to) {
 				loopCoef = 0;
 				toX = to;
 				fromX = from;
 				movex = 0 + MARGIN;
-				// –Ú“IŠg‘å—¦‚ğZo
+				// ç›®çš„æ‹¡å¤§ç‡ã‚’ç®—å‡º
 //				float xs = (getWidth() - 2.0f * MARGIN) / massRange;
 				double xs = (getWidth() - (2.0d * MARGIN) - ((recNum-1) * moveXPoint)) / massRange;
 				tmpMassStart = massStart + ((toX - MARGIN) / xs);
@@ -2133,11 +2133,11 @@ public class PackageViewPanel extends JPanel {
 					tmpMassRange = MASS_RANGE_MIN;
 				}
 
-				// Intensity‚ÌƒŒƒ“ƒW‚ğİ’è
+				// Intensityã®ãƒ¬ãƒ³ã‚¸ã‚’è¨­å®š
 				if (massRange <= massRangeMax) {
 					int maxIntensity = 0;
 					double start = Math.max(tmpMassStart, 0.0d);
-					// ‘S‚Ä‚ÌƒŒƒR[ƒh“à‚©‚ç‹­“x‚ÌÅ‘å’l‚ğZo
+					// å…¨ã¦ã®ãƒ¬ã‚³ãƒ¼ãƒ‰å†…ã‹ã‚‰å¼·åº¦ã®æœ€å¤§å€¤ã‚’ç®—å‡º
 					PackageRecData recData = null;
 					for ( int i=0; i<recNum; i++ ) {
 						recData = specData.getRecInfo(i);
@@ -2145,7 +2145,7 @@ public class PackageViewPanel extends JPanel {
 							maxIntensity = recData.getMaxIntensity(start, start + tmpMassRange);
 						}
 					}
-					// 50’PˆÊ‚É•ÏŠ·‚µ‚ÄƒXƒP[ƒ‹‚ğŒˆ’è
+					// 50å˜ä½ã«å¤‰æ›ã—ã¦ã‚¹ã‚±ãƒ¼ãƒ«ã‚’æ±ºå®š
 					tmpIntensityRange = (int)((1.0d + maxIntensity / 50.0d) * 50.0d);
 					if(tmpIntensityRange > INTENSITY_RANGE_MAX) {
 						tmpIntensityRange = INTENSITY_RANGE_MAX;
@@ -2154,7 +2154,7 @@ public class PackageViewPanel extends JPanel {
 			}
 
 			/**
-			 * ƒAƒNƒVƒ‡ƒ“ƒCƒxƒ“ƒg
+			 * ã‚¢ã‚¯ã‚·ãƒ§ãƒ³ã‚¤ãƒ™ãƒ³ãƒˆ
 			 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 			 */
 			public void actionPerformed(ActionEvent e) {
@@ -2169,7 +2169,7 @@ public class PackageViewPanel extends JPanel {
 					massRange = tmpMassRange;
 					intensityRange = tmpIntensityRange;
 					animationTimer.stop();
-					// ƒ}ƒEƒXƒJ[ƒ\ƒ‹İ’è
+					// ãƒã‚¦ã‚¹ã‚«ãƒ¼ã‚½ãƒ«è¨­å®š
 					PackageViewPanel.this.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 				}
 				else {
@@ -2195,15 +2195,15 @@ public class PackageViewPanel extends JPanel {
 		}
 		
 		/**
-		 * ƒs[ƒN‘I‘ğƒ|ƒbƒvƒAƒbƒvƒƒjƒ…[ƒŠƒXƒi[ƒNƒ‰ƒX
-		 * PlotPane‚ÌƒCƒ“ƒi[ƒNƒ‰ƒX
+		 * ãƒ”ãƒ¼ã‚¯é¸æŠãƒãƒƒãƒ—ã‚¢ãƒƒãƒ—ãƒ¡ãƒ‹ãƒ¥ãƒ¼ãƒªã‚¹ãƒŠãƒ¼ã‚¯ãƒ©ã‚¹
+		 * PlotPaneã®ã‚¤ãƒ³ãƒŠãƒ¼ã‚¯ãƒ©ã‚¹
 		 */
 		class SelectMZPopupListener implements ActionListener {
 			
 			private String mz = "";			// m/z
 			
 			/**
-			 * ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+			 * ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 			 * @param mz m/z
 			 */
 			public SelectMZPopupListener(String mz) {
@@ -2211,7 +2211,7 @@ public class PackageViewPanel extends JPanel {
 			}
 			
 			/**
-			 * ƒAƒNƒVƒ‡ƒ“ƒCƒxƒ“ƒg
+			 * ã‚¢ã‚¯ã‚·ãƒ§ãƒ³ã‚¤ãƒ™ãƒ³ãƒˆ
 			 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 			 */
 			public void actionPerformed(ActionEvent e) {
@@ -2219,18 +2219,18 @@ public class PackageViewPanel extends JPanel {
 				PackageRecData recData = null;
 				
 				if (!specData.containsSelectedPeak(mz)) {
-					// ‘I‘ğÏƒs[ƒN‚Ì•Û
+					// é¸æŠæ¸ˆãƒ”ãƒ¼ã‚¯ã®ä¿æŒ
 					specData.addSelectedPeakList(mz);
-					// ‘I‘ğó‘Ô‚ğİ’è
+					// é¸æŠçŠ¶æ…‹ã‚’è¨­å®š
 					for (int i=0; i<recNum; i++) {
 						recData = specData.getRecInfo(i);
 						recData.setSelectPeak(mz, true);
 					}
 				}
 				else {
-					// ‘I‘ğÏƒs[ƒN‚Ì•Û‰ğœ
+					// é¸æŠæ¸ˆãƒ”ãƒ¼ã‚¯ã®ä¿æŒè§£é™¤
 					specData.removeSelectedPeakList(mz);
-					// ‘I‘ğó‘Ô‚ğ‰ğœ
+					// é¸æŠçŠ¶æ…‹ã‚’è§£é™¤
 					for (int i=0; i<recNum; i++) {
 						recData = specData.getRecInfo(i);
 						recData.setSelectPeak(mz, false);
@@ -2239,7 +2239,7 @@ public class PackageViewPanel extends JPanel {
 				
 				setStatusLabel();
 				
-				// PlotPaneƒJ[ƒ\ƒ‹ƒ|ƒCƒ“ƒg‰Šú‰»
+				// PlotPaneã‚«ãƒ¼ã‚½ãƒ«ãƒã‚¤ãƒ³ãƒˆåˆæœŸåŒ–
 				cursorPoint = new Point();
 				
 				PackageViewPanel.this.repaint();
@@ -2247,19 +2247,19 @@ public class PackageViewPanel extends JPanel {
 		}
 		
 		/**
-		 * ƒRƒ“ƒeƒLƒXƒgƒ|ƒbƒvƒAƒbƒvƒƒjƒ…[ƒŠƒXƒi[ƒNƒ‰ƒX
-		 * PlotPane‚ÌƒCƒ“ƒi[ƒNƒ‰ƒX
+		 * ã‚³ãƒ³ãƒ†ã‚­ã‚¹ãƒˆãƒãƒƒãƒ—ã‚¢ãƒƒãƒ—ãƒ¡ãƒ‹ãƒ¥ãƒ¼ãƒªã‚¹ãƒŠãƒ¼ã‚¯ãƒ©ã‚¹
+		 * PlotPaneã®ã‚¤ãƒ³ãƒŠãƒ¼ã‚¯ãƒ©ã‚¹
 		 */
 		class ContextPopupListener implements ActionListener {
 			
 			/**
-			 * ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+			 * ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 			 */
 			public ContextPopupListener() {
 			}
 
 			/**
-			 * ƒAƒNƒVƒ‡ƒ“ƒCƒxƒ“ƒg
+			 * ã‚¢ã‚¯ã‚·ãƒ§ãƒ³ã‚¤ãƒ™ãƒ³ãƒˆ
 			 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 			 */
 			public void actionPerformed(ActionEvent e) {
@@ -2267,30 +2267,30 @@ public class PackageViewPanel extends JPanel {
 				String com = e.getActionCommand();
 				
 				if (com.equals("search")) {
-					// URLƒpƒ‰ƒ[ƒ^¶¬
+					// URLãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ç”Ÿæˆ
 					StringBuffer urlParam = new StringBuffer();
 					
 					String typeName = MassBankCommon.CGI_TBL[MassBankCommon.CGI_TBL_NUM_TYPE][MassBankCommon.CGI_TBL_TYPE_PEAK];
 					
-					urlParam.append("?type=" + typeName);							// typeFpeak
-					urlParam.append("&num=" + specData.getSelectedPeakNum());		// num F
-					urlParam.append("&tol=0");										// tol F0
-					urlParam.append("&int=5");										// int F5
+					urlParam.append("?type=" + typeName);							// typeï¼špeak
+					urlParam.append("&num=" + specData.getSelectedPeakNum());		// num ï¼š
+					urlParam.append("&tol=0");										// tol ï¼š0
+					urlParam.append("&int=5");										// int ï¼š5
 					
 					int index = 0;
 					Iterator<Double> ite = specData.getSelectedPeakList().iterator();
 					while (ite.hasNext()) {
 						if (index != 0) {
-							urlParam.append("&op"+ index +"=and");					// op  Fand
+							urlParam.append("&op"+ index +"=and");					// op  ï¼šand
 						} else {
-							urlParam.append("&op"+ index +"=or");					// op  For
+							urlParam.append("&op"+ index +"=or");					// op  ï¼šor
 						}
-						urlParam.append("&mz"+ index +"=" + String.valueOf(ite.next()));	// mz  F
+						urlParam.append("&mz"+ index +"=" + String.valueOf(ite.next()));	// mz  ï¼š
 						index++;
 					}
 					urlParam.append("&sortKey=name&sortAction=1&pageNo=1&exec=&inst=all");
 					
-					// JSPŒÄ‚Ño‚µ
+					// JSPå‘¼ã³å‡ºã—
 					String reqUrl = SearchPage.baseUrl + "jsp/Result.jsp" + urlParam.toString();
 					try {
 						SearchPage.context.showDocument(new URL(reqUrl), "_blank");
@@ -2310,26 +2310,26 @@ public class PackageViewPanel extends JPanel {
 	}
 	
 	/**
-	 * ƒ{ƒ^ƒ“ƒyƒCƒ“
-	 * PackageViewPanel‚ÌƒCƒ“ƒi[ƒNƒ‰ƒX
+	 * ãƒœã‚¿ãƒ³ãƒšã‚¤ãƒ³
+	 * PackageViewPanelã®ã‚¤ãƒ³ãƒŠãƒ¼ã‚¯ãƒ©ã‚¹
 	 */
 	class ButtonPane extends JPanel implements MouseListener, MouseMotionListener {
 
-		private boolean isInMZ = false;					// show all m/zƒ{ƒ^ƒ“ƒJ[ƒ\ƒ‹ƒCƒ“ƒtƒ‰ƒO
-		private boolean isInMZMatch = false;				// show match m/zƒ{ƒ^ƒ“ƒJ[ƒ\ƒ‹ƒCƒ“ƒtƒ‰ƒO
-		private boolean isInChgColor = false;				// change colorƒ{ƒ^ƒ“ƒJ[ƒ\ƒ‹ƒCƒ“ƒtƒ‰ƒO
-		private boolean isInFlat = false;					// flatƒ{ƒ^ƒ“ƒJ[ƒ\ƒ‹ƒCƒ“ƒtƒ‰ƒO
-		private boolean isMZState = false;				// ƒCƒxƒ“ƒg‘Oshow all m/zƒ{ƒ^ƒ“ó‘Ô
-		private boolean isMZMatchState = false;			// ƒCƒxƒ“ƒg‘Oshow match m/zƒ{ƒ^ƒ“ó‘Ô
-		private boolean isChgColorState = false;			// ƒCƒxƒ“ƒg‘Ochange colorƒ{ƒ^ƒ“ó‘Ô
-		private boolean isFlatState = false;				// ƒCƒxƒ“ƒg‘Oflatƒ{ƒ^ƒ“ó‘Ô
+		private boolean isInMZ = false;					// show all m/zãƒœã‚¿ãƒ³ã‚«ãƒ¼ã‚½ãƒ«ã‚¤ãƒ³ãƒ•ãƒ©ã‚°
+		private boolean isInMZMatch = false;				// show match m/zãƒœã‚¿ãƒ³ã‚«ãƒ¼ã‚½ãƒ«ã‚¤ãƒ³ãƒ•ãƒ©ã‚°
+		private boolean isInChgColor = false;				// change colorãƒœã‚¿ãƒ³ã‚«ãƒ¼ã‚½ãƒ«ã‚¤ãƒ³ãƒ•ãƒ©ã‚°
+		private boolean isInFlat = false;					// flatãƒœã‚¿ãƒ³ã‚«ãƒ¼ã‚½ãƒ«ã‚¤ãƒ³ãƒ•ãƒ©ã‚°
+		private boolean isMZState = false;				// ã‚¤ãƒ™ãƒ³ãƒˆå‰show all m/zãƒœã‚¿ãƒ³çŠ¶æ…‹
+		private boolean isMZMatchState = false;			// ã‚¤ãƒ™ãƒ³ãƒˆå‰show match m/zãƒœã‚¿ãƒ³çŠ¶æ…‹
+		private boolean isChgColorState = false;			// ã‚¤ãƒ™ãƒ³ãƒˆå‰change colorãƒœã‚¿ãƒ³çŠ¶æ…‹
+		private boolean isFlatState = false;				// ã‚¤ãƒ™ãƒ³ãƒˆå‰flatãƒœã‚¿ãƒ³çŠ¶æ…‹
 		
 		/**
-		 * ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+		 * ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 		 */
 		public ButtonPane() {
 			
-			// ƒŒƒCƒAƒEƒgw’è
+			// ãƒ¬ã‚¤ã‚¢ã‚¦ãƒˆæŒ‡å®š
 			setLayout(new FlowLayout());
 			
 			leftMostBtn = new JButton("<<");
@@ -2386,28 +2386,28 @@ public class PackageViewPanel extends JPanel {
 			chgColor.setMargin(new Insets(0, 0, 0, 0));
 			chgColor.setSelected(false);
 			
-			// ƒŒƒCƒAƒEƒg’²®—pƒuƒ‰ƒ“ƒNƒ‰ƒxƒ‹
+			// ãƒ¬ã‚¤ã‚¢ã‚¦ãƒˆèª¿æ•´ç”¨ãƒ–ãƒ©ãƒ³ã‚¯ãƒ©ãƒ™ãƒ«
 			JLabel blankLabel1 = new JLabel("   ");
 			
-			xAxisUp = new JButton("©");
+			xAxisUp = new JButton("â†");
 			xAxisUp.setName("xup");
 			xAxisUp.addMouseListener(this);
 			xAxisUp.addMouseMotionListener(this);
 			xAxisUp.setMargin(new Insets(0, 0, 0, 0));
 			
-			xAxisDown = new JButton("¨");
+			xAxisDown = new JButton("â†’");
 			xAxisDown.setName("xdown");
 			xAxisDown.addMouseListener(this);
 			xAxisDown.addMouseMotionListener(this);
 			xAxisDown.setMargin(new Insets(0, 0, 0, 0));
 			
-			yAxisUp = new JButton("ª");
+			yAxisUp = new JButton("â†‘");
 			yAxisUp.setName("yup");
 			yAxisUp.addMouseListener(this);
 			yAxisUp.addMouseMotionListener(this);
 			yAxisUp.setMargin(new Insets(0, 0, 0, 0));
 			
-			yAxisDown = new JButton("«");
+			yAxisDown = new JButton("â†“");
 			yAxisDown.setName("ydown");
 			yAxisDown.addMouseListener(this);
 			yAxisDown.addMouseMotionListener(this);
@@ -2449,7 +2449,7 @@ public class PackageViewPanel extends JPanel {
 		
 		
 		/**
-		 * ƒ}ƒEƒXƒNƒŠƒbƒNƒCƒxƒ“ƒg
+		 * ãƒã‚¦ã‚¹ã‚¯ãƒªãƒƒã‚¯ã‚¤ãƒ™ãƒ³ãƒˆ
 		 * @see java.awt.event.MouseListener#mouseClicked(java.awt.event.MouseEvent)
 		 */
 		public void mouseClicked(MouseEvent e) {
@@ -2463,7 +2463,7 @@ public class PackageViewPanel extends JPanel {
 				return;
 			}
 			
-			// ¶ƒ{ƒ^ƒ“‚Ìê‡
+			// å·¦ãƒœã‚¿ãƒ³ã®å ´åˆ
 			if ( SwingUtilities.isLeftMouseButton(e) ) {
 				
 				if (btnName.equals("<<")) {
@@ -2485,7 +2485,7 @@ public class PackageViewPanel extends JPanel {
 				else if (btnName.equals("top")) {
 					if (moveXPoint != minMoveXPoint || moveYPoint != maxMoveYPoint) {
 						allBtnCtrl(false);
-						// ƒ}ƒEƒXƒJ[ƒ\ƒ‹İ’è
+						// ãƒã‚¦ã‚¹ã‚«ãƒ¼ã‚½ãƒ«è¨­å®š
 						PackageViewPanel.this.setCursor(new Cursor(Cursor.WAIT_CURSOR));
 						moveTimer = new Timer(10,
 								  new MoveAnimationTimer(btnName));
@@ -2495,7 +2495,7 @@ public class PackageViewPanel extends JPanel {
 				else if (btnName.equals("side")) {
 					if (moveXPoint != minMoveXPoint || moveYPoint != minMoveYPoint) {
 						allBtnCtrl(false);
-						// ƒ}ƒEƒXƒJ[ƒ\ƒ‹İ’è
+						// ãƒã‚¦ã‚¹ã‚«ãƒ¼ã‚½ãƒ«è¨­å®š
 						PackageViewPanel.this.setCursor(new Cursor(Cursor.WAIT_CURSOR));
 						moveTimer = new Timer(10,
 								  new MoveAnimationTimer(btnName));
@@ -2506,7 +2506,7 @@ public class PackageViewPanel extends JPanel {
 		}
 
 		/**
-		 * ƒ}ƒEƒXƒvƒŒƒXƒCƒxƒ“ƒg
+		 * ãƒã‚¦ã‚¹ãƒ—ãƒ¬ã‚¹ã‚¤ãƒ™ãƒ³ãƒˆ
 		 * @see java.awt.event.MouseListener#mousePressed(java.awt.event.MouseEvent)
 		 */
 		public void mousePressed(MouseEvent e) {
@@ -2517,7 +2517,7 @@ public class PackageViewPanel extends JPanel {
 				return;
 			}
 			else if (animationTimer != null && animationTimer.isRunning()) {
-				// ƒ{ƒ^ƒ“‰Ÿ‰º‘Oó‘Ô‚ğ•Û
+				// ãƒœã‚¿ãƒ³æŠ¼ä¸‹å‰çŠ¶æ…‹ã‚’ä¿æŒ
 				isMZState = mzDisp.isSelected();
 				isMZMatchState = mzMatchDisp.isSelected();
 				isChgColorState = chgColor.isSelected();
@@ -2525,15 +2525,15 @@ public class PackageViewPanel extends JPanel {
 				return;
 			}
 			
-			// PlotPaneƒJ[ƒ\ƒ‹ƒ|ƒCƒ“ƒg‰Šú‰»
+			// PlotPaneã‚«ãƒ¼ã‚½ãƒ«ãƒã‚¤ãƒ³ãƒˆåˆæœŸåŒ–
 			cursorPoint = new Point();
 			
-			// ¶ƒ{ƒ^ƒ“‚Ìê‡
+			// å·¦ãƒœã‚¿ãƒ³ã®å ´åˆ
 			if ( SwingUtilities.isLeftMouseButton(e) ) {
 				
 				int time = 10;
 				
-				// ƒRƒ“ƒgƒ[ƒ‹ƒL[‚ª“¯‚É‰Ÿ‰º‚³‚ê‚Ä‚¢‚éê‡‚ÍA“®ì‚ğ’x‚­‚·‚é
+				// ã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ«ã‚­ãƒ¼ãŒåŒæ™‚ã«æŠ¼ä¸‹ã•ã‚Œã¦ã„ã‚‹å ´åˆã¯ã€å‹•ä½œã‚’é…ãã™ã‚‹
 				if (e.isControlDown()) {
 					time = 70;
 				}
@@ -2551,7 +2551,7 @@ public class PackageViewPanel extends JPanel {
 		}
 
 		/**
-		 * ƒ}ƒEƒXƒŠƒŠ[ƒXƒCƒxƒ“ƒg
+		 * ãƒã‚¦ã‚¹ãƒªãƒªãƒ¼ã‚¹ã‚¤ãƒ™ãƒ³ãƒˆ
 		 * @see java.awt.event.MouseListener#mouseReleased(java.awt.event.MouseEvent)
 		 */
 		public void mouseReleased(MouseEvent e) {
@@ -2562,7 +2562,7 @@ public class PackageViewPanel extends JPanel {
 				return;
 			}
 			else if (animationTimer != null && animationTimer.isRunning()) {
-				// ƒ{ƒ^ƒ“‰Ÿ‰º‘Oó‘Ô‚É–ß‚·
+				// ãƒœã‚¿ãƒ³æŠ¼ä¸‹å‰çŠ¶æ…‹ã«æˆ»ã™
 				if (btnName.equals("mz")) {
 					mzDisp.setSelected(isMZState);
 				}
@@ -2579,7 +2579,7 @@ public class PackageViewPanel extends JPanel {
 			}
 			
 			
-			// ¶ƒ{ƒ^ƒ“‚Ìê‡
+			// å·¦ãƒœã‚¿ãƒ³ã®å ´åˆ
 			if ( SwingUtilities.isLeftMouseButton(e) ) {
 				
 				if (btnName.equals("mz")) {
@@ -2602,17 +2602,17 @@ public class PackageViewPanel extends JPanel {
 				else if (btnName.equals("flat")) {
 					if (isInFlat) {
 						
-						// flatƒ{ƒ^ƒ“ó‘Ôæ“¾
+						// flatãƒœã‚¿ãƒ³çŠ¶æ…‹å–å¾—
 						if (flat.isSelected()) {
 							if (tmpMoveXPoint == -1 && tmpMoveYPoint == -1) {
-								// Œ»İ‚Ìx²Ay²‰Â“®’l‚ğ‘Ş”ğ
+								// ç¾åœ¨ã®xè»¸ã€yè»¸å¯å‹•å€¤ã‚’é€€é¿
 								tmpMoveXPoint = moveXPoint;
 								tmpMoveYPoint = moveYPoint;
 							}
 						}
 						
 						allBtnCtrl(false);
-						// ƒ}ƒEƒXƒJ[ƒ\ƒ‹İ’è
+						// ãƒã‚¦ã‚¹ã‚«ãƒ¼ã‚½ãƒ«è¨­å®š
 						PackageViewPanel.this.setCursor(new Cursor(Cursor.WAIT_CURSOR));
 						moveTimer = new Timer(10,
 								  new MoveAnimationTimer(btnName));
@@ -2632,7 +2632,7 @@ public class PackageViewPanel extends JPanel {
 		}
 
 		/**
-		 * ƒ}ƒEƒXƒGƒ“ƒ^[ƒCƒxƒ“ƒg
+		 * ãƒã‚¦ã‚¹ã‚¨ãƒ³ã‚¿ãƒ¼ã‚¤ãƒ™ãƒ³ãƒˆ
 		 * @see java.awt.event.MouseListener#mouseClicked(java.awt.event.MouseEvent)
 		 */
 		public void mouseEntered(MouseEvent e) {
@@ -2661,7 +2661,7 @@ public class PackageViewPanel extends JPanel {
 		}
 
 		/**
-		 * ƒ}ƒEƒXƒCƒOƒWƒbƒgƒCƒxƒ“ƒg
+		 * ãƒã‚¦ã‚¹ã‚¤ã‚°ã‚¸ãƒƒãƒˆã‚¤ãƒ™ãƒ³ãƒˆ
 		 * @see java.awt.event.MouseListener#mouseClicked(java.awt.event.MouseEvent)
 		 */
 		public void mouseExited(MouseEvent e) {
@@ -2690,14 +2690,14 @@ public class PackageViewPanel extends JPanel {
 		}
 
 		/**
-		 * ƒ}ƒEƒXƒhƒ‰ƒbƒOƒCƒxƒ“ƒg
+		 * ãƒã‚¦ã‚¹ãƒ‰ãƒ©ãƒƒã‚°ã‚¤ãƒ™ãƒ³ãƒˆ
 		 * @see java.awt.event.MouseMotionListener#mouseDragged(java.awt.event.MouseEvent)
 		 */
 		public void mouseDragged(MouseEvent e) {
 		}
 
 		/**
-		 * ƒ}ƒEƒXƒ€[ƒuƒCƒxƒ“ƒg
+		 * ãƒã‚¦ã‚¹ãƒ ãƒ¼ãƒ–ã‚¤ãƒ™ãƒ³ãƒˆ
 		 * @see java.awt.event.MouseMotionListener#mouseClicked(java.awt.event.MouseEvent)
 		 */
 		public void mouseMoved(MouseEvent e) {
@@ -2705,19 +2705,19 @@ public class PackageViewPanel extends JPanel {
 		
 		
 		/**
-		 * ƒOƒ‰ƒt‰Â“®‚ğƒAƒjƒ[ƒVƒ‡ƒ“‰»‚·‚éƒNƒ‰ƒX
-		 * FunctionPain2‚ÌƒCƒ“ƒi[ƒNƒ‰ƒX
+		 * ã‚°ãƒ©ãƒ•å¯å‹•ã‚’ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³åŒ–ã™ã‚‹ã‚¯ãƒ©ã‚¹
+		 * FunctionPain2ã®ã‚¤ãƒ³ãƒŠãƒ¼ã‚¯ãƒ©ã‚¹
 		 */
 		class MoveAnimationTimer implements ActionListener {
 
-			private String btnName = "";				// ƒ{ƒ^ƒ“–¼
+			private String btnName = "";				// ãƒœã‚¿ãƒ³å
 			
-			private int moveXNum = 1;					// x²‚Ìˆê“x‚É‰Ò“®‚·‚é’l
-			private int moveYNum = 1;					// y²‚Ìˆê“x‚É‰Ò“®‚·‚é’l
+			private int moveXNum = 1;					// xè»¸ã®ä¸€åº¦ã«ç¨¼å‹•ã™ã‚‹å€¤
+			private int moveYNum = 1;					// yè»¸ã®ä¸€åº¦ã«ç¨¼å‹•ã™ã‚‹å€¤
 			
 			/**
-			 * ƒRƒ“ƒXƒgƒ‰ƒNƒ^
-			 * @param btnName ƒ{ƒ^ƒ“–¼
+			 * ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
+			 * @param btnName ãƒœã‚¿ãƒ³å
 			 */
 			public MoveAnimationTimer(String btnName) {
 				this.btnName = btnName;
@@ -2726,7 +2726,7 @@ public class PackageViewPanel extends JPanel {
 			}
 
 			/**
-			 * ƒAƒNƒVƒ‡ƒ“ƒCƒxƒ“ƒg
+			 * ã‚¢ã‚¯ã‚·ãƒ§ãƒ³ã‚¤ãƒ™ãƒ³ãƒˆ
 			 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 			 */
 			public void actionPerformed(ActionEvent e) {
@@ -2789,7 +2789,7 @@ public class PackageViewPanel extends JPanel {
 					
 					if (isMovedX && isMovedY) {
 						moveTimer.stop();
-						// ƒ}ƒEƒXƒJ[ƒ\ƒ‹İ’è
+						// ãƒã‚¦ã‚¹ã‚«ãƒ¼ã‚½ãƒ«è¨­å®š
 						PackageViewPanel.this.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 						allBtnCtrl(true);
 					}
@@ -2816,7 +2816,7 @@ public class PackageViewPanel extends JPanel {
 					
 					if (isMovedX && isMovedY) {
 						moveTimer.stop();
-						// ƒ}ƒEƒXƒJ[ƒ\ƒ‹İ’è
+						// ãƒã‚¦ã‚¹ã‚«ãƒ¼ã‚½ãƒ«è¨­å®š
 						PackageViewPanel.this.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 						allBtnCtrl(true);
 					}
@@ -2846,11 +2846,11 @@ public class PackageViewPanel extends JPanel {
 						
 						if (isMovedX && isMovedY) {
 							moveTimer.stop();
-							// ƒ}ƒEƒXƒJ[ƒ\ƒ‹İ’è
+							// ãƒã‚¦ã‚¹ã‚«ãƒ¼ã‚½ãƒ«è¨­å®š
 							PackageViewPanel.this.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 							allBtnCtrl(true);
 							
-							// ŠeƒOƒ‰ƒt‰Â“®ƒ{ƒ^ƒ“‚Ì§Œä
+							// å„ã‚°ãƒ©ãƒ•å¯å‹•ãƒœã‚¿ãƒ³ã®åˆ¶å¾¡
 							xAxisDown.setEnabled(false);
 							xAxisUp.setEnabled(false);
 							yAxisDown.setEnabled(false);
@@ -2879,7 +2879,7 @@ public class PackageViewPanel extends JPanel {
 						
 						if (isMovedX && isMovedY) {
 							moveTimer.stop();
-							// ƒ}ƒEƒXƒJ[ƒ\ƒ‹İ’è
+							// ãƒã‚¦ã‚¹ã‚«ãƒ¼ã‚½ãƒ«è¨­å®š
 							PackageViewPanel.this.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 							allBtnCtrl(true);
 							
@@ -2894,13 +2894,13 @@ public class PackageViewPanel extends JPanel {
 	}
 
 	/**
-	 * ƒe[ƒuƒ‹ƒŠƒXƒgƒZƒŒƒNƒgƒŠƒXƒi[ƒNƒ‰ƒX
-	 * PackageViewPanel‚ÌƒCƒ“ƒi[ƒNƒ‰ƒX
+	 * ãƒ†ãƒ¼ãƒ–ãƒ«ãƒªã‚¹ãƒˆã‚»ãƒ¬ã‚¯ãƒˆãƒªã‚¹ãƒŠãƒ¼ã‚¯ãƒ©ã‚¹
+	 * PackageViewPanelã®ã‚¤ãƒ³ãƒŠãƒ¼ã‚¯ãƒ©ã‚¹
 	 */
 	class LmSelectionListener implements ListSelectionListener {
 
 		/**
-		 * ƒoƒŠƒ…[ƒ`ƒFƒ“ƒWƒCƒxƒ“ƒg
+		 * ãƒãƒªãƒ¥ãƒ¼ãƒã‚§ãƒ³ã‚¸ã‚¤ãƒ™ãƒ³ãƒˆ
 		 * @see javax.swing.event.ListSelectionListener#valueChanged(javax.swing.event.ListSelectionEvent)
 		 */
 		public void valueChanged(ListSelectionEvent e) {
@@ -2908,7 +2908,7 @@ public class PackageViewPanel extends JPanel {
 				return;
 			}
 			
-			// ‘I‘ğs‚ğ‰Â‹‚É‚·‚é‚½‚ßƒXƒNƒ[ƒ‹ƒo[ˆÊ’uİ’è
+			// é¸æŠè¡Œã‚’å¯è¦–ã«ã™ã‚‹ãŸã‚ã‚¹ã‚¯ãƒ­ãƒ¼ãƒ«ãƒãƒ¼ä½ç½®è¨­å®š
 			int selRow = recTable.getSelectedRow();
 			int selCol = recTable.getSelectedColumn();
 			Rectangle cellRect = recTable.getCellRect(selRow, selCol, false	);
@@ -2921,8 +2921,8 @@ public class PackageViewPanel extends JPanel {
 	}
 	
 	/**
-	 * ƒe[ƒuƒ‹ƒ}ƒEƒXƒŠƒXƒi[ƒNƒ‰ƒX
-	 * PackageViewPanel‚ÌƒCƒ“ƒi[ƒNƒ‰ƒX
+	 * ãƒ†ãƒ¼ãƒ–ãƒ«ãƒã‚¦ã‚¹ãƒªã‚¹ãƒŠãƒ¼ã‚¯ãƒ©ã‚¹
+	 * PackageViewPanelã®ã‚¤ãƒ³ãƒŠãƒ¼ã‚¯ãƒ©ã‚¹
 	 */
 	class TblMouseListener extends MouseAdapter {
 		
@@ -2942,7 +2942,7 @@ public class PackageViewPanel extends JPanel {
 				return;
 			}
 			
-			// ƒ`ƒFƒbƒNƒ{ƒbƒNƒX‚Ì‘I‘ğˆ—
+			// ãƒã‚§ãƒƒã‚¯ãƒœãƒƒã‚¯ã‚¹ã®é¸æŠå‡¦ç†
 			int disableCol = recTable.getColumnModel().getColumnIndex(SearchPage.COL_LABEL_DISABLE);
 			if (selCol == disableCol) {
 				recTable.setValueAt(
@@ -2952,7 +2952,7 @@ public class PackageViewPanel extends JPanel {
 				return;
 			}
 			
-			// ƒŒƒR[ƒhƒy[ƒW•\¦ˆ—
+			// ãƒ¬ã‚³ãƒ¼ãƒ‰ãƒšãƒ¼ã‚¸è¡¨ç¤ºå‡¦ç†
 			if (e.getClickCount() == 2) {
 				int siteCol = recTable.getColumnModel().getColumnIndex(SearchPage.COL_LABEL_CONTRIBUTOR);
 				if (String.valueOf(recTable.getValueAt(selRow, siteCol)).equals("")) {
@@ -2989,7 +2989,7 @@ public class PackageViewPanel extends JPanel {
 		public void mouseReleased(MouseEvent e) {
 			super.mouseReleased(e);
 			
-			// ‰EƒŠƒŠ[ƒX‚Ìê‡
+			// å³ãƒªãƒªãƒ¼ã‚¹ã®å ´åˆ
 			if (SwingUtilities.isRightMouseButton(e)) {
 				recListPopup(e);
 			}
@@ -3007,12 +3007,12 @@ public class PackageViewPanel extends JPanel {
 		    releaseRowIndex = recTable.rowAtPoint(p);
 			
 			if (!isSortStatus() && pressRowIndex != releaseRowIndex && releaseRowIndex != -1) {
-				// ƒŒƒR[ƒhƒhƒƒbƒv(ˆÚ“®)
+				// ãƒ¬ã‚³ãƒ¼ãƒ‰ãƒ‰ãƒ­ãƒƒãƒ—(ç§»å‹•)
 				DefaultTableModel dataModel = (DefaultTableModel)recSorter.getTableModel();
 				dataModel.moveRow(pressRowIndex, pressRowIndex, releaseRowIndex);
 				recTable.setRowSelectionInterval(releaseRowIndex, releaseRowIndex);
 				
-				// ƒf[ƒ^ƒNƒ‰ƒXƒ\[ƒg
+				// ãƒ‡ãƒ¼ã‚¿ã‚¯ãƒ©ã‚¹ã‚½ãƒ¼ãƒˆ
 				specData.sortRecInfo(recTable);
 			}
 			recTable.repaint();
@@ -3021,8 +3021,8 @@ public class PackageViewPanel extends JPanel {
 	}
 	
 	/**
-	 * ƒe[ƒuƒ‹ƒ}ƒEƒXƒ‚[ƒVƒ‡ƒ“ƒŠƒXƒi[ƒNƒ‰ƒX
-	 * PackageViewPanel‚ÌƒCƒ“ƒi[ƒNƒ‰ƒX
+	 * ãƒ†ãƒ¼ãƒ–ãƒ«ãƒã‚¦ã‚¹ãƒ¢ãƒ¼ã‚·ãƒ§ãƒ³ãƒªã‚¹ãƒŠãƒ¼ã‚¯ãƒ©ã‚¹
+	 * PackageViewPanelã®ã‚¤ãƒ³ãƒŠãƒ¼ã‚¯ãƒ©ã‚¹
 	 */
 	class TblMouseMotionListener extends MouseMotionAdapter {
 		
@@ -3041,33 +3041,33 @@ public class PackageViewPanel extends JPanel {
 			Point p = e.getPoint();
 			dragRowIndex = recTable.rowAtPoint(p);
 			
-			// ƒJ[ƒ\ƒ‹•ÏX
+			// ã‚«ãƒ¼ã‚½ãƒ«å¤‰æ›´
 			Cursor cursor = Cursor.getDefaultCursor();
 			if ( !isSortStatus()  && pressRowIndex != dragRowIndex) {
 				try {
 					cursor = Cursor.getSystemCustomCursor("MoveDrop.32x32");
 				} catch (Exception ex) {
-					// ƒhƒƒbƒv—pƒVƒXƒeƒ€ƒJ[ƒ\ƒ‹‚ª‘¶İ‚µ‚È‚¢ê‡AƒJ[ƒ\ƒ‹•ÏX‚È‚µ
+					// ãƒ‰ãƒ­ãƒƒãƒ—ç”¨ã‚·ã‚¹ãƒ†ãƒ ã‚«ãƒ¼ã‚½ãƒ«ãŒå­˜åœ¨ã—ãªã„å ´åˆã€ã‚«ãƒ¼ã‚½ãƒ«å¤‰æ›´ãªã—
 				}
 			}
 			else {
 				try {
 					cursor = Cursor.getSystemCustomCursor("MoveNoDrop.32x32");
 				} catch (Exception ex) {
-					// ƒhƒƒbƒv•s‰Â—pƒVƒXƒeƒ€ƒJ[ƒ\ƒ‹‚ª‘¶İ‚µ‚È‚¢ê‡AƒJ[ƒ\ƒ‹•ÏX‚È‚µ
+					// ãƒ‰ãƒ­ãƒƒãƒ—ä¸å¯ç”¨ã‚·ã‚¹ãƒ†ãƒ ã‚«ãƒ¼ã‚½ãƒ«ãŒå­˜åœ¨ã—ãªã„å ´åˆã€ã‚«ãƒ¼ã‚½ãƒ«å¤‰æ›´ãªã—
 				}				
 			}
 			PackageViewPanel.this.setCursor(cursor);
 			
-			// ƒhƒ‰ƒbƒO’†‚Í‘I‘ğs‚ğˆÚ“®‚µ‚È‚¢
+			// ãƒ‰ãƒ©ãƒƒã‚°ä¸­ã¯é¸æŠè¡Œã‚’ç§»å‹•ã—ãªã„
 			recTable.setRowSelectionInterval(pressRowIndex, pressRowIndex);
 			recTable.repaint();
 		}
 	}
 	
 	/**
-	 * ƒe[ƒuƒ‹ƒL[ƒŠƒXƒi[ƒNƒ‰ƒX
-	 * PackageViewPanel‚ÌƒCƒ“ƒi[ƒNƒ‰ƒX
+	 * ãƒ†ãƒ¼ãƒ–ãƒ«ã‚­ãƒ¼ãƒªã‚¹ãƒŠãƒ¼ã‚¯ãƒ©ã‚¹
+	 * PackageViewPanelã®ã‚¤ãƒ³ãƒŠãƒ¼ã‚¯ãƒ©ã‚¹
 	 */
 	class TblKeyListener extends KeyAdapter {
 		
@@ -3075,7 +3075,7 @@ public class PackageViewPanel extends JPanel {
 		public void keyReleased(KeyEvent e) {
 			super.keyReleased(e);
 			
-			// ESCƒL[ƒvƒŒƒX‚Åƒhƒ‰ƒbƒOƒCƒxƒ“ƒg‰ğœ
+			// ESCã‚­ãƒ¼ãƒ—ãƒ¬ã‚¹ã§ãƒ‰ãƒ©ãƒƒã‚°ã‚¤ãƒ™ãƒ³ãƒˆè§£é™¤
 			if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
 				isDragCancel = true;
 				dragRowIndex = -1;
@@ -3086,9 +3086,9 @@ public class PackageViewPanel extends JPanel {
 	}
 	
 	/**
-	 * ƒe[ƒuƒ‹ƒŒƒ“ƒ_ƒ‰[
-	 * PackageViewPanel‚ÌƒCƒ“ƒi[ƒNƒ‰ƒX
-	 * ƒIƒŠƒWƒiƒ‹ƒŒƒ“ƒ_ƒ‰[B
+	 * ãƒ†ãƒ¼ãƒ–ãƒ«ãƒ¬ãƒ³ãƒ€ãƒ©ãƒ¼
+	 * PackageViewPanelã®ã‚¤ãƒ³ãƒŠãƒ¼ã‚¯ãƒ©ã‚¹
+	 * ã‚ªãƒªã‚¸ãƒŠãƒ«ãƒ¬ãƒ³ãƒ€ãƒ©ãƒ¼ã€‚
 	 */
 	class TblRenderer extends DefaultTableCellRenderer {
 		
@@ -3106,7 +3106,7 @@ public class PackageViewPanel extends JPanel {
 				setBackground(table.getBackground());
 			}
 			
-			// ”ñ•\¦ƒŒƒR[ƒh‚Ì•¶šF•ÏX
+			// éè¡¨ç¤ºãƒ¬ã‚³ãƒ¼ãƒ‰ã®æ–‡å­—è‰²å¤‰æ›´
 			int disableCol = recTable.getColumnModel().getColumnIndex(SearchPage.COL_LABEL_DISABLE);
 			if (Boolean.parseBoolean(String.valueOf(recTable.getValueAt(row, disableCol)))) {
 				if (isSelected) {
@@ -3119,7 +3119,7 @@ public class PackageViewPanel extends JPanel {
 			
 			if (value instanceof Boolean) {
 				if (column == disableCol) {
-					// ƒ`ƒFƒbƒNƒ{ƒbƒNƒX•Ô‹p
+					// ãƒã‚§ãƒƒã‚¯ãƒœãƒƒã‚¯ã‚¹è¿”å´
 					JCheckBox obj = new JCheckBox(null, null, ((Boolean)table
 							.getValueAt(row, column)).booleanValue());
 					if (isSelected) {
@@ -3136,8 +3136,8 @@ public class PackageViewPanel extends JPanel {
 	}
 	
 	/**
-	 * ƒyƒCƒ“ƒ}ƒEƒXƒŠƒXƒi[
-	 * PackageViewPanel‚ÌƒCƒ“ƒi[ƒNƒ‰ƒX
+	 * ãƒšã‚¤ãƒ³ãƒã‚¦ã‚¹ãƒªã‚¹ãƒŠãƒ¼
+	 * PackageViewPanelã®ã‚¤ãƒ³ãƒŠãƒ¼ã‚¯ãƒ©ã‚¹
 	 */
 	class PaneMouseListener extends MouseAdapter {
 		
@@ -3145,7 +3145,7 @@ public class PackageViewPanel extends JPanel {
 		public void mouseReleased(MouseEvent e) {
 			super.mouseReleased(e);
 			
-			// ‰EƒŠƒŠ[ƒX‚Ìê‡
+			// å³ãƒªãƒªãƒ¼ã‚¹ã®å ´åˆ
 			if (SwingUtilities.isRightMouseButton(e)) {
 				recListPopup(e);
 			}

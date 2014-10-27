@@ -18,7 +18,7 @@
  *
  *******************************************************************************
  *
- * ƒXƒyƒNƒgƒ‹î•ñŠi”[ ƒNƒ‰ƒX
+ * ã‚¹ãƒšã‚¯ãƒˆãƒ«æƒ…å ±æ ¼ç´ ã‚¯ãƒ©ã‚¹
  *
  * ver 1.0.4 2010.02.01
  *
@@ -32,39 +32,39 @@ import java.util.TreeSet;
 import javax.swing.JTable;
 
 /**
- * ƒXƒyƒNƒgƒ‹î•ñŠi”[ ƒNƒ‰ƒX
+ * ã‚¹ãƒšã‚¯ãƒˆãƒ«æƒ…å ±æ ¼ç´ ã‚¯ãƒ©ã‚¹
  * 
- * ƒXƒyƒNƒgƒ‹ˆêŠ‡•\¦—pƒf[ƒ^ƒNƒ‰ƒX
- * ƒŒƒR[ƒhî•ñ‚ğˆêŠ‡‚Å•Û‚·‚éƒf[ƒ^ƒNƒ‰ƒX
+ * ã‚¹ãƒšã‚¯ãƒˆãƒ«ä¸€æ‹¬è¡¨ç¤ºç”¨ãƒ‡ãƒ¼ã‚¿ã‚¯ãƒ©ã‚¹
+ * ãƒ¬ã‚³ãƒ¼ãƒ‰æƒ…å ±ã‚’ä¸€æ‹¬ã§ä¿æŒã™ã‚‹ãƒ‡ãƒ¼ã‚¿ã‚¯ãƒ©ã‚¹
  */
 public class PackageSpecData {
 	
-	/** ƒŒƒR[ƒhƒ\[ƒgƒL[(ƒ\[ƒg–³‚µ) */
+	/** ãƒ¬ã‚³ãƒ¼ãƒ‰ã‚½ãƒ¼ãƒˆã‚­ãƒ¼(ã‚½ãƒ¼ãƒˆç„¡ã—) */
 	public static final int SORT_KEY_NONE = -1;
 	
-	/** ƒŒƒR[ƒhƒ\[ƒgƒL[(ƒXƒRƒA) */
+	/** ãƒ¬ã‚³ãƒ¼ãƒ‰ã‚½ãƒ¼ãƒˆã‚­ãƒ¼(ã‚¹ã‚³ã‚¢) */
 	public static final int SORT_KEY_SCORE = 0;
 	
-	/** ƒŒƒR[ƒhƒ\[ƒgƒL[(‰»‡•¨–¼) */
+	/** ãƒ¬ã‚³ãƒ¼ãƒ‰ã‚½ãƒ¼ãƒˆã‚­ãƒ¼(åŒ–åˆç‰©å) */
 	public static final int SORT_KEY_NAME = 1;
 	
-	/** ƒŒƒR[ƒhî•ñ */
+	/** ãƒ¬ã‚³ãƒ¼ãƒ‰æƒ…å ± */
 	private ArrayList<PackageRecData> recInfo = new ArrayList<PackageRecData>();
 	
-	/** ƒŒƒR[ƒh” */
+	/** ãƒ¬ã‚³ãƒ¼ãƒ‰æ•° */
 	private int recNum = 0;
 	
-	/** ‘I‘ğÏ‚İƒs[ƒNm/zƒŠƒXƒg */
+	/** é¸æŠæ¸ˆã¿ãƒ”ãƒ¼ã‚¯m/zãƒªã‚¹ãƒˆ */
 	private TreeSet<Double> selectedPeakList = new TreeSet<Double>();
 	
 	/**
-	 * ƒfƒtƒHƒ‹ƒgƒRƒ“ƒXƒgƒ‰ƒNƒ^
+	 * ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	 */
 	public PackageSpecData() {
 	}
 	
 	/**
-	 * ƒŒƒR[ƒhî•ñ‰Šú‰»(‘SƒŒƒR[ƒh)
+	 * ãƒ¬ã‚³ãƒ¼ãƒ‰æƒ…å ±åˆæœŸåŒ–(å…¨ãƒ¬ã‚³ãƒ¼ãƒ‰)
 	 */
 	public void initAllData() {
 		recInfo = new ArrayList<PackageRecData>();
@@ -73,12 +73,12 @@ public class PackageSpecData {
 	}
 	
 	/**
-	 * ƒŒƒR[ƒhî•ñ‰Šú‰»(ŒŸõŒ‹‰ÊƒŒƒR[ƒh‚Ì‚İ)
+	 * ãƒ¬ã‚³ãƒ¼ãƒ‰æƒ…å ±åˆæœŸåŒ–(æ¤œç´¢çµæœãƒ¬ã‚³ãƒ¼ãƒ‰ã®ã¿)
 	 */
 	public void initResultData() {
 		PackageRecData queryRecData = null;
 		for (int i=0; i<recInfo.size(); i++) {
-			// ƒNƒGƒŠ[ƒŒƒR[ƒh‘Ş”ğ
+			// ã‚¯ã‚¨ãƒªãƒ¼ãƒ¬ã‚³ãƒ¼ãƒ‰é€€é¿
 			if(recInfo.get(i).isQueryRecord()) {
 				queryRecData = recInfo.get(i);
 				break;
@@ -94,50 +94,50 @@ public class PackageSpecData {
 	}
 	
 	/**
-	 * ƒŒƒR[ƒh”æ“¾
-	 * @return ƒŒƒR[ƒh”
+	 * ãƒ¬ã‚³ãƒ¼ãƒ‰æ•°å–å¾—
+	 * @return ãƒ¬ã‚³ãƒ¼ãƒ‰æ•°
 	 */
 	public int getRecNum() {
 		return recNum;
 	}
 
 	/**
-	 * ƒŒƒR[ƒhî•ñæ“¾
-	 * @return ƒŒƒR[ƒhî•ñ
+	 * ãƒ¬ã‚³ãƒ¼ãƒ‰æƒ…å ±å–å¾—
+	 * @return ãƒ¬ã‚³ãƒ¼ãƒ‰æƒ…å ±
 	 */
 	public ArrayList<PackageRecData> getRecInfo() {
 		return recInfo;
 	}
 	
 	/**
-	 * ƒŒƒR[ƒhî•ñæ“¾(ƒCƒ“ƒfƒbƒNƒXw’è)
-	 * @param index ƒCƒ“ƒfƒbƒNƒX
-	 * @return ƒŒƒR[ƒhƒf[ƒ^
+	 * ãƒ¬ã‚³ãƒ¼ãƒ‰æƒ…å ±å–å¾—(ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹æŒ‡å®š)
+	 * @param index ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹
+	 * @return ãƒ¬ã‚³ãƒ¼ãƒ‰ãƒ‡ãƒ¼ã‚¿
 	 */
 	public PackageRecData getRecInfo(int index) {
 		return recInfo.get(index);
 	}
 	
 	/**
-	 * ƒŒƒR[ƒhî•ñ’Ç‰Á
-	 * @param recData ƒŒƒR[ƒhƒf[ƒ^
+	 * ãƒ¬ã‚³ãƒ¼ãƒ‰æƒ…å ±è¿½åŠ 
+	 * @param recData ãƒ¬ã‚³ãƒ¼ãƒ‰ãƒ‡ãƒ¼ã‚¿
 	 */
 	public void addRecInfo(PackageRecData recData) {
 		this.recInfo.add(recData);
-		this.recNum = recInfo.size();			// ƒŒƒR[ƒh”‚Ìİ’è‚à“¯‚És‚¤
+		this.recNum = recInfo.size();			// ãƒ¬ã‚³ãƒ¼ãƒ‰æ•°ã®è¨­å®šã‚‚åŒæ™‚ã«è¡Œã†
 	}
 	
 	/**
-	 * ƒŒƒR[ƒhî•ñƒ\[ƒg(ƒ\[ƒgƒL[w’è)
-	 * @param sortKey ƒ\[ƒgƒL[
+	 * ãƒ¬ã‚³ãƒ¼ãƒ‰æƒ…å ±ã‚½ãƒ¼ãƒˆ(ã‚½ãƒ¼ãƒˆã‚­ãƒ¼æŒ‡å®š)
+	 * @param sortKey ã‚½ãƒ¼ãƒˆã‚­ãƒ¼
 	 */
 	public void sortRecInfo(int sortKey) {
 		Collections.sort(recInfo, new RecInfoComparator(sortKey));
 	}
 	
 	/**
-	 * ƒŒƒR[ƒhî•ñƒ\[ƒg(ƒe[ƒuƒ‹‡)
-	 * @param t ƒŒƒR[ƒhî•ñƒ\[ƒg‚ÌŒ³‚Æ‚È‚éƒe[ƒuƒ‹
+	 * ãƒ¬ã‚³ãƒ¼ãƒ‰æƒ…å ±ã‚½ãƒ¼ãƒˆ(ãƒ†ãƒ¼ãƒ–ãƒ«é †)
+	 * @param t ãƒ¬ã‚³ãƒ¼ãƒ‰æƒ…å ±ã‚½ãƒ¼ãƒˆã®å…ƒã¨ãªã‚‹ãƒ†ãƒ¼ãƒ–ãƒ«
 	 */
 	public void sortRecInfo(JTable t) {
 		if(recNum == 0) {
@@ -149,11 +149,11 @@ public class PackageSpecData {
 		String idVal = "";
 		String typeVal = "";
 		
-		// Œ»İ‚ÌƒŒƒR[ƒhî•ñ‚ğ‘Ş”ğ
+		// ç¾åœ¨ã®ãƒ¬ã‚³ãƒ¼ãƒ‰æƒ…å ±ã‚’é€€é¿
 		ArrayList tmpRecInfo = (ArrayList)recInfo.clone();
 		recInfo.clear();
 		
-		// w’è‚³‚ê‚½ƒCƒ“ƒfƒbƒNƒXƒŠƒXƒg‡‚Å•À‚Ñ‘Ö‚¦
+		// æŒ‡å®šã•ã‚ŒãŸã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ãƒªã‚¹ãƒˆé †ã§ä¸¦ã³æ›¿ãˆ
 		PackageRecData recData;
 		for (int i=0; i<t.getRowCount(); i++) {
 			idVal = String.valueOf(t.getValueAt(i, idColumn));
@@ -176,79 +176,79 @@ public class PackageSpecData {
 	}
 	
 	/**
-	 * ‘SƒŒƒR[ƒhî•ñ“à‚Ìƒs[ƒN‘I‘ğƒtƒ‰ƒO‰Šú‰»
+	 * å…¨ãƒ¬ã‚³ãƒ¼ãƒ‰æƒ…å ±å†…ã®ãƒ”ãƒ¼ã‚¯é¸æŠãƒ•ãƒ©ã‚°åˆæœŸåŒ–
 	 */
 	public void initAllSelectedPeak() {
-		// ŠeƒŒƒR[ƒhî•ñ“à‚Ìƒs[ƒN‘I‘ğƒtƒ‰ƒO‰Šú‰»ƒƒ\ƒbƒhŒÄ‚Ño‚µ
+		// å„ãƒ¬ã‚³ãƒ¼ãƒ‰æƒ…å ±å†…ã®ãƒ”ãƒ¼ã‚¯é¸æŠãƒ•ãƒ©ã‚°åˆæœŸåŒ–ãƒ¡ã‚½ãƒƒãƒ‰å‘¼ã³å‡ºã—
 		for (int i=0; i<recNum; i++) {
 			recInfo.get(i).initSelectPeak();
 		}
 	}
 	
 	/**
-	 * ‘I‘ğÏ‚İƒs[ƒN‚ÌŠm”F
-	 * @param mz Šm”F‚µ‚½‚¢m/z
-	 * @return Œ‹‰Ê(‘I‘ğÏFtrueA–¢‘I‘ğFfalse)
+	 * é¸æŠæ¸ˆã¿ãƒ”ãƒ¼ã‚¯ã®ç¢ºèª
+	 * @param mz ç¢ºèªã—ãŸã„m/z
+	 * @return çµæœ(é¸æŠæ¸ˆï¼štrueã€æœªé¸æŠï¼šfalse)
 	 */
 	public boolean containsSelectedPeak(String mz) {
 		return selectedPeakList.contains(Double.valueOf(mz));
 	}
 	
 	/**
-	 * ‘I‘ğÏ‚İƒs[ƒNƒŠƒXƒg‚Ì‰Šú‰»
+	 * é¸æŠæ¸ˆã¿ãƒ”ãƒ¼ã‚¯ãƒªã‚¹ãƒˆã®åˆæœŸåŒ–
 	 */
 	public void clearSelectedPeakList() {
 		selectedPeakList.clear();
 	}
 	
 	/**
-	 * ‘I‘ğÏ‚İƒs[ƒNƒŠƒXƒg‚Ö‚Ì“o˜^
-	 * @param mz ‘I‘ğÏ‚İ‚Æ‚·‚ém/z
+	 * é¸æŠæ¸ˆã¿ãƒ”ãƒ¼ã‚¯ãƒªã‚¹ãƒˆã¸ã®ç™»éŒ²
+	 * @param mz é¸æŠæ¸ˆã¿ã¨ã™ã‚‹m/z
 	 */
 	public void addSelectedPeakList(String mz) {
 		selectedPeakList.add(Double.parseDouble(mz));
 	}
 	
 	/**
-	 * ‘I‘ğÏ‚İƒs[ƒNƒŠƒXƒg‚©‚ç‚Ìíœ
-	 * @param mz ‘I‘ğ‰ğœ‚·‚ém/z
+	 * é¸æŠæ¸ˆã¿ãƒ”ãƒ¼ã‚¯ãƒªã‚¹ãƒˆã‹ã‚‰ã®å‰Šé™¤
+	 * @param mz é¸æŠè§£é™¤ã™ã‚‹m/z
 	 */
 	public void removeSelectedPeakList(String mz) {
 		selectedPeakList.remove(Double.valueOf(mz));
 	}
 	
 	/**
-	 * ‘I‘ğÏ‚İƒs[ƒNƒŠƒXƒg‚Ìæ“¾
-	 * @return ‘I‘ğÏ‚İƒs[ƒNƒŠƒXƒg
+	 * é¸æŠæ¸ˆã¿ãƒ”ãƒ¼ã‚¯ãƒªã‚¹ãƒˆã®å–å¾—
+	 * @return é¸æŠæ¸ˆã¿ãƒ”ãƒ¼ã‚¯ãƒªã‚¹ãƒˆ
 	 */
 	public TreeSet<Double> getSelectedPeakList() {
 		return selectedPeakList;
 	}
 	
 	/**
-	 * ‘I‘ğÏ‚İƒs[ƒN”æ“¾
-	 * @retrun ‘I‘ğÏƒs[ƒN”
+	 * é¸æŠæ¸ˆã¿ãƒ”ãƒ¼ã‚¯æ•°å–å¾—
+	 * @retrun é¸æŠæ¸ˆãƒ”ãƒ¼ã‚¯æ•°
 	 */
 	public int getSelectedPeakNum() {
 		return selectedPeakList.size();
 	}
 	
 	/**
-	 * ƒ}ƒbƒ`ƒs[ƒNî•ñİ’è
-	 * ƒNƒGƒŠ[ƒŒƒR[ƒh‚Ìƒs[ƒN‚É‘Î‚µ‚Ä‡’v‚µ‚½ƒs[ƒN‚ğF‚Ã‚¯‚·‚é‚½‚ßA
-	 * PackeageRecDataƒNƒ‰ƒX‚Éƒs[ƒNFî•ñ‚ğİ’è‚·‚éB
-	 *  ƒNƒGƒŠ[ƒŒƒR[ƒh‚Ìƒs[ƒN‚ÉŠ®‘Sˆê’v‚Ìê‡
-	 *   EƒNƒGƒŠ[ƒŒƒR[ƒh‚Ìƒs[ƒNFÔ
-	 *   E”äŠrƒŒƒR[ƒh‚Ìƒs[ƒNFÔ
-	 *  ƒNƒGƒŠ[ƒŒƒR[ƒh‚Ìƒs[ƒN‚É”ÍˆÍ“àˆê’v‚Ìê‡
-	 *   EƒNƒGƒŠ[ƒŒƒR[ƒh‚Ìƒs[ƒNFÔ
-	 *   E”äŠrƒŒƒR[ƒh‚Ìƒs[ƒNFƒ}ƒ[ƒ“ƒ^
-	 * @param tolVal Tolerance“ü—Í’l
-	 * @param tolUnit Tolerance’PˆÊ(trueFunitAfalseFppm)
+	 * ãƒãƒƒãƒãƒ”ãƒ¼ã‚¯æƒ…å ±è¨­å®š
+	 * ã‚¯ã‚¨ãƒªãƒ¼ãƒ¬ã‚³ãƒ¼ãƒ‰ã®ãƒ”ãƒ¼ã‚¯ã«å¯¾ã—ã¦åˆè‡´ã—ãŸãƒ”ãƒ¼ã‚¯ã‚’è‰²ã¥ã‘ã™ã‚‹ãŸã‚ã€
+	 * PackeageRecDataã‚¯ãƒ©ã‚¹ã«ãƒ”ãƒ¼ã‚¯è‰²æƒ…å ±ã‚’è¨­å®šã™ã‚‹ã€‚
+	 *  ã‚¯ã‚¨ãƒªãƒ¼ãƒ¬ã‚³ãƒ¼ãƒ‰ã®ãƒ”ãƒ¼ã‚¯ã«å®Œå…¨ä¸€è‡´ã®å ´åˆ
+	 *   ãƒ»ã‚¯ã‚¨ãƒªãƒ¼ãƒ¬ã‚³ãƒ¼ãƒ‰ã®ãƒ”ãƒ¼ã‚¯ï¼šèµ¤
+	 *   ãƒ»æ¯”è¼ƒãƒ¬ã‚³ãƒ¼ãƒ‰ã®ãƒ”ãƒ¼ã‚¯ï¼šèµ¤
+	 *  ã‚¯ã‚¨ãƒªãƒ¼ãƒ¬ã‚³ãƒ¼ãƒ‰ã®ãƒ”ãƒ¼ã‚¯ã«ç¯„å›²å†…ä¸€è‡´ã®å ´åˆ
+	 *   ãƒ»ã‚¯ã‚¨ãƒªãƒ¼ãƒ¬ã‚³ãƒ¼ãƒ‰ã®ãƒ”ãƒ¼ã‚¯ï¼šèµ¤
+	 *   ãƒ»æ¯”è¼ƒãƒ¬ã‚³ãƒ¼ãƒ‰ã®ãƒ”ãƒ¼ã‚¯ï¼šãƒã‚¼ãƒ³ã‚¿
+	 * @param tolVal Toleranceå…¥åŠ›å€¤
+	 * @param tolUnit Toleranceå˜ä½(trueï¼šunitã€falseï¼šppm)
 	 */
 	public void setMatchPeakInfo(float tolVal, boolean tolUnit) {
 		
-		// ƒNƒGƒŠ[ƒŒƒR[ƒhæ“¾‚Æƒs[ƒNF‰Šú‰»
+		// ã‚¯ã‚¨ãƒªãƒ¼ãƒ¬ã‚³ãƒ¼ãƒ‰å–å¾—ã¨ãƒ”ãƒ¼ã‚¯è‰²åˆæœŸåŒ–
 		PackageRecData queryRecData = null;
 		for (int i=0; i<recNum; i++) {
 			if ( recInfo.get(i).isQueryRecord() ) {
@@ -258,25 +258,25 @@ public class PackageSpecData {
 			}
 		}
 		
-		// ƒNƒGƒŠ[ƒŒƒR[ƒh‚Æ‚Ì”äŠr
+		// ã‚¯ã‚¨ãƒªãƒ¼ãƒ¬ã‚³ãƒ¼ãƒ‰ã¨ã®æ¯”è¼ƒ
 		long qMz;
 		long cMz;
 		int qIts = 0;
 		int cIts = 0;
 		long minusRange;
 		long plusRange;
-		final int TO_INTEGER_VAL = 100000;	// ŠÛ‚ßŒë·‚ª¶‚¶‚é‚½‚ß®”‰»‚·‚é‚Ì‚Ég—p
+		final int TO_INTEGER_VAL = 100000;	// ä¸¸ã‚èª¤å·®ãŒç”Ÿã˜ã‚‹ãŸã‚æ•´æ•°åŒ–ã™ã‚‹ã®ã«ä½¿ç”¨
 		PackageRecData compRecData = null;
 		for (int i=0; i<recNum; i++) {
 			if ( !recInfo.get(i).isQueryRecord() ) {
-				// ”äŠr—pƒŒƒR[ƒhæ“¾‚Æƒs[ƒNF‰Šú‰»
+				// æ¯”è¼ƒç”¨ãƒ¬ã‚³ãƒ¼ãƒ‰å–å¾—ã¨ãƒ”ãƒ¼ã‚¯è‰²åˆæœŸåŒ–
 				compRecData = recInfo.get(i);
 				compRecData.setPeakColorType(PackageRecData.COLOR_TYPE_BLACK);
 				
 				if (queryRecData == null) {
 					continue;
 				}
-				// ”ñ•\¦’†ƒŒƒR[ƒh‚Í”äŠr‘ÎÛ‚Æ‚µ‚È‚¢
+				// éè¡¨ç¤ºä¸­ãƒ¬ã‚³ãƒ¼ãƒ‰ã¯æ¯”è¼ƒå¯¾è±¡ã¨ã—ãªã„
 				if (queryRecData.isDisable() || compRecData.isDisable()) {
 					continue;
 				}
@@ -289,12 +289,12 @@ public class PackageSpecData {
 						continue;
 					}
 					
-					// unit‚Ìê‡
+					// unitã®å ´åˆ
 					if (tolUnit) {
 						minusRange = qMz - (int)(tolVal * TO_INTEGER_VAL);
 						plusRange = qMz + (int)(tolVal * TO_INTEGER_VAL);
 					}
-					// ppm‚Ìê‡
+					// ppmã®å ´åˆ
 					else {
 						minusRange = (long)(qMz * (1 - tolVal / 1000000));
 						plusRange = (long)(qMz * (1 + tolVal / 1000000));
@@ -324,21 +324,21 @@ public class PackageSpecData {
 	}
 	
 	/**
-	 * ƒŒƒR[ƒhî•ñƒ\[ƒg—pƒRƒ“ƒpƒŒ[ƒ^
-	 * PeckageSpecData‚ÌƒCƒ“ƒi[ƒNƒ‰ƒXB
-	 * PackageRecData‚ğŠi”[‚µ‚½ƒŠƒXƒg‚Ìƒ\[ƒg‚ğs‚¤B
-	 * ƒ\[ƒgˆ—‚ğs‚¤‚ªA‚Ç‚Ì‚æ‚¤‚Èƒ\[ƒg‚ğs‚Á‚½ê‡‚Å‚à
-	 * •K‚¸ÅŒã”ö‚©‚çƒNƒGƒŠ[ƒŒƒR[ƒhA“‡ƒŒƒR[ƒhAÀ‘ªƒŒƒR[ƒh‚Ì‡‚É•À‚ÔB
-	 * ƒ\[ƒgƒL[‚ªw’è‚³‚ê‚½ê‡‚ÍÀ‘ªƒŒƒR[ƒh‚Ì‡‚ª•À‚Ñ•Ï‚í‚éB
+	 * ãƒ¬ã‚³ãƒ¼ãƒ‰æƒ…å ±ã‚½ãƒ¼ãƒˆç”¨ã‚³ãƒ³ãƒ‘ãƒ¬ãƒ¼ã‚¿
+	 * PeckageSpecDataã®ã‚¤ãƒ³ãƒŠãƒ¼ã‚¯ãƒ©ã‚¹ã€‚
+	 * PackageRecDataã‚’æ ¼ç´ã—ãŸãƒªã‚¹ãƒˆã®ã‚½ãƒ¼ãƒˆã‚’è¡Œã†ã€‚
+	 * ã‚½ãƒ¼ãƒˆå‡¦ç†ã‚’è¡Œã†ãŒã€ã©ã®ã‚ˆã†ãªã‚½ãƒ¼ãƒˆã‚’è¡Œã£ãŸå ´åˆã§ã‚‚
+	 * å¿…ãšæœ€å¾Œå°¾ã‹ã‚‰ã‚¯ã‚¨ãƒªãƒ¼ãƒ¬ã‚³ãƒ¼ãƒ‰ã€çµ±åˆãƒ¬ã‚³ãƒ¼ãƒ‰ã€å®Ÿæ¸¬ãƒ¬ã‚³ãƒ¼ãƒ‰ã®é †ã«ä¸¦ã¶ã€‚
+	 * ã‚½ãƒ¼ãƒˆã‚­ãƒ¼ãŒæŒ‡å®šã•ã‚ŒãŸå ´åˆã¯å®Ÿæ¸¬ãƒ¬ã‚³ãƒ¼ãƒ‰ã®é †ãŒä¸¦ã³å¤‰ã‚ã‚‹ã€‚
 	 */
 	class RecInfoComparator implements Comparator<Object> {
 		
-		/** ƒ\[ƒgƒL[ */
+		/** ã‚½ãƒ¼ãƒˆã‚­ãƒ¼ */
 		private int sortKey = PackageSpecData.SORT_KEY_NONE;
 		
 		/**
-		 * ƒRƒ“ƒXƒgƒ‰ƒNƒ^
-		 * @param sortKey ƒ\[ƒgƒL[
+		 * ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
+		 * @param sortKey ã‚½ãƒ¼ãƒˆã‚­ãƒ¼
 		 */
 		public RecInfoComparator(int sortKey) {
 			this.sortKey = sortKey;
@@ -350,12 +350,12 @@ public class PackageSpecData {
 			
 			int ret = 0;
 			
-			// ƒ\[ƒgƒL[ƒ\[ƒgˆ—
+			// ã‚½ãƒ¼ãƒˆã‚­ãƒ¼ã‚½ãƒ¼ãƒˆå‡¦ç†
 			if (sortKey == PackageSpecData.SORT_KEY_NAME) {
 				ret = (e2.getName()).compareTo(e1.getName());
 			}
 			else if (sortKey == PackageSpecData.SORT_KEY_SCORE) {
-				// ƒXƒRƒA‚É‚æ‚éƒ\[ƒg‚Í•¶š—ñ‚àŠÜ‚Ü‚ê‚éê‡‚ª‚ ‚é‚Ì‚Ål—¶‚·‚é
+				// ã‚¹ã‚³ã‚¢ã«ã‚ˆã‚‹ã‚½ãƒ¼ãƒˆã¯æ–‡å­—åˆ—ã‚‚å«ã¾ã‚Œã‚‹å ´åˆãŒã‚ã‚‹ã®ã§è€ƒæ…®ã™ã‚‹
 	    		boolean e1String = false;
 	    		boolean e2String = false;
 	    		try {
@@ -382,11 +382,11 @@ public class PackageSpecData {
 	    		}
 			}
 			else {
-				// ƒ\[ƒgƒL[w’è‚È‚µ‚Ìê‡‚ÍID‚Åƒ\[ƒg
+				// ã‚½ãƒ¼ãƒˆã‚­ãƒ¼æŒ‡å®šãªã—ã®å ´åˆã¯IDã§ã‚½ãƒ¼ãƒˆ
 				ret = (e1.getId()).compareTo(e2.getId());
 			}
 			
-			// ŒÅ’èƒ\[ƒgˆ—
+			// å›ºå®šã‚½ãƒ¼ãƒˆå‡¦ç†
 			if (e1.isQueryRecord() && !e2.isQueryRecord()) {
 				ret = 1;
 			}

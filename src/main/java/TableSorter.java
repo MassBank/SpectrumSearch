@@ -216,9 +216,9 @@ public class TableSorter extends AbstractTableModel {
     }
 
     /**
-     * ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+     * ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
      * @param tableModel
-     * @param tableName ƒe[ƒuƒ‹–¼
+     * @param tableName ãƒ†ãƒ¼ãƒ–ãƒ«å
      */
     public TableSorter(TableModel tableModel, String tableName) {
         this();
@@ -227,10 +227,10 @@ public class TableSorter extends AbstractTableModel {
     }
     
     /**
-     * PackageView—pƒRƒ“ƒXƒgƒ‰ƒNƒ^
+     * PackageViewç”¨ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
      * @param tableModel
      * @param specData
-     * @param statusLbl ƒXƒe[ƒ^ƒXƒ‰ƒxƒ‹
+     * @param statusLbl ã‚¹ãƒ†ãƒ¼ã‚¿ã‚¹ãƒ©ãƒ™ãƒ«
      */
     public TableSorter(TableModel tableModel, PackageSpecData specData) {
     	this();
@@ -344,7 +344,7 @@ public class TableSorter extends AbstractTableModel {
         Class columnType = tableModel.getColumnClass(column);
         Comparator comparator = (Comparator) columnComparators.get(columnType);
         
-        // ƒJƒ‰ƒ€–¼æ“¾iƒJƒ‰ƒ€–¼‚É‚æ‚Á‚Äƒ\[ƒgcomparator‚ğØ‚è‘Ö‚¦‚éj
+        // ã‚«ãƒ©ãƒ åå–å¾—ï¼ˆã‚«ãƒ©ãƒ åã«ã‚ˆã£ã¦ã‚½ãƒ¼ãƒˆcomparatorã‚’åˆ‡ã‚Šæ›¿ãˆã‚‹ï¼‰
         String columnName = tableModel.getColumnName(column);
         if ( columnName.equals(SearchPage.COL_LABEL_SCORE) ) {
         	return STRING_DOUBLE_COMPARATOR;
@@ -532,7 +532,7 @@ public class TableSorter extends AbstractTableModel {
             int viewColumn = columnModel.getColumnIndexAtX(e.getX());
             int column = columnModel.getColumn(viewColumn).getModelIndex();
             
-            // ƒŒƒR[ƒh‘I‘ğó‘Ô•Ûˆ—iƒ\[ƒg‘O‘I‘ğî•ñ•Ûj
+            // ãƒ¬ã‚³ãƒ¼ãƒ‰é¸æŠçŠ¶æ…‹ä¿æŒå‡¦ç†ï¼ˆã‚½ãƒ¼ãƒˆå‰é¸æŠæƒ…å ±ä¿æŒï¼‰
             JTable table = h.getTable();
             int[] selRows = table.getSelectedRows();
             int idCol = columnModel.getColumnIndex(SearchPage.COL_LABEL_ID);
@@ -542,7 +542,7 @@ public class TableSorter extends AbstractTableModel {
             for (int i=0; i<selRows.length; i++) {
             	keys[i] = String.valueOf(table.getValueAt(selRows[i], idCol));
             	
-            	// PackageView‚ÌƒŒƒR[ƒhƒŠƒXƒgƒe[ƒuƒ‹‚Ìê‡
+            	// PackageViewã®ãƒ¬ã‚³ãƒ¼ãƒ‰ãƒªã‚¹ãƒˆãƒ†ãƒ¼ãƒ–ãƒ«ã®å ´åˆ
             	if (tableName.equals(PackageViewPanel.TABLE_RECORD_LIST)) {
             		types[i] = String.valueOf(table.getValueAt(selRows[i], typeCol));
             	}
@@ -560,13 +560,13 @@ public class TableSorter extends AbstractTableModel {
                 setSortingStatus(column, status);
             }
             
-            // ƒŒƒR[ƒh‘I‘ğó‘Ô•Ûˆ—iƒ\[ƒg‘O‘I‘ğî•ñ”½‰fj
+            // ãƒ¬ã‚³ãƒ¼ãƒ‰é¸æŠçŠ¶æ…‹ä¿æŒå‡¦ç†ï¼ˆã‚½ãƒ¼ãƒˆå‰é¸æŠæƒ…å ±åæ˜ ï¼‰
             if ( selRows.length > 0 ) {
-            	// ƒ\[ƒg‘O‚É‘I‘ğ‚µ‚Ä‚¢‚½ƒŒƒR[ƒh‚ğ“Á’è‚Å‚«‚éê‡A
-            	// ƒ\[ƒgŒãƒe[ƒuƒ‹‚©‚ç‘I‘ğ‚µ‚Ä‚¢‚½ƒŒƒR[ƒh‚ğ“Á’è‚µ‘I‘ğó‘Ô‚Éİ’è‚·‚éB
+            	// ã‚½ãƒ¼ãƒˆå‰ã«é¸æŠã—ã¦ã„ãŸãƒ¬ã‚³ãƒ¼ãƒ‰ã‚’ç‰¹å®šã§ãã‚‹å ´åˆã€
+            	// ã‚½ãƒ¼ãƒˆå¾Œãƒ†ãƒ¼ãƒ–ãƒ«ã‹ã‚‰é¸æŠã—ã¦ã„ãŸãƒ¬ã‚³ãƒ¼ãƒ‰ã‚’ç‰¹å®šã—é¸æŠçŠ¶æ…‹ã«è¨­å®šã™ã‚‹ã€‚
             	for (int i=0; i<table.getRowCount(); i++) {
             		String idVal = String.valueOf(table.getValueAt(i, idCol));
-            		// PackageView‚ÌƒŒƒR[ƒhƒŠƒXƒgƒe[ƒuƒ‹ˆÈŠO‚Ìê‡
+            		// PackageViewã®ãƒ¬ã‚³ãƒ¼ãƒ‰ãƒªã‚¹ãƒˆãƒ†ãƒ¼ãƒ–ãƒ«ä»¥å¤–ã®å ´åˆ
             		if ( !tableName.equals(PackageViewPanel.TABLE_RECORD_LIST) ) {
             			for (int j=0; j<selRows.length; j++) {
             				if ( keys[j].equals(idVal) ) {
@@ -587,10 +587,10 @@ public class TableSorter extends AbstractTableModel {
             	}
             }
             
-            // PackageView‚ÌƒŒƒR[ƒhƒŠƒXƒgƒe[ƒuƒ‹‚Ìê‡
+            // PackageViewã®ãƒ¬ã‚³ãƒ¼ãƒ‰ãƒªã‚¹ãƒˆãƒ†ãƒ¼ãƒ–ãƒ«ã®å ´åˆ
             if ( tableName.equals(PackageViewPanel.TABLE_RECORD_LIST) ) {
-            	// PackeageViewƒf[ƒ^ƒNƒ‰ƒX‚ÌƒŒƒR[ƒhî•ñ‚ğ
-            	// ƒe[ƒuƒ‹‚Ìƒ\[ƒg‡‚Æ“¯‚¶‚æ‚¤‚Éƒ\[ƒg‚·‚éB
+            	// PackeageViewãƒ‡ãƒ¼ã‚¿ã‚¯ãƒ©ã‚¹ã®ãƒ¬ã‚³ãƒ¼ãƒ‰æƒ…å ±ã‚’
+            	// ãƒ†ãƒ¼ãƒ–ãƒ«ã®ã‚½ãƒ¼ãƒˆé †ã¨åŒã˜ã‚ˆã†ã«ã‚½ãƒ¼ãƒˆã™ã‚‹ã€‚
             	specData.sortRecInfo(table);
             }
         }
