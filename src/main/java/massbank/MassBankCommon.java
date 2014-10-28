@@ -144,8 +144,7 @@ public class MassBankCommon {
 	 * @param type		リクエスト種別
 	 * @param param	URLパラメータ（リクエスト種別を含まない）
 	 * @return
-	 * @deprecated 非推奨メソッド
-	 * @see execDispatcher(String serverUrl, String type, String param, boolean isMulti, String siteNo)
+	 * @see #execDispatcher(String serverUrl, String type, String param, boolean isMulti, String siteNo)
 	 */
 	public ArrayList<String> execMultiDispatcher( String serverUrl, String type, String param ) {
 		return execDispatcher( serverUrl, type, param, true, null );

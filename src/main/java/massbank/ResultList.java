@@ -32,7 +32,10 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 
-// TODO remove this. because It seems like this class is not used in SpectrumSearch.
+/**
+ * @deprecated TODO remove this. because It seems like this class is not used in SpectrumSearch.
+ * */
+@Deprecated
 public class ResultList {
 	
 	/** ソートアクション（昇順） */

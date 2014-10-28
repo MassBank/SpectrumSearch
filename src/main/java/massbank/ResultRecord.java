@@ -53,8 +53,10 @@ package massbank;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
-
-//TODO remove this. because It seems like this class is not used in SpectrumSearch.
+/**
+ * @deprecated TODO remove this. because It seems like this class is not used in SpectrumSearch.
+ * */
+@Deprecated
 public class ResultRecord {
 	
 	/** ノードグループ */
