@@ -790,7 +790,8 @@ public class PackageViewPanel extends JPanel {
 		String reqUrl = SearchPage.baseUrl + "jsp/" + MassBankCommon.DISPATCHER_NAME
 				+ "?type=" + typeName + "&id=" + id + "&site=" + site;
 		try {
-			SearchPage.context.showDocument(new URL(reqUrl), "_blank");
+		  // TODO open specified url with browser or some registered application in client.
+//      	SearchPage.context.showDocument(new URL(reqUrl), "_blank");
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
@@ -2296,7 +2297,8 @@ public class PackageViewPanel extends JPanel {
 					// JSP呼び出し
 					String reqUrl = SearchPage.baseUrl + "jsp/Result.jsp" + urlParam.toString();
 					try {
-						SearchPage.context.showDocument(new URL(reqUrl), "_blank");
+			          // TODO open specified url with browser or some registered application in client.
+//						SearchPage.context.showDocument(new URL(reqUrl), "_blank");
 					}
 					catch (Exception ex) {
 						ex.printStackTrace();
