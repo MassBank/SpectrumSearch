@@ -24,7 +24,11 @@
  *
  ******************************************************************************/
 package massbank;
-
+/**
+ * MassBank共通クラス(Applet, JSP, Servlet 全てにおいて使用される)
+ * 
+ * APIアクセス用
+ * */
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
@@ -229,6 +233,8 @@ public class MassBankCommon {
 	 * @param conf			設定ファイル情報オブジェクト
 	 * @return レコード情報リスト
 	 */
+// It seems like this method is not used in SpecrumSearch.
+	/*
 	public ResultList execDispatcherResult(
 			String serverUrl,
 			String type,
@@ -339,4 +345,6 @@ public class MassBankCommon {
 		
 		return list;
 	 }
+ * */
+
 }
