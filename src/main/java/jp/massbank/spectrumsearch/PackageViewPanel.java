@@ -77,6 +77,8 @@ import javax.swing.plaf.FontUIResource;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
+import jp.massbank.spectrumsearch.model.PackageRecData;
+import jp.massbank.spectrumsearch.model.PackageSpecData;
 import massbank.MassBankCommon;
 
 /**

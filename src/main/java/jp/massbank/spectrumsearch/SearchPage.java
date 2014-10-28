@@ -96,6 +96,10 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 
+import jp.massbank.spectrumsearch.model.PackageRecData;
+import jp.massbank.spectrumsearch.model.PackageSpecData;
+import jp.massbank.spectrumsearch.model.PeakData;
+import jp.massbank.spectrumsearch.model.UserFileData;
 import massbank.GetConfig;
 import massbank.GetInstInfo;
 import massbank.MassBankCommon;

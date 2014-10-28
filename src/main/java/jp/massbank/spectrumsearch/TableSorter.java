@@ -51,6 +51,8 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 
+import jp.massbank.spectrumsearch.model.PackageSpecData;
+
 /**
  * TableSorter Class
  * 

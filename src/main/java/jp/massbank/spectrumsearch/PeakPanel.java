@@ -59,9 +59,14 @@ import javax.swing.JPopupMenu;
 import javax.swing.JToggleButton;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
+
 import massbank.MassBankCommon;
+
 import javax.imageio.ImageIO;
+
 import java.awt.image.BufferedImage;
+
+import jp.massbank.spectrumsearch.model.PeakData;
 
 /**
  * ピークパネル クラス

@@ -1,4 +1,4 @@
-package jp.massbank.spectrumsearch;
+package jp.massbank.spectrumsearch.model;
 /*******************************************************************************
  *
  * Copyright (C) 2008 JST-BIRD MassBank
@@ -31,6 +31,9 @@ import java.util.Comparator;
 import java.util.TreeSet;
 
 import javax.swing.JTable;
+
+import jp.massbank.spectrumsearch.PackageViewPanel;
+import jp.massbank.spectrumsearch.SearchPage;
 
 /**
  * スペクトル情報格納 クラス
