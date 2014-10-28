@@ -28,6 +28,9 @@ package jp.massbank.spectrumsearch;
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * 処理中メッセージ表示ダイアログ
+ */
 public class ProgressDialog extends JDialog {
 
 	public ProgressDialog(Frame parent){
