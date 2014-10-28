@@ -1286,7 +1286,9 @@ public class PeakPanel extends JPanel {
 					String reqUrl = SearchPage.baseUrl + "jsp/Result.jsp"
 							+ urlParam.toString();
 					try {
-						searchPage.getAppletContext().showDocument(new URL(reqUrl), "_blank");
+			          // TODO open specified url with browser or some registered application in client.
+					  System.err.println("popup  - reqUrl");
+//						searchPage.getAppletContext().showDocument(new URL(reqUrl), "_blank");
 					} catch (Exception ex) {
 						ex.printStackTrace();
 					}
