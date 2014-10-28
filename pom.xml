@@ -61,6 +61,7 @@ Retrieves spectra similar to user's spectrum in terms of the m/z value. This sea
 						<manifestEntries>
 							<Permissions>all-permissions</Permissions>
 							<Codebase>*</Codebase>
+							<Application-Name>SpectrumSearch</Application-Name> 
 						</manifestEntries>
 					</archive>
 				</configuration>
