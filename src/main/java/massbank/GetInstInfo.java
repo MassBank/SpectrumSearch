@@ -42,7 +42,6 @@ public class GetInstInfo {
 	private int index = 0;
 
 	/**
-	 * コンストラクタ
 	 * レコードフォーマットバージョン2の
 	 * INSTRUMENT情報とMS情報を取得するコンストラクタ
 	 * @param baseUrl ベースURL
