@@ -31,6 +31,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+/**
+ * INSTRUMENT情報とMS情報を取得するクラス
+ * */
 public class GetInstInfo {
 	ArrayList<String>[] instNo   = null;
 	ArrayList<String>[] instType = null;

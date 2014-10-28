@@ -28,6 +28,10 @@ package massbank;
 import javax.xml.parsers.*;
 import org.w3c.dom.*;
 
+/** 
+ * 環境設定ファイルの情報を取得するクラス
+ * wrapper of massbank.conf 
+ */
 public class GetConfig {
 	public static final int MYSVR_INFO_NUM = 0;
 	private Element m_root;
