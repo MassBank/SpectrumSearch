@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jnlp 
+  spec="7.0+" 
+  codebase="http://localhost/SpectrumSearch/" 
+  href="SpectrumSearch.jnlp">
+
+  <information> 
+    <title>Spectrum Search | massbank.jp</title> 
+    <vendor>MassBank</vendor> 
+    <description>Retrieves spectra similar to user's spectrum in terms of the m/z value. This search is helpful to identify chemical compound by comparing similar spectra on a 3D-display.</description>
+    <description kind="short">Search similar spectra on a peak-to-peak basis</description>
+    <icon kind="splash" href="splash.jpg"/>
+    <offline-allowed/> 
+  </information> 
+
+  <security>
+      <all-permissions/>
+  </security>
+
+
+  <resources> 
+    <java version="1.8"/> 
+    <jar href="SpectrumSearch.jar"/> 
+    <jar href="log4j-1.2.17.jar"/> 
+  </resources> 
+
+  <application-desc main-class="jp.massbank.spectrumsearch.SearchPage"/> 
+</jnlp>
+
+
