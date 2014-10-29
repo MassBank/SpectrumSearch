@@ -26,6 +26,8 @@
 package massbank;
 
 import javax.xml.parsers.*;
+
+import org.apache.log4j.Logger;
 import org.w3c.dom.*;
 
 /** 
@@ -33,6 +35,8 @@ import org.w3c.dom.*;
  * wrapper of massbank.conf 
  */
 public class GetConfig {
+  static final Logger LOGGER = Logger.getLogger(GetConfig.class);
+
 	public static final int MYSVR_INFO_NUM = 0;
 	private Element m_root;
 
@@ -40,6 +44,7 @@ public class GetConfig {
 	 * コンストラクタ
 	 */ 
 	public GetConfig( String baseUrl ) {
+	  LOGGER.info(baseUrl);
 		String url =  baseUrl + "massbank.conf";
 		try {
 			// ドキュメントビルダーファクトリを生成
@@ -57,6 +62,7 @@ public class GetConfig {
 		catch ( Exception e ) {
 			e.printStackTrace();
 		}
+		  LOGGER.info(m_root);
 	}
 
 	/**
@@ -206,6 +212,7 @@ public class GetConfig {
 	 * 自サーバーの設定を取得する
 	 */
 	private String getServerSetting(String tagName) {
+	  LOGGER.info(tagName);
 		String val = "";
 		try {
 			NodeList nodeList = m_root.getElementsByTagName( "MyServer" );

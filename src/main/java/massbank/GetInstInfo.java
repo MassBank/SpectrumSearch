@@ -31,10 +31,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import org.apache.log4j.Logger;
+
 /**
  * INSTRUMENT情報とMS情報を取得するクラス
  * */
 public class GetInstInfo {
+  static final Logger LOGGER = Logger.getLogger(GetInstInfo.class);
+
 	ArrayList<String>[] instNo   = null;
 	ArrayList<String>[] instType = null;
 	ArrayList<String>[] instName = null;
@@ -79,6 +83,7 @@ public class GetInstInfo {
 		String serverUrl = conf.getServerUrl();
 		MassBankCommon mbcommon = new MassBankCommon();
 		String typeName = MassBankCommon.CGI_TBL[MassBankCommon.CGI_TBL_NUM_TYPE][MassBankCommon.CGI_TBL_TYPE_INST];
+	    LOGGER.info(serverUrl);
 		ArrayList<String> resultAll = mbcommon.execDispatcher( serverUrl, typeName, urlParam, true, null );
 		
 		instNo = new ArrayList[urlList.length];
