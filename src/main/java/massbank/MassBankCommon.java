@@ -37,8 +37,13 @@ import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import org.apache.log4j.Logger;
+
+
 public class MassBankCommon {
-	public static final String DISPATCHER_NAME = "Dispatcher.jsp";
+  static final Logger LOGGER = Logger.getLogger(MassBankCommon.class);
+
+    public static final String DISPATCHER_NAME = "Dispatcher.jsp";
 	public static final String MULTI_DISPATCHER_NAME = "MultiDispatcher";
 
 	// ＜検索条件数＞
@@ -182,6 +187,9 @@ public class MassBankCommon {
 		if ( !param.equals("") ) {
 			reqParam += "&" + param;
 		}
+		LOGGER.info(reqUrl + "?" + reqParam);
+//	      LOGGER.info(reqParam);
+
 		ArrayList<String> result = new ArrayList<String>();
 		try {
 			URL url = new URL( reqUrl );
@@ -218,6 +226,7 @@ public class MassBankCommon {
 		catch ( Exception ex ) {
 			ex.printStackTrace();
 		}
+//	     LOGGER.info(result);
 		return result;
 	 }
 	
