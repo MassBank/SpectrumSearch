@@ -64,6 +64,8 @@ import massbank.MassBankCommon;
 
 import javax.imageio.ImageIO;
 
+import org.apache.log4j.Logger;
+
 import java.awt.image.BufferedImage;
 
 import jp.massbank.spectrumsearch.model.PeakData;
@@ -73,6 +75,7 @@ import jp.massbank.spectrumsearch.model.PeakData;
  */
 @SuppressWarnings("serial")
 public class PeakPanel extends JPanel {
+  static final Logger LOGGER = Logger.getLogger(PeakPanel.class);
 
 	public static final int INTENSITY_MAX = 1000;	// 最大強度
 
@@ -1287,7 +1290,7 @@ public class PeakPanel extends JPanel {
 							+ urlParam.toString();
 					try {
 			          // TODO open specified url with browser or some registered application in client.
-					  System.err.println("popup  - reqUrl");
+					  LOGGER.info("reqUrl " + reqUrl);
 //						searchPage.getAppletContext().showDocument(new URL(reqUrl), "_blank");
 					} catch (Exception ex) {
 						ex.printStackTrace();
