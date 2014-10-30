@@ -1,6 +1,4 @@
-package jp.massbank.spectrumsearch;
-/*******************************************************************************
- *
+/*
  * Copyright (C) 2008 JST-BIRD MassBank
  *
  * This program is free software; you can redistribute it and/or modify
@@ -17,13 +15,9 @@ package jp.massbank.spectrumsearch;
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- *******************************************************************************
- *
- * スペクトル一括表示 クラス
- *
- * ver 1.0.7 2011.08.10
- *
- ******************************************************************************/
+ */
+
+package jp.massbank.spectrumsearch;
 
 import java.awt.AlphaComposite;
 import java.awt.BorderLayout;

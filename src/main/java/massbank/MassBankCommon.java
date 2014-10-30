@@ -1,5 +1,4 @@
-/*******************************************************************************
- *
+/*
  * Copyright (C) 2008 JST-BIRD MassBank
  *
  * This program is free software; you can redistribute it and/or modify
@@ -16,13 +15,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- *******************************************************************************
- *
- * MassBank共通クラス(Applet, JSP, Servlet 全てにおいて使用される)
- *
- * ver 1.0.23 2011.09.21
- *
- ******************************************************************************/
+ */
 package massbank;
 /**
  * MassBank共通クラス(Applet, JSP, Servlet 全てにおいて使用される)

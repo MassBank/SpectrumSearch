@@ -1,5 +1,4 @@
-/*******************************************************************************
- *
+/*
  * Copyright (C) 2008 JST-BIRD MassBank
  *
  * This program is free software; you can redistribute it and/or modify
@@ -16,8 +15,14 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- *******************************************************************************
- *
+ */
+
+package massbank;
+
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+
+/**
  * 検索結果レコード情報格納クラス
  * 検索にヒットした1スペクトルの情報を格納するデータクラス
  *   提供機能
@@ -47,15 +52,8 @@
  *
  * ver 1.0.3 2008.12.05
  *
- ******************************************************************************/
-package massbank;
-
-import java.text.DecimalFormat;
-import java.util.ArrayList;
-
-/**
  * @deprecated TODO remove this. because It seems like this class is not used in SpectrumSearch.
- * */
+ */
 @Deprecated
 public class ResultRecord {
 	

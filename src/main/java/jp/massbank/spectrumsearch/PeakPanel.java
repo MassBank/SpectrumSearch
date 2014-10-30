@@ -1,7 +1,5 @@
-package jp.massbank.spectrumsearch;
-/*******************************************************************************
- *
- * Copyright (C) 2010 JST-BIRD MassBank
+/*
+ * Copyright (C) 2008 JST-BIRD MassBank
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,13 +15,9 @@ package jp.massbank.spectrumsearch;
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- *******************************************************************************
- *
- * ピークパネル クラス
- *
- * ver 1.0.10 2011.08.10
- *
- ******************************************************************************/
+ */
+
+package jp.massbank.spectrumsearch;
 
 import java.awt.Color;
 import java.awt.Cursor;

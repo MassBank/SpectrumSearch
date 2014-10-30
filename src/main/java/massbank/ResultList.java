@@ -1,5 +1,4 @@
-/*******************************************************************************
- *
+/*
  * Copyright (C) 2008 JST-BIRD MassBank
  *
  * This program is free software; you can redistribute it and/or modify
@@ -16,15 +15,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- *******************************************************************************
- *
- * 検索結果レコード情報一括管理クラス
- * 検索にヒットしたスペクトルの情報（ResultRecordクラス）を一括で保持するデータクラス
- * Resultページに表示する全ての情報を保持するクラス
- *
- * ver 1.0.3 2008.12.17
- *
- ******************************************************************************/
+ */
 package massbank;
 
 import java.util.ArrayList;
