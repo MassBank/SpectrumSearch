@@ -35,6 +35,8 @@ import java.util.ArrayList;
 /**
  * Cookie情報管理 クラス
  * 
+ * TODO 内部実装を代えて、preferenceか、プロパティファイルにするべきかもしれない。
+ * 
  * Cookie情報は次のように取得できる
  * [Cookie名]=[値]; [その他キー]=[その他の値];…
  * [Cookie名]には適当な名称、[値]は[[キー]=[値],[キー]=[値],…;]のように格納
@@ -57,7 +59,8 @@ public class CookieManager {
 	 */
 	private CookieManager() {
 	}
-	
+	/** dummy */
+	public CookieManager( String name, int expDate, boolean isCookie) {}
 	/**
 	 * コンストラクタ
 	 * 対象Cookie名と有効期限日数を指定するコンストラクタ
