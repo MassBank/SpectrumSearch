@@ -27,6 +27,7 @@ package jp.massbank.spectrumsearch;
 
 import java.awt.Color;
 import java.awt.Cursor;
+import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
@@ -46,9 +47,14 @@ import java.awt.font.FontRenderContext;
 import java.awt.font.TextLayout;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 
+import javax.imageio.ImageIO;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -60,15 +66,10 @@ import javax.swing.JToggleButton;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 
+import jp.massbank.spectrumsearch.model.PeakData;
 import massbank.MassBankCommon;
 
-import javax.imageio.ImageIO;
-
 import org.apache.log4j.Logger;
-
-import java.awt.image.BufferedImage;
-
-import jp.massbank.spectrumsearch.model.PeakData;
 
 /**
  * ピークパネル クラス
@@ -1288,13 +1289,12 @@ public class PeakPanel extends JPanel {
 					// JSP呼び出し
 					String reqUrl = SearchPage.baseUrl + "jsp/Result.jsp"
 							+ urlParam.toString();
-					try {
-			          // TODO open specified url with browser or some registered application in client.
-					  LOGGER.info("reqUrl " + reqUrl);
-//						searchPage.getAppletContext().showDocument(new URL(reqUrl), "_blank");
-					} catch (Exception ex) {
-						ex.printStackTrace();
-					}
+			        LOGGER.info("open browser with" + reqUrl);
+			        try {
+			          Desktop.getDesktop().browse(new URI(reqUrl));
+			        } catch (IOException | URISyntaxException ex) {
+			            LOGGER.error(ex.getMessage(),ex);
+			        }
 				}
 				else if (com.equals("reset")) {
 					if (peaks1 != null) {

@@ -30,6 +30,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Cursor;
+import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Graphics;
@@ -49,8 +50,10 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionAdapter;
 import java.awt.event.MouseMotionListener;
 import java.awt.geom.Rectangle2D;
+import java.io.IOException;
 import java.math.BigDecimal;
-import java.net.URL;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -81,12 +84,15 @@ import jp.massbank.spectrumsearch.model.PackageRecData;
 import jp.massbank.spectrumsearch.model.PackageSpecData;
 import massbank.MassBankCommon;
 
+import org.apache.log4j.Logger;
+
 /**
  * スペクトル一括表示 クラス
  */
 @SuppressWarnings("serial")
 public class PackageViewPanel extends JPanel {
-	
+  static final Logger LOGGER = Logger.getLogger(PackageViewPanel.class);
+
 	private final PackageSpecData specData;				// スペクトル情報データクラス(blank final変数)
 	
 	private final int MARGIN = 15;						// 余白
@@ -789,11 +795,11 @@ public class PackageViewPanel extends JPanel {
 		String typeName = MassBankCommon.CGI_TBL[MassBankCommon.CGI_TBL_NUM_TYPE][MassBankCommon.CGI_TBL_TYPE_DISP];
 		String reqUrl = SearchPage.baseUrl + "jsp/" + MassBankCommon.DISPATCHER_NAME
 				+ "?type=" + typeName + "&id=" + id + "&site=" + site;
+		LOGGER.info("open browser with" + reqUrl);
 		try {
-		  // TODO open specified url with browser or some registered application in client.
-//      	SearchPage.context.showDocument(new URL(reqUrl), "_blank");
-		} catch (Exception ex) {
-			ex.printStackTrace();
+		  Desktop.getDesktop().browse(new URI(reqUrl));
+		} catch (IOException | URISyntaxException ex) {
+			LOGGER.error(ex.getMessage(),ex);
 		}
 	}
 	
@@ -2296,13 +2302,12 @@ public class PackageViewPanel extends JPanel {
 					
 					// JSP呼び出し
 					String reqUrl = SearchPage.baseUrl + "jsp/Result.jsp" + urlParam.toString();
-					try {
-			          // TODO open specified url with browser or some registered application in client.
-//						SearchPage.context.showDocument(new URL(reqUrl), "_blank");
-					}
-					catch (Exception ex) {
-						ex.printStackTrace();
-					}
+			        LOGGER.info("open browser with" + reqUrl);
+			        try {
+			          Desktop.getDesktop().browse(new URI(reqUrl));
+			        } catch (IOException | URISyntaxException ex) {
+			          LOGGER.error(ex.getMessage(),ex);
+			        }
 				}
 				else if (com.equals("reset")) {
 					specData.clearSelectedPeakList();
