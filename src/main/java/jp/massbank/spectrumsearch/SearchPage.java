@@ -25,12 +25,12 @@ package jp.massbank.spectrumsearch;
  *
  ******************************************************************************/
 
-import java.applet.AppletContext;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Cursor;
+import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.GridBagConstraints;
@@ -51,6 +51,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
@@ -69,7 +71,6 @@ import java.util.Vector;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
-import javax.swing.JApplet;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
@@ -88,6 +89,7 @@ import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
 import javax.swing.ToolTipManager;
+import javax.swing.WindowConstants;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeEvent;
@@ -104,12 +106,25 @@ import massbank.GetConfig;
 import massbank.GetInstInfo;
 import massbank.MassBankCommon;
 
+import org.apache.log4j.Logger;
+
 /**
  * SearchPage クラス
  */
 @SuppressWarnings("serial")
-public class SearchPage extends JApplet {
+public class SearchPage extends JFrame {
+  static final Logger LOGGER = Logger.getLogger(SearchPage.class);
 
+  public static void main(String[] args) {
+    LOGGER.info("Application start!");
+    SearchPage appli = new SearchPage();
+    appli.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+    appli.setTitle("Spectrum Search | massbank.jp");
+    appli.setSize(1200, 700);
+    appli.init();
+    appli.setVisible(true);
+    
+  }
 	public static String baseUrl = "";
 
 	private GetInstInfo instInfo = null;
@@ -210,7 +225,7 @@ public class SearchPage extends JApplet {
 	private static int seaqId = 0;
 	private static int seaqCompound = 0;
 
-	public static AppletContext context = null;				// アプレットコンテキスト
+//	public static AppletContext context = null;				// アプレットコンテキスト
 	public static int initAppletWidth = 0;					// アプレット初期画面サイズ(幅)
 	public static int initAppletHight = 0;					// アプレット初期画面サイズ(高さ)
 	
@@ -238,21 +253,23 @@ public class SearchPage extends JApplet {
 	public void init() {
 		
 		// アプレットコンテキスト取得
-		context = getAppletContext();
+//      context = getAppletContext();
 		
 		// アプレット初期画面サイズ取得
 		initAppletWidth = getWidth();
 		initAppletHight = getHeight();
 
 		// 環境設定ファイルから連携サイトのURLを取得
-		String confPath = getCodeBase().toString();
+		// 暫定代入
+        String confPath = "http://www.massbank.jp/";
+//        String confPath = getCodeBase().toString();
 		confPath = confPath.replaceAll("/jsp", "");
 		GetConfig conf = new GetConfig(confPath);
 		siteNameList = conf.getSiteName();
 		baseUrl = conf.getServerUrl();
 		
 		// Cookie情報ユーティリティ初期化
-		cm = new CookieManager(this, "SerchApplet", 30, conf.isCookie());
+		cm = new CookieManager( "SerchApplet", 30, conf.isCookie());
 		
 		// Precursor m/z情報初期化
 		initPreInfo();
@@ -262,7 +279,7 @@ public class SearchPage extends JApplet {
 		
 		// Cutoff Threshold情報初期化
 		initCutoffInfo();
-		
+		LOGGER.info(confPath);
 		// 装置種別情報初期化
 		instInfo = new GetInstInfo(confPath);
 		initInstInfo();
@@ -281,28 +298,28 @@ public class SearchPage extends JApplet {
 		this.dlg = new ProgressDialog(getFrame());
 
 		// ユーザーファイル読込み
-		if (getParameter("file") != null) {
-			loadFile(getParameter("file"));
-		}
-		// 他画面からのクエリ追加
-		else if (getParameter("num") != null) {
-			DefaultTableModel dm = (DefaultTableModel) querySorter.getTableModel();
-			dm.setRowCount(0);
-
-			int num = Integer.parseInt(getParameter("num"));
-			for (int i = 0; i < num; i++) {
-				String pnum = Integer.toString(i + 1);
-				String id = getParameter("qid" + pnum);
-				String name = getParameter("name" + pnum);
-				String site = getParameter("site" + pnum);
-				String[] idNameSite = new String[] { id, name, site };
-				nameList.add(idNameSite);
-
-				site = siteNameList[Integer.parseInt(site)];
-				String[] idNameSite2 = new String[] { id, name, site, String.valueOf(i + 1) };
-				dm.addRow(idNameSite2);
-			}
-		}
+//		if (getParameter("file") != null) {
+//			loadFile(getParameter("file"));
+//		}
+//		// 他画面からのクエリ追加
+//		else if (getParameter("num") != null) {
+//			DefaultTableModel dm = (DefaultTableModel) querySorter.getTableModel();
+//			dm.setRowCount(0);
+//
+//			int num = Integer.parseInt(getParameter("num"));
+//			for (int i = 0; i < num; i++) {
+//				String pnum = Integer.toString(i + 1);
+//				String id = getParameter("qid" + pnum);
+//				String name = getParameter("name" + pnum);
+//				String site = getParameter("site" + pnum);
+//				String[] idNameSite = new String[] { id, name, site };
+//				nameList.add(idNameSite);
+//
+//				site = siteNameList[Integer.parseInt(site)];
+//				String[] idNameSite2 = new String[] { id, name, site, String.valueOf(i + 1) };
+//				dm.addRow(idNameSite2);
+//			}
+//		}
 	}
 	
 	/**
@@ -1206,6 +1223,7 @@ public class SearchPage extends JApplet {
 
 		// サーブレット呼び出し-マルチスレッドでCGIを起動
 		String cgiType = MassBankCommon.CGI_TBL[MassBankCommon.CGI_TBL_NUM_TYPE][MassBankCommon.CGI_TBL_TYPE_GNAME];
+		LOGGER.info(baseUrl + cgiType + param);
 		ArrayList<String> result = mbcommon.execMultiDispatcher(baseUrl, cgiType, param);
 		DefaultTableModel dataModel = (DefaultTableModel) querySorter.getTableModel();
 		dataModel.setRowCount(0);
@@ -1260,11 +1278,12 @@ public class SearchPage extends JApplet {
 		String typeName = MassBankCommon.CGI_TBL[MassBankCommon.CGI_TBL_NUM_TYPE][MassBankCommon.CGI_TBL_TYPE_DISP];
 		String reqUrl = baseUrl + "jsp/" + MassBankCommon.DISPATCHER_NAME
 				+ "?type=" + typeName + "&id=" + id + "&site=" + site;
-		try {
-			context.showDocument(new URL(reqUrl), "_blank");
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
+        LOGGER.info("open browser with" + reqUrl);
+        try {
+          Desktop.getDesktop().browse(new URI(reqUrl));
+        } catch (IOException | URISyntaxException ex) {
+            LOGGER.error(ex.getMessage(),ex);
+        }
 	}
 	
 	/**
@@ -1349,7 +1368,7 @@ public class SearchPage extends JApplet {
 	 */
 	private void initTolInfo() {
 		// Cookie情報用リストにCookieからTolerance状態を取得
-		ArrayList<String> valueList = cm.getCookie(COOKIE_TOL);
+      ArrayList<String> valueList = cm.getCookie(COOKIE_TOL);
 		
 		// Cookieが存在する場合
 		if (valueList.size() != 0) {
@@ -1412,7 +1431,7 @@ public class SearchPage extends JApplet {
 		instGroup = instInfo.getTypeGroup();
 		
 		// Cookie情報用リストにCookieから装置種別の選択状態を取得
-		ArrayList<String> valueGetList = cm.getCookie(COOKIE_INST);
+        ArrayList<String> valueGetList = cm.getCookie(COOKIE_INST);
 		ArrayList<String> valueSetList = new ArrayList<String>();
 		
 		boolean checked = false;
@@ -1486,7 +1505,7 @@ public class SearchPage extends JApplet {
 		isMsCheck = new HashMap<String, Boolean>();
 		
 		// Cookie情報用リストにCookieからMS種別の選択状態を取得
-		ArrayList<String> valueGetList = cm.getCookie(COOKIE_MS);
+        ArrayList<String> valueGetList = cm.getCookie(COOKIE_MS);
 		ArrayList<String> valueSetList = new ArrayList<String>();
 		
 		boolean checked = false;
@@ -1552,7 +1571,7 @@ public class SearchPage extends JApplet {
 		isIonRadio = new HashMap<String, Boolean>();
 		
 		// Cookie情報用リストにCookieからイオン種別の選択状態を取得
-		ArrayList<String> valueList = cm.getCookie(COOKIE_ION);
+        ArrayList<String> valueList = cm.getCookie(COOKIE_ION);
 		
 		JRadioButton ionPosi = new JRadioButton("Positive");
 		JRadioButton ionNega = new JRadioButton("Negative");
@@ -3681,9 +3700,11 @@ public class SearchPage extends JApplet {
 				in.close();
 
 				reqUrl += "?type=Multiple Display&" + "name=" + filename;
-				context.showDocument(new URL(reqUrl), "_blank");
-			} catch (Exception ex) {
-				ex.printStackTrace();
+		        LOGGER.info("open browser with" + reqUrl);
+		        Desktop.getDesktop().browse(new URI(reqUrl));
+		            
+			} catch (IOException | URISyntaxException ex) {
+		        LOGGER.error(ex.getMessage(),ex);
 			}
 		}
 	}
