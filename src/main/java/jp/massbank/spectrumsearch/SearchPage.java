@@ -44,23 +44,19 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
-import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Vector;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -103,11 +99,12 @@ import massbank.MassBankCommon;
 import org.apache.log4j.Logger;
 
 /**
- * SearchPage クラス
+ * Start point of this application.
  */
-@SuppressWarnings("serial")
 public class SearchPage extends JFrame {
-  static final Logger LOGGER = Logger.getLogger(SearchPage.class);
+  private static final long serialVersionUID = 1L;
+  private static final Logger LOGGER = Logger.getLogger(SearchPage.class);
+
 
   public static void main(String[] args) {
     LOGGER.info("Application start!");
@@ -129,7 +126,7 @@ public class SearchPage extends JFrame {
 	private static final int LEFT_PANEL_WIDTH = 430;
 
 	private static final int TAB_ORDER_DB = 0;
-	private static final int TAB_ORDER_FILE = 1;
+	static final int TAB_ORDER_FILE = 1;
 	private static final int TAB_RESULT_DB = 0;
 	private static final int TAB_VIEW_COMPARE = 0;
 	private static final int TAB_VIEW_PACKAGE = 1;
@@ -148,13 +145,13 @@ public class SearchPage extends JFrame {
 	public static final String COL_LABEL_PEAK = "Peak";
 	public static final String COL_LABEL_PRECURSOR = "Precursor";
 
-	private UserFileData[] userDataList = null;
+	UserFileData[] userDataList = null;
 
 	public static final String TABLE_QUERY_FILE = "QueryFile";
 	public static final String TABLE_QUERY_DB = "QueryDb";
 	public static final String TABLE_RESULT = "Result";
 	
-	private TableSorter fileSorter = null;						// クエリーファイルテーブルモデル
+	TableSorter fileSorter = null;						// クエリーファイルテーブルモデル
 	private TableSorter querySorter = null; 					// クエリーDBテーブルモデル
 	private TableSorter resultSorter = null;					// 検索結果テーブルモデル
 	
@@ -166,7 +163,7 @@ public class SearchPage extends JFrame {
 	private PeakPanel resultPlot = new PeakPanel(false);		// 検索結果スペクトルパネル
 	private PeakPanel compPlot = new PeakPanel(true);			// 比較用スペクトルパネル
 
-	private JTabbedPane queryTabPane = new JTabbedPane();		// クエリータブペイン
+	JTabbedPane queryTabPane = new JTabbedPane();		// クエリータブペイン
 	private JTabbedPane resultTabPane = new JTabbedPane();		// 検索結果タブペイン
 	private JTabbedPane viewTabPane = new JTabbedPane();		// スペクトル表示タブペイン
 
@@ -216,8 +213,10 @@ public class SearchPage extends JFrame {
 	private MassBankCommon mbcommon = new MassBankCommon();
 	private final Cursor waitCursor = new Cursor(Cursor.WAIT_CURSOR);
 
-	private static int seaqId = 0;
-	private static int seaqCompound = 0;
+	/** sequence number for user query file.*/
+	int seaqId = 0;
+    /** sequence Compound name for user query file.*/
+	int seaqCompound = 0;
 
 //	public static AppletContext context = null;				// アプレットコンテキスト
 	public static int initAppletWidth = 0;					// アプレット初期画面サイズ(幅)
@@ -722,222 +721,11 @@ public class SearchPage extends JFrame {
 		queryPlot.setSearchPage(this);
 		compPlot.setSearchPage(this);
 		resultPlot.setSearchPage(this);
+		
+	    setJMenuBar(MenuBarGenerator.generateMenuBar(this));
 	}
 
-	/**
-	 * ファイル読み込み処理
-	 * @param fileName ファイル名
-	 */
-	private void loadFile(String fileName) {
-		seaqCompound = 0;
-		seaqId = 0;
-		String reqUrl = baseUrl + "jsp/SearchPage.jsp?file=" + fileName;
-		ArrayList<String> lineList = new ArrayList<String>();
-		
-		try {
-			
-			URL url = new URL(reqUrl);
-			URLConnection con = url.openConnection();
-
-			// レスポンス取得
-			BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
-			String line = "";
-			while ((line = in.readLine()) != null) {
-				lineList.add(line);
-			}
-			in.close();
-			
-			// 1行も読み込めなかった場合
-			if (lineList.size() == 0) {
-				// ERROR：ファイルがありません
-				JOptionPane.showMessageDialog(null, "No file.", "Error",
-						JOptionPane.ERROR_MESSAGE);
-				return;
-			}
-		}
-		catch (MalformedURLException mue) {			// URL書式無効
-			mue.printStackTrace();
-			// ERROR：サーバーエラー
-			JOptionPane.showMessageDialog(null, "Server error.", "Error",
-					JOptionPane.ERROR_MESSAGE);
-			return;
-		}
-		catch (IOException ie) {					// 入出力例外
-			ie.printStackTrace();
-			// ERROR：サーバーエラー
-			JOptionPane.showMessageDialog(null, "Server error.", "Error",
-					JOptionPane.ERROR_MESSAGE);
-			return;
-		}
-		
-		DefaultTableModel dataModel = (DefaultTableModel) fileSorter.getTableModel();
-		dataModel.setRowCount(0);
-
-		Object[] row;
-		String line = "";
-		String peaksLine = "";
-		UserFileData usrData = null;
-		Vector<UserFileData>tmpUserDataList = new Vector<UserFileData>();
-		int dataNum = 0;
-		try {
-			for (int i=0; i<lineList.size(); i++) {
-				
-				line = lineList.get(i);
-				
-				// コメント行読み飛ばし
-				if (line.trim().startsWith("//")) {
-					continue;
-				}
-				
-				// レコード情報取得処理
-				if (line.trim().indexOf(":") == -1 && line.trim().length() != 0) {
-					if (usrData == null) {
-						usrData = new UserFileData();
-					}
-					if (line.lastIndexOf(";") != -1) {
-						peaksLine += line.trim();
-					}
-					else {
-						peaksLine += line.trim() + ";";
-					}
-				}
-				else if (line.trim().startsWith("Name:")) {
-					if (usrData == null) {
-						usrData = new UserFileData();
-					}
-					usrData.setName(line.substring(5).trim());
-				}
-				else if (line.trim().startsWith("ID:")) {
-					if (usrData == null) {
-						usrData = new UserFileData();
-					}
-					usrData.setId(line.substring(3).trim());
-				}
-				
-				// レコード情報追加処理
-				if (line.trim().length() == 0 || i == lineList.size()-1) {
-					
-					if (usrData != null) {
-						
-						dataNum++;
-						
-						// === ID ===
-						if (usrData.getId().equals("")) {
-							usrData.setId(createId());
-						}
-						
-						// === 化合物名 ===
-						if (usrData.getName().equals("")) {
-							usrData.setName(createName());
-						}
-						
-						if (peaksLine.length() != 0) {
-							
-							// ピーク情報加工(m/z昇順のm/zと強度の組み合わせ)
-							double max = 0d;
-							ArrayList<String> peakList = new ArrayList<String>(Arrays.asList(peaksLine.split(";")));
-							for (int j = 0; j < peakList.size(); j++) {
-								peakList.set(j, peakList.get(j).replaceAll("^ +", ""));
-								peakList.set(j, peakList.get(j).replaceAll(" +", "\t"));
-								
-								// 最大強度保持
-								if (max < Double.parseDouble(peakList.get(j).split("\t")[1])) {
-									max = Double.parseDouble(peakList.get(j).split("\t")[1]);
-								}
-							}
-							Collections.sort(peakList, new PeakComparator());
-							
-							// 強制的に強度を相対強度に変換
-							for (int j = 0; j < peakList.size(); j++) {
-								
-								// m/z退避
-								String tmpMz = peakList.get(j).split("\t")[0];
-								
-								// 元の強度
-								String beforeVal = peakList.get(j).split("\t")[1];
-								
-								// 相対強度
-								long tmpVal = Math.round(Double.parseDouble(beforeVal) / max * 999d);
-								if (tmpVal > 999) { 
-									tmpVal = 999;
-								}
-								if (tmpVal < 1) {
-									tmpVal = 1;
-								}
-								String afterVal = String.valueOf(tmpVal);
-								
-								peakList.set(j, tmpMz + "\t" + afterVal);
-							}
-							usrData.setPeaks((String[])peakList.toArray(new String[peakList.size()]));
-							
-						}
-						
-						// ユーザデータ情報追加
-						tmpUserDataList.add(usrData);
-						
-						// テーブル情報追加
-						row = new Object[3];
-						row[0] = String.valueOf(dataNum);
-						row[1] = usrData.getName();
-						row[2] = usrData.getId();
-						dataModel.addRow(row);
-					}
-					
-					usrData = null;
-					peaksLine = "";
-				}
-			}
-		}
-		catch (Exception e) {
-			System.out.println("Illegal file format.");
-			e.printStackTrace();
-			// WARNING：ファイルフォーマットが不正です
-			JOptionPane.showMessageDialog(null, "Illegal file format.", "Warning",
-					JOptionPane.WARNING_MESSAGE);
-			return;
-		}
-		userDataList = (UserFileData[])tmpUserDataList.toArray(new UserFileData[tmpUserDataList.size()]);
-		queryTabPane.setSelectedIndex(TAB_ORDER_FILE);
-	}
-
-	/**
-	 * ID生成
-	 * IDを自動生成し返却する
-	 * @return 化合物名
-	 */
-	private String createId() {
-		String tmpId = "US";
-		
-		synchronized (this) {
-			if (seaqId < Integer.MAX_VALUE) {
-				seaqId++;
-			} else {
-				seaqId = 0;
-			}
-		}
-		DecimalFormat df = new DecimalFormat("000000");
-		return tmpId + df.format(seaqId);
-	}
 	
-	/**
-	 * 化合物名生成
-	 * 化合物名を自動生成し返却する
-	 * @return 化合物名
-	 */
-	private String createName() {
-		String tmpName = "Compound_";
-
-		synchronized (this) {
-			if (seaqCompound < Integer.MAX_VALUE) {
-				seaqCompound++;
-			} else {
-				seaqCompound = 0;
-			}
-		}
-		DecimalFormat df = new DecimalFormat("000000");
-		return tmpName + df.format(seaqCompound);
-	}
-
 	/**
 	 * DB検索
 	 * クエリーにヒットするピークのスペクトルをDBから検索する。
@@ -3700,19 +3488,6 @@ public class SearchPage extends JFrame {
 			} catch (IOException | URISyntaxException ex) {
 		        LOGGER.error(ex.getMessage(),ex);
 			}
-		}
-	}
-	
-	/**
-	 * ピークコンパレータ
-	 * SearchPageのインナークラス。
-	 * m/zの昇順ソートを行う。
-	 */
-	class PeakComparator implements Comparator<Object> {
-		public int compare(Object o1, Object o2) {
-			String mz1 = String.valueOf(o1).split("\t")[0];
-			String mz2 = String.valueOf(o2).split("\t")[0];
-			return Double.valueOf(mz1).compareTo(Double.valueOf(mz2));
 		}
 	}
 }
