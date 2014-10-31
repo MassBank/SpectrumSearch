@@ -6,7 +6,7 @@
 	<artifactId>SpectrumSearch</artifactId>
 	<packaging>jar</packaging>
 
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.2-2014-10-31</version>
 	<url>http://www.massbank.jp/SearchPage.html</url>
 	<name>SpectrumSearch</name>
 	<organization>
