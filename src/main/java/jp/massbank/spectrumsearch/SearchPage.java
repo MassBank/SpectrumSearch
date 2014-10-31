@@ -108,13 +108,14 @@ public class SearchPage extends JFrame {
 
   public static void main(String[] args) {
     LOGGER.info("Application start!");
+    LOGGER.info("Spectrum Search version " + SearchPage.class.getPackage().getImplementationVersion());
+    
     SearchPage appli = new SearchPage();
     appli.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
     appli.setTitle("Spectrum Search | massbank.jp");
     appli.setSize(1200, 700);
     appli.init();
     appli.setVisible(true);
-    
   }
 	public static String baseUrl = "";
 
@@ -244,11 +245,8 @@ public class SearchPage extends JFrame {
 	 * メインプログラム
 	 */
 	public void init() {
-		
-		// アプレットコンテキスト取得
-//      context = getAppletContext();
-		
-		// アプレット初期画面サイズ取得
+
+	    // アプレット初期画面サイズ取得
 		initAppletWidth = getWidth();
 		initAppletHight = getHeight();
 
