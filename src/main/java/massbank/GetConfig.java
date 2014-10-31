@@ -19,10 +19,18 @@
 
 package massbank;
 
-import javax.xml.parsers.*;
+import java.io.IOException;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.log4j.Logger;
-import org.w3c.dom.*;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 /** 
  * 環境設定ファイルの情報を取得するクラス
@@ -34,9 +42,6 @@ public class GetConfig {
 	public static final int MYSVR_INFO_NUM = 0;
 	private Element m_root;
 
-	/**
-	 * コンストラクタ
-	 */ 
 	public GetConfig( String baseUrl ) {
 	  LOGGER.info(baseUrl);
 		String url =  baseUrl + "massbank.conf";
@@ -53,10 +58,9 @@ public class GetConfig {
 			// ルート要素を取得
 			m_root = doc.getDocumentElement();
 		}
-		catch ( Exception e ) {
-			e.printStackTrace();
+		catch ( IOException | ParserConfigurationException | SAXException e ) {
+		  LOGGER.error(e.getMessage(),e);
 		}
-		  LOGGER.info(m_root);
 	}
 
 	/**
@@ -208,7 +212,7 @@ public class GetConfig {
 	private String getServerSetting(String tagName) {
 	  LOGGER.info(tagName);
 		String val = "";
-		try {
+//		try {
 			NodeList nodeList = m_root.getElementsByTagName( "MyServer" );
 			if ( nodeList == null ) {
 				return val;
@@ -230,10 +234,10 @@ public class GetConfig {
 					val = "";
 				}
 			}
-		}
-		catch ( Exception e ) {
-			e.printStackTrace();
-		}
+//		}
+//		catch ( ArrayIndexOutOfBoundsException e ) {
+//			e.printStackTrace();
+//		}
 		return val;
 	}
 
@@ -284,6 +288,7 @@ public class GetConfig {
 			val = child.getFirstChild().getNodeValue();
 		}
 		catch ( Exception e ) {
+		  // TODO avoid catch Exception. need detailed check for this method.
 			System.out.println("\"" + tagName + "\" tag doesn't exist in massbank.conf.");
 		}
 		return val;
