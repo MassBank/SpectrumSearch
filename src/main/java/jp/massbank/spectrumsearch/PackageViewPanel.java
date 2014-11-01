@@ -576,7 +576,7 @@ public class PackageViewPanel extends JPanel {
 			recordData[2] = recData.getName();
 			recordData[3] = recData.getMatchPeakNum();
 			recordData[4] = recData.getId();
-			recordData[5] = new Boolean(recData.isDisable());
+			recordData[5] = Boolean.valueOf(recData.isDisable());
 			if (!recData.getSite().equals("")) {
 				recordData[6] = SearchPage.siteNameList[Integer.parseInt(recData.getSite())];
 			}
@@ -606,7 +606,7 @@ public class PackageViewPanel extends JPanel {
     	if (recTable.getRowCount() > 0) {
     		int disableCol = recTable.getColumnModel().getColumnIndex(SearchPage.COL_LABEL_DISABLE);
 			for (int i=0; i<recTable.getRowCount(); i++) {
-				recTable.setValueAt(new Boolean(disable), i, disableCol);
+				recTable.setValueAt(Boolean.valueOf(disable), i, disableCol);
 			}
     	}
 	}
