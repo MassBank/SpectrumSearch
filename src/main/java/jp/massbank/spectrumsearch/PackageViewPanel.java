@@ -85,7 +85,7 @@ import org.apache.log4j.Logger;
  */
 @SuppressWarnings("serial")
 public class PackageViewPanel extends JPanel {
-  static final Logger LOGGER = Logger.getLogger(PackageViewPanel.class);
+	static final Logger LOGGER = Logger.getLogger(PackageViewPanel.class);
 
 	private final PackageSpecData specData;				// スペクトル情報データクラス(blank final変数)
 	
