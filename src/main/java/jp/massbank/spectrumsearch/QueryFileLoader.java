@@ -24,6 +24,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.Serializable;
+import java.nio.charset.StandardCharsets;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -55,7 +57,7 @@ public class QueryFileLoader implements ActionListener {
   @Override
   public void actionPerformed(ActionEvent e) {
     int returnVal = fc.showOpenDialog(targetFrame);
-    LOGGER.info("returnVal" + returnVal);
+//    LOGGER.info("returnVal" + returnVal);
     if (returnVal == JFileChooser.APPROVE_OPTION) {
       File file = fc.getSelectedFile();
       LOGGER.info(file.getAbsolutePath());
@@ -75,7 +77,7 @@ public class QueryFileLoader implements ActionListener {
     File targetFile = new File(fileName);
 
     try (BufferedReader in =
-        new BufferedReader(new InputStreamReader(new FileInputStream(targetFile)));) {
+        new BufferedReader(new InputStreamReader(new FileInputStream(targetFile), StandardCharsets.UTF_8));) {
       String line = null;
       while ((line = in.readLine()) != null) {
         LOGGER.info(line);
@@ -263,7 +265,7 @@ public class QueryFileLoader implements ActionListener {
   /**
    * ピークコンパレータ SearchPageのインナークラス。 m/zの昇順ソートを行う。
    */
-  static class PeakComparator implements Comparator<String> {
+  static class PeakComparator implements Comparator<String> , Serializable {
     public int compare(String o1, String o2) {
       String mz1 = String.valueOf(o1).split("\t")[0];
       String mz2 = String.valueOf(o2).split("\t")[0];

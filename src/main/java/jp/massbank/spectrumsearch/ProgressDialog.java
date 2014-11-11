@@ -58,8 +58,8 @@ public class ProgressDialog extends JDialog {
 		panel.add(label);
 
 		// プログレスバーセット
-		UIManager.put("ProgressBar.repaintInterval", new Integer(20));
-		UIManager.put("ProgressBar.cycleTime", new Integer(1000));
+		UIManager.put("ProgressBar.repaintInterval", Integer.valueOf(20));
+		UIManager.put("ProgressBar.cycleTime", Integer.valueOf(1000));
 		JProgressBar progressBar = new JProgressBar();
 		progressBar.setIndeterminate(true);	// 不確定モード
 		panel.add(progressBar);
