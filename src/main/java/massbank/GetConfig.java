@@ -30,20 +30,24 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.w3c.dom.ls.DOMImplementationLS;
+import org.w3c.dom.ls.LSSerializer;
 import org.xml.sax.SAXException;
 
 /** 
  * 環境設定ファイルの情報を取得するクラス
  * wrapper of massbank.conf 
+ * @deprecated This class uses massbank.jp/massbank.conf and should not use such design.
  */
+ @Deprecated
 public class GetConfig {
   static final Logger LOGGER = Logger.getLogger(GetConfig.class);
 
 	public static final int MYSVR_INFO_NUM = 0;
 	private Element m_root;
-
+	 @Deprecated
 	public GetConfig( String baseUrl ) {
-	  LOGGER.info(baseUrl);
+//	  LOGGER.info(baseUrl);
 		String url =  baseUrl + "massbank.conf";
 		try {
 			// ドキュメントビルダーファクトリを生成
@@ -55,6 +59,15 @@ public class GetConfig {
 			// パースを実行してDocumentオブジェクトを取得
 			Document doc = builder.parse( url );
 
+			
+			DOMImplementationLS lsImpl = (DOMImplementationLS)doc.getImplementation().getFeature("LS", "3.0");
+			LSSerializer serializer = lsImpl.createLSSerializer();
+			serializer.getDomConfig().setParameter("xml-declaration", false); //by default its true, so set it to false to get String without xml-declaration
+			String str = serializer.writeToString(doc.getDocumentElement());
+			
+//			LOGGER.info(str);
+			 
+			 
 			// ルート要素を取得
 			m_root = doc.getDocumentElement();
 		}
@@ -210,7 +223,6 @@ public class GetConfig {
 	 * 自サーバーの設定を取得する
 	 */
 	private String getServerSetting(String tagName) {
-	  LOGGER.info(tagName);
 		String val = "";
 //		try {
 			NodeList nodeList = m_root.getElementsByTagName( "MyServer" );
@@ -238,6 +250,7 @@ public class GetConfig {
 //		catch ( ArrayIndexOutOfBoundsException e ) {
 //			e.printStackTrace();
 //		}
+			  LOGGER.info(tagName + " <-> " + val);
 		return val;
 	}
 
