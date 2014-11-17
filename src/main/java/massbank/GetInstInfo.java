@@ -19,11 +19,15 @@
 
 package massbank;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+
+import jp.massbank.spectrumsearch.db.DbAccessor;
+import jp.massbank.spectrumsearch.db.Instrument;
 
 import org.apache.log4j.Logger;
 
@@ -33,20 +37,30 @@ import org.apache.log4j.Logger;
 public class GetInstInfo {
   static final Logger LOGGER = Logger.getLogger(GetInstInfo.class);
 
+  @Deprecated
 	ArrayList<String>[] instNo   = null;
+  @Deprecated
 	ArrayList<String>[] instType = null;
+  @Deprecated
 	ArrayList<String>[] instName = null;
-	ArrayList<String>[] msType = null;
-	private int index = 0;
+  @Deprecated
+    ArrayList<String>[] msType = null;
+
+  List<String> msList = null;
+  List<Instrument> instList = null;
+  
+	//	private int index = 0;
 
 	/**
 	 * レコードフォーマットバージョン2の
 	 * INSTRUMENT情報とMS情報を取得するコンストラクタ
 	 * @param baseUrl ベースURL
+	 * @throws SQLException 
 	 */
-	public GetInstInfo( String baseUrl ) {
+	public GetInstInfo( String baseUrl ) throws SQLException {
 		String urlParam = "ver=2";
-		getInformation(baseUrl, urlParam);
+//		getInformation(baseUrl, urlParam);
+		getInformationNew();
 	}
 
 	/**
@@ -57,13 +71,14 @@ public class GetInstInfo {
 	 * @param formatVer MassBankレコードフォーマットバージョン
 	 * @param isPeakAdv PeakSearchAdvancedフラグ
 	 */
-	public GetInstInfo( String baseUrl, int formatVer, boolean isPeakAdv ) {
-		String urlParam = "ver=" + formatVer;
-		if ( isPeakAdv ) {
-			urlParam += "&padv=1";
-		}
-		getInformation(baseUrl, urlParam);
-	}
+	// TODO remove this. this seems not used.
+//	public GetInstInfo( String baseUrl, int formatVer, boolean isPeakAdv ) {
+//		String urlParam = "ver=" + formatVer;
+//		if ( isPeakAdv ) {
+//			urlParam += "&padv=1";
+//		}
+//		getInformation(baseUrl, urlParam);
+//	}
 	
 	/**
 	 * 装置種別、MS種別情報取得
@@ -71,14 +86,18 @@ public class GetInstInfo {
 	 * @param urlParam CGI実行時のパラメータ
 	 */
 	private void getInformation( String baseUrl, String urlParam ) {
-		GetConfig conf = new GetConfig(baseUrl);
-		String[] urlList = conf.getSiteUrl();
+//		GetConfig conf = new GetConfig(baseUrl);
+      String[] urlList = {"http://massbank.jp/"};
+//      String[] urlList = conf.getSiteUrl();
 
-		String serverUrl = conf.getServerUrl();
-		MassBankCommon mbcommon = new MassBankCommon();
+      String serverUrl = "http://massbank.jp/";
+//      String serverUrl = conf.getServerUrl();
+      
+//		MassBankCommon mbcommon = new MassBankCommon();
 		String typeName = MassBankCommon.CGI_TBL[MassBankCommon.CGI_TBL_NUM_TYPE][MassBankCommon.CGI_TBL_TYPE_INST];
-	    LOGGER.info(serverUrl);
-		ArrayList<String> resultAll = mbcommon.execDispatcher( serverUrl, typeName, urlParam, true, null );
+//	    LOGGER.info(serverUrl);
+        ArrayList<String> resultAll = new ArrayList<String>();
+//        ArrayList<String> resultAll = mbcommon.execDispatcher( serverUrl, typeName, urlParam, true, null );
 		
 		instNo = new ArrayList[urlList.length];
 		instType = new ArrayList[urlList.length];
@@ -115,51 +134,71 @@ public class GetInstInfo {
 			}
 		}
 	}
-	
+	private void getInformationNew() throws SQLException {
+	  instList = DbAccessor.getAllInstrument();
+	  msList = DbAccessor.getMsType();
+//	     instNo = new ArrayList[1];
+//	        instType = new ArrayList[urlList.length];
+//	        instName = new ArrayList[urlList.length];
+//	        msType = new ArrayList[urlList.length];
+//	        for ( int i = 0; i < urlList.length; i++ ) {
+//	            instNo[i]   = new ArrayList<String>();
+//	            instType[i] = new ArrayList<String>();
+//	            instName[i] = new ArrayList<String>();
+//	            msType[i] = new ArrayList<String>();
+//	        }
+	  
+	}
 	/**
 	 * サイトインデックスをセット
 	 */ 
-	public void setIndex(int index) {
-		this.index = index;
-	}
+//	public void setIndex(int index) {
+//		this.index = index;
+//	}
 
 	/**
 	 * INSTRUMENT_TYPE_NOを取得
 	 */ 
-	public String[] getNo() {
-		return (String[])this.instNo[this.index].toArray( new String[0] );
-	}
+//	public String[] getNo() {
+//		return (String[])this.instNo[this.index].toArray( new String[0] );
+//	}
 
 	/**
 	 * INSTRUMENT_NAMEを取得
 	 */
-	public String[] getName() {
-		return (String[])this.instName[this.index].toArray( new String[0] );
-	}
+//	public String[] getName() {
+//		return (String[])this.instName[this.index].toArray( new String[0] );
+//	}
 
 	/**
 	 * INSTRUMENT_TYPEを取得
 	 */
-	public String[] getType() {
-		return (String[])this.instType[this.index].toArray( new String[0] );
-	}
+//	public String[] getType() {
+//		return (String[])this.instType[this.index].toArray( new String[0] );
+//	}
 
 	/**
 	 * INSTRUMENT_TYPEを取得（重複なしで全サイト分を取得）
 	 */
-	public String[] getTypeAll() {
+	private String[] getTypeAll() {
 		ArrayList<String> instTypeList = new ArrayList<String>();
-		for ( int i = 0; i < this.instType.length; i++ ) {
-			for ( int j = 0; j < instType[i].size(); j++ ) {
-				String type = instType[i].get(j);
+		for (Instrument oneInst : instList ) {
+				String type = oneInst.getType();
 				if ( !instTypeList.contains(type) ) {
 					instTypeList.add( type );
 				}
-			}
 		}
+//        for ( int i = 0; i < this.instType.length; i++ ) {
+//          for ( int j = 0; j < instType[i].size(); j++ ) {
+//              String type = instType[i].get(j);
+//              if ( !instTypeList.contains(type) ) {
+//                  instTypeList.add( type );
+//              }
+//          }
+//      }
 		// 名前順でソート
 		Collections.sort( instTypeList );
-		return (String[])instTypeList.toArray( new String[0] );
+		return instTypeList.toArray( new String[0] );
 	}
 
 	/**
@@ -201,25 +240,32 @@ public class GetInstInfo {
 	/**
 	 * MS_TYPEを取得
 	 */
-	public String[] getMsType() {
-		return (String[])this.msType[this.index].toArray( new String[0] );
-	}
+//	public String[] getMsType() {
+//		return (String[])this.msType[this.index].toArray( new String[0] );
+//	}
 
 	/**
 	 * MS_TYPEを取得（重複なしで全サイト分を取得）
 	 */
 	public String[] getMsAll() {
 		ArrayList<String> msTypeList = new ArrayList<String>();
-		for ( int i = 0; i < this.msType.length; i++ ) {
-			for ( int j = 0; j < msType[i].size(); j++ ) {
-				String type = msType[i].get(j);
-				if ( !msTypeList.contains(type) ) {
-					msTypeList.add( type );
+		for ( String msType : msList ) {
+//				String type = msType[i].get(j);
+				if ( !msTypeList.contains(msType) ) {
+					msTypeList.add( msType );
 				}
-			}
 		}
+//        for ( int i = 0; i < this.msType.length; i++ ) {
+//          for ( int j = 0; j < msType[i].size(); j++ ) {
+//              String type = msType[i].get(j);
+//              if ( !msTypeList.contains(type) ) {
+//                  msTypeList.add( type );
+//              }
+//          }
+//      }
+		
 		// 名前順でソート
 		Collections.sort( msTypeList );
-		return (String[])msTypeList.toArray( new String[0] );
+		return msTypeList.toArray( new String[0] );
 	}
 }
