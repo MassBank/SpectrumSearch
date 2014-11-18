@@ -60,7 +60,9 @@ public class MassBankCommon {
 	public static final String REQ_TYPE_RECORD    = "record";
 	public static final String REQ_TYPE_IDXCNT    = "idxcnt";
 	public static final String REQ_TYPE_RCDIDX    = "rcdidx";
+
 	public static final String REQ_TYPE_INST      = "inst";
+	
 	public static final String REQ_TYPE_MOL       = "mol";
 	public static final String REQ_TYPE_GSDATA    = "gsdata";
 	public static final String REQ_TYPE_GDATA3    = "gdata3";
@@ -76,39 +78,41 @@ public class MassBankCommon {
 	
 	// ＜CGIテーブルインデックス＞
 	public static final int CGI_TBL_NUM_TYPE = 0;		// CGI種別指定
-	public static final int CGI_TBL_NUM_FILE = 1;		// CGIファイル指定
+//	public static final int CGI_TBL_NUM_FILE = 1;		// CGIファイル指定
 
 	// ＜CGIテーブル番号＞
 	public static final int CGI_TBL_TYPE_PEAK     = 0;
-	public static final int CGI_TBL_TYPE_PDIFF    = 1;
+//	public static final int CGI_TBL_TYPE_PDIFF    = 1;
 	public static final int CGI_TBL_TYPE_DISP     = 2;
-	public static final int CGI_TBL_TYPE_GDATA    = 3;
-	public static final int CGI_TBL_TYPE_GDATA2   = 4;
+//	public static final int CGI_TBL_TYPE_GDATA    = 3;
+//	public static final int CGI_TBL_TYPE_GDATA2   = 4;
 	public static final int CGI_TBL_TYPE_SEARCH   = 5;
 	public static final int CGI_TBL_TYPE_GNAME    = 6;
-	public static final int CGI_TBL_TYPE_GPEAK    = 7;
-	public static final int CGI_TBL_TYPE_QSTAR    = 8;
-	public static final int CGI_TBL_TYPE_GSON     = 9;
-	public static final int CGI_TBL_TYPE_DISPDIFF = 10;
-	public static final int CGI_TBL_TYPE_QUICK    = 11;
-	public static final int CGI_TBL_TYPE_PEAK2    = 12;		// ver 1.0.11 未使用
-	public static final int CGI_TBL_TYPE_PDIFF2   = 13;		// ver 1.0.11 未使用
-	public static final int CGI_TBL_TYPE_RECORD   = 14;
-	public static final int CGI_TBL_TYPE_IDXCNT   = 15;
-	public static final int CGI_TBL_TYPE_RCDIDX   = 16;
+//	public static final int CGI_TBL_TYPE_GPEAK    = 7;
+//	public static final int CGI_TBL_TYPE_QSTAR    = 8;
+//	public static final int CGI_TBL_TYPE_GSON     = 9;
+//	public static final int CGI_TBL_TYPE_DISPDIFF = 10;
+//	public static final int CGI_TBL_TYPE_QUICK    = 11;
+//	public static final int CGI_TBL_TYPE_PEAK2    = 12;		// ver 1.0.11 未使用
+//	public static final int CGI_TBL_TYPE_PDIFF2   = 13;		// ver 1.0.11 未使用
+//	public static final int CGI_TBL_TYPE_RECORD   = 14;
+//	public static final int CGI_TBL_TYPE_IDXCNT   = 15;
+//	public static final int CGI_TBL_TYPE_RCDIDX   = 16;
+	
 	public static final int CGI_TBL_TYPE_INST     = 17;
-	public static final int CGI_TBL_TYPE_MOL      = 18;
+
+//	public static final int CGI_TBL_TYPE_MOL      = 18;
 	public static final int CGI_TBL_TYPE_GSDATA   = 19;
-	public static final int CGI_TBL_TYPE_GDATA3   = 20;
-	public static final int CGI_TBL_TYPE_GETLIST  = 21;
-	public static final int CGI_TBL_TYPE_STRUCT   = 22;
-	public static final int CGI_TBL_TYPE_PEAKADV  = 23;
-	public static final int CGI_TBL_TYPE_GETRECORD= 24;
-	public static final int CGI_TBL_TYPE_GETMOL   = 25;
-	public static final int CGI_TBL_TYPE_GETSTRUCT= 26;
-	public static final int CGI_TBL_TYPE_ADVSEARCH= 27;
-	public static final int CGI_TBL_TYPE_GETCINFO  = 28;
-	public static final int CGI_TBL_TYPE_GETFORMULA = 29;
+//	public static final int CGI_TBL_TYPE_GDATA3   = 20;
+//	public static final int CGI_TBL_TYPE_GETLIST  = 21;
+//	public static final int CGI_TBL_TYPE_STRUCT   = 22;
+//	public static final int CGI_TBL_TYPE_PEAKADV  = 23;
+//	public static final int CGI_TBL_TYPE_GETRECORD= 24;
+//	public static final int CGI_TBL_TYPE_GETMOL   = 25;
+//	public static final int CGI_TBL_TYPE_GETSTRUCT= 26;
+//	public static final int CGI_TBL_TYPE_ADVSEARCH= 27;
+//	public static final int CGI_TBL_TYPE_GETCINFO  = 28;
+//	public static final int CGI_TBL_TYPE_GETFORMULA = 29;
 	
 
 	// ＜CGIテーブル＞
@@ -158,7 +162,7 @@ public class MassBankCommon {
 	 * @param siteNo		サイトNo.
 	 * @return 
 	 */
-	public ArrayList<String> execDispatcher(
+	private ArrayList<String> execDispatcher(
 			String serverUrl,
 			String type,
 			String param,
