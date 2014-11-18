@@ -16,19 +16,16 @@ import org.apache.log4j.Logger;
 public class DbAccessor {
   static final Logger LOGGER = Logger.getLogger(DbAccessor.class);
   static Connection conn = null;
-  static {
-
-
-
-  }
 
   public static Connection getConnection() throws SQLException {
 
     Properties connectionProps = new Properties();
-    connectionProps.put("user", "root");
-    connectionProps.put("password", "");
+//    connectionProps.put("user", "root");
+//    connectionProps.put("password", "");
 
-    conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/keio", connectionProps);
+    conn = DriverManager.getConnection("jdbc:derby:C:/temp/massbankdb", connectionProps);
+    // TODO this url should be changed to refer inside of this project.
+//    conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/keio", connectionProps);
 
     LOGGER.info("Connected to database");
     DatabaseMetaData metadata = conn.getMetaData();
@@ -77,7 +74,10 @@ public class DbAccessor {
     StringBuilder sql = new StringBuilder("select NAME, ID from SPECTRUM");
 
     if (name != null && !"".equals(name)) {
-      sql.append("  where left(NAME,instr(NAME,';')-1) ");
+      sql.append("  where NAME ");
+      // JavaDB does not support left() and instr(). we need change table structure.
+      // devide name column by ';' . 
+//      sql.append("  where left(NAME,instr(NAME,';')-1) ");
       if (match == null) {
         sql.append("= ?");
       } else {
@@ -135,7 +135,7 @@ public class DbAccessor {
   }
   static String getChildInfo(String id)throws SQLException {
    StringBuilder sb = new StringBuilder();  
-    try (PreparedStatement ps = conn.prepareStatement("select MZ, RELATIVE from PEAK where ID=? order by MZ")) {
+    try (PreparedStatement ps = conn.prepareStatement("select MZ, RELATIVE_ from PEAK where ID=? order by MZ")) {
       ps.setString(1,  id );
       ResultSet rs = ps.executeQuery();
       while (rs.next()) {

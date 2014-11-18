@@ -42,12 +42,12 @@ public class DbAccessorTest {
       
       LOGGER.info(str);
     }
-    result = DbAccessor.getSpectrumNameByName("Dime", "end");
+    result = DbAccessor.getSpectrumNameByName("GABA", "end");
     LOGGER.info(result.size());
     for (String str : result){
       LOGGER.info(str);
     }
-    result = DbAccessor.getSpectrumNameByName("sine", "start");
+    result = DbAccessor.getSpectrumNameByName("[M+H]+", "start");
     LOGGER.info(result.size());
     for (String str : result){
       LOGGER.info(str);
