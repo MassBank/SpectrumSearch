@@ -577,12 +577,13 @@ public class PackageViewPanel extends JPanel {
 			recordData[3] = recData.getMatchPeakNum();
 			recordData[4] = recData.getId();
 			recordData[5] = Boolean.valueOf(recData.isDisable());
-			if (!recData.getSite().equals("")) {
-				recordData[6] = SearchPage.siteNameList[Integer.parseInt(recData.getSite())];
-			}
-			else {
-				recordData[6] = "";
-			}
+//			if (!recData.getSite().equals("")) {
+//				recordData[6] = SearchPage.siteNameList[Integer.parseInt(recData.getSite())];
+//			}
+//			else {
+//				recordData[6] = "";
+//			}
+			recordData[6] = SearchPage.DUMMY_SITENAME;
 			recordData[7] = recData.getScore();
 			recordData[8] = recData.getHitPeakNum();
 			recordData[9] = String.valueOf(recData.getPeakNum());

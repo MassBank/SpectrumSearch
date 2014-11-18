@@ -49,6 +49,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -88,11 +89,11 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 
+import jp.massbank.spectrumsearch.db.DbAccessor;
 import jp.massbank.spectrumsearch.model.PackageRecData;
 import jp.massbank.spectrumsearch.model.PackageSpecData;
 import jp.massbank.spectrumsearch.model.PeakData;
 import jp.massbank.spectrumsearch.model.UserFileData;
-import massbank.GetConfig;
 import massbank.GetInstInfo;
 import massbank.MassBankCommon;
 
@@ -104,7 +105,7 @@ import org.apache.log4j.Logger;
 public class SearchPage extends JFrame {
   private static final long serialVersionUID = 1L;
   private static final Logger LOGGER = Logger.getLogger(SearchPage.class);
-
+  static final String DUMMY_SITENAME = "dmyname";
 
   public static void main(String[] args) {
     LOGGER.info("Application start!");
@@ -114,10 +115,19 @@ public class SearchPage extends JFrame {
     appli.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
     appli.setTitle("Spectrum Search | massbank.jp");
     appli.setSize(1200, 700);
-    appli.init();
-    appli.setVisible(true);
+    try {
+      DbAccessor.getConnection();
+      appli.init();
+      appli.setVisible(true);
+    } catch (SQLException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+      System.exit(-1);
+    }
   }
-	public static String baseUrl = "";
+  
+  // TODO this will be removed. 
+	static String baseUrl = "http://www.massbank.jp/";
 
 	private GetInstInfo instInfo = null;
 	
@@ -203,9 +213,9 @@ public class SearchPage extends JFrame {
 
 	private ArrayList nameListAll = new ArrayList();
 
-	private String[] siteList;
+	private String[] siteList ;
 
-	public static String[] siteNameList;
+//	public static String[] siteNameList = new String[]{"Keio Univ."};
 
 	private JPanel parentPanel2 = null;
 
@@ -220,8 +230,8 @@ public class SearchPage extends JFrame {
 	int seaqCompound = 0;
 
 //	public static AppletContext context = null;				// アプレットコンテキスト
-	public static int initAppletWidth = 0;					// アプレット初期画面サイズ(幅)
-	public static int initAppletHight = 0;					// アプレット初期画面サイズ(高さ)
+	static int initAppletWidth = 0;					// アプレット初期画面サイズ(幅)
+	static int initAppletHight = 0;					// アプレット初期画面サイズ(高さ)
 	
 	public static final int MAX_DISPLAY_NUM = 30;				// Package View最大表示可能件数
 	
@@ -243,8 +253,9 @@ public class SearchPage extends JFrame {
 
 	/**
 	 * メインプログラム
+	 * @throws SQLException 
 	 */
-	public void init() {
+	public void init() throws SQLException {
 
 	    // アプレット初期画面サイズ取得
 		initAppletWidth = getWidth();
@@ -255,12 +266,12 @@ public class SearchPage extends JFrame {
         String confPath = "http://www.massbank.jp/";
 //        String confPath = getCodeBase().toString();
 		confPath = confPath.replaceAll("/jsp", "");
-		GetConfig conf = new GetConfig(confPath);
-		siteNameList = conf.getSiteName();
-		baseUrl = conf.getServerUrl();
+//		GetConfig conf = new GetConfig(confPath);
+//		siteNameList = conf.getSiteName();
+//		baseUrl = conf.getServerUrl();
 		
 		// Cookie情報ユーティリティ初期化
-		cm = new CookieManager( "SerchApplet", 30, conf.isCookie());
+		cm = new CookieManager( "SerchApplet", 30, true);
 		
 		// Precursor m/z情報初期化
 		initPreInfo();
@@ -270,7 +281,7 @@ public class SearchPage extends JFrame {
 		
 		// Cutoff Threshold情報初期化
 		initCutoffInfo();
-		LOGGER.info(confPath);
+//		LOGGER.info(confPath);
 		// 装置種別情報初期化
 		instInfo = new GetInstInfo(confPath);
 		initInstInfo();
@@ -904,7 +915,8 @@ public class SearchPage extends JFrame {
 						}
 
 						// SiteName
-						String siteName = siteNameList[Integer.parseInt(item[4])];
+                        String siteName = DUMMY_SITENAME;
+//                        String siteName = siteNameList[Integer.parseInt(item[4])];
 						siteList[i] = item[4];
 
 						// Name, Score, Hit, ID, Ion, SiteName, No.
@@ -973,8 +985,10 @@ public class SearchPage extends JFrame {
 	private void getSpectrumForQuery(String searchName) {
 		
 		String param = "";
+		String wcValue = null;
 		if (!searchName.equals("")) {
-			String wc = "&wc=";
+//			String wc = "&wc=";
+		  
 			boolean wcStart = false;
 			boolean wcEnd = false;
 			if (searchName.substring(0, 1).equals("*")) {
@@ -986,25 +1000,36 @@ public class SearchPage extends JFrame {
 
 			if (wcStart) {
 				if (wcEnd) {
-					wc += "both";
+				  wcValue= "both";
 				} else {
-					wc += "start";
+				  wcValue= "start";
 				}
 			} else {
 				if (wcEnd) {
-					wc += "end";
+				  wcValue= "end";
 				} else {
-					wc = "";
+				  wcValue = "";
 				}
 			}
 			searchName = searchName.replace("*", "");
-			param = "name=" + searchName + wc;
+//			param = "name=" + searchName + wc;
 		}
-
+		List<String> result = null;
+		try {
+		  result = DbAccessor.getSpectrumNameByName(searchName, wcValue);
+    } catch (SQLException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+      return;
+    }
 		// サーブレット呼び出し-マルチスレッドでCGIを起動
-		String cgiType = MassBankCommon.CGI_TBL[MassBankCommon.CGI_TBL_NUM_TYPE][MassBankCommon.CGI_TBL_TYPE_GNAME];
-		LOGGER.info(baseUrl + cgiType + param);
-		ArrayList<String> result = mbcommon.execMultiDispatcher(baseUrl, cgiType, param);
+//		String cgiType = MassBankCommon.CGI_TBL[MassBankCommon.CGI_TBL_NUM_TYPE][MassBankCommon.CGI_TBL_TYPE_GNAME];
+//		LOGGER.info(baseUrl + "  >>  cgiType >>" + cgiType + "  >>  param >>" + param);
+//		ArrayList<String> result = mbcommon.execMultiDispatcher(baseUrl, cgiType, param);
+		
+		
+		
+		
 		DefaultTableModel dataModel = (DefaultTableModel) querySorter.getTableModel();
 		dataModel.setRowCount(0);
 		if (result == null || result.size() == 0) {
@@ -1026,7 +1051,8 @@ public class SearchPage extends JFrame {
 			String[] cutIdNameSite = new String[] { id, name, site };
 			nameList.add(cutIdNameSite);
 
-			site = siteNameList[Integer.parseInt(site)];
+//			site = siteNameList[Integer.parseInt(site)];
+			site = DUMMY_SITENAME;
 			String[] idNameSite2 = new String[] { id, name, site, String.valueOf(i + 1) };
 
 			// 取得値をテーブルにセット
@@ -1047,18 +1073,18 @@ public class SearchPage extends JFrame {
 		String id = (String)eventTbl.getValueAt(selRows[0], idCol);
 		String siteName = (String)eventTbl.getValueAt(selRows[0], siteCol);
 		String site = "0";
-		for (int i=0; i<siteNameList.length; i++) {
-			if (siteName.equals(siteNameList[i])) {
-				site = Integer.toString(i);
-				break;
-			}
-		}
-
+//		for (int i=0; i<siteNameList.length; i++) {
+//			if (siteName.equals(siteNameList[i])) {
+//				site = Integer.toString(i);
+//				break;
+//			}
+//		}
+		
 		// CGI呼び出し
 		String typeName = MassBankCommon.CGI_TBL[MassBankCommon.CGI_TBL_NUM_TYPE][MassBankCommon.CGI_TBL_TYPE_DISP];
 		String reqUrl = baseUrl + "jsp/" + MassBankCommon.DISPATCHER_NAME
 				+ "?type=" + typeName + "&id=" + id + "&site=" + site;
-        LOGGER.info("open browser with" + reqUrl);
+        LOGGER.info("open browser with " + reqUrl);
         try {
           Desktop.getDesktop().browse(new URI(reqUrl));
         } catch (IOException | URISyntaxException ex) {
@@ -1188,7 +1214,8 @@ public class SearchPage extends JFrame {
 		// Cookieが存在する場合
 		if (valueList.size() != 0) {
 			try {
-				CUTOFF_THRESHOLD = Integer.valueOf(valueList.get(0));
+              CUTOFF_THRESHOLD = Integer.parseInt(valueList.get(0));
+//              CUTOFF_THRESHOLD = Integer.valueOf(valueList.get(0));
 			} catch (Exception e) {
 				// CUTOFF_THRESHOLDはデフォルト値を使用
 			}
@@ -1215,11 +1242,12 @@ public class SearchPage extends JFrame {
 		ArrayList<String> valueSetList = new ArrayList<String>();
 		
 		boolean checked = false;
-		
+	      LOGGER.info("instInfo.getTypeGroup().size() -> " + instGroup.size());
 		for (Iterator i=instGroup.keySet().iterator(); i.hasNext(); ) {
 			String key = (String)i.next();
 			
 			List<String> list = instGroup.get(key);
+		      LOGGER.info("instGroup.get(  "+key+"  ).size() -> " + list.size());
 			for ( int j = 0; j < list.size(); j++ ) {
 				String val = list.get(j);
 			
@@ -1291,6 +1319,8 @@ public class SearchPage extends JFrame {
 		boolean checked = false;
 		
 		List<String> list = Arrays.asList(instInfo.getMsAll());
+		
+//		LOGGER.info("instInfo.getMsAll().length -> " + list.size());
 		for ( int j=0; j<list.size(); j++ ) {
 			String val = list.get(j);
 		
@@ -2760,42 +2790,48 @@ public class SearchPage extends JFrame {
 					relation = "false";
 					score = String.valueOf(resultTable.getValueAt(selRows[i], scoreCol));
 					siteName = (String)resultTable.getValueAt(selRows[i], siteNameCol);
-					for (int j=0; j<siteNameList.length; j++) {
-						if (siteName.equals(siteNameList[j])) {
-							site = Integer.toString(j);
-							break;
-						}
-					}
+//					for (int j=0; j<siteNameList.length; j++) {
+//						if (siteName.equals(siteNameList[j])) {
+//							site = Integer.toString(j);
+//							break;
+//						}
+//					}
 					
-					String reqUrl = baseUrl + "jsp/"
-							+ MassBankCommon.DISPATCHER_NAME + "?type="
-							+ typeName + "&id=" + id + "&site=" + site + "&relation=" + relation + "&ion=" + ion;
-					
+//					String reqUrl = baseUrl + "jsp/"
+//							+ MassBankCommon.DISPATCHER_NAME + "?type="
+//							+ typeName + "&id=" + id + "&site=" + site + "&relation=" + relation + "&ion=" + ion;
+//			        LOGGER.info("not calling... " + reqUrl);
 					String line = "";
 					String findStr;
-					try {
-						URL url = new URL( reqUrl );
-						URLConnection con = url.openConnection();
-						
-						// レスポンス取得
-						BufferedReader in = new BufferedReader( new InputStreamReader(con.getInputStream()) );
-						
-						// レスポンス格納
-						String result;
-						while ( (result = in.readLine()) != null ) {
-							if ( !result.equals("") ) {		// スペース行を読み飛ばす
-								line = result;
-								break;
-							}
-						}
-						in.close();
-					}
-					catch (IOException iex) {
-						iex.printStackTrace();
-						SearchPage.this.setCursor(Cursor.getDefaultCursor());
-					}
-					
-						
+//					try {
+//						URL url = new URL( reqUrl );
+//						URLConnection con = url.openConnection();
+//						
+//						// レスポンス取得
+//						BufferedReader in = new BufferedReader( new InputStreamReader(con.getInputStream()) );
+//						
+//						// レスポンス格納
+//						String result;
+//						while ( (result = in.readLine()) != null ) {
+//							if ( !result.equals("") ) {		// スペース行を読み飛ばす
+//								line = result;
+//								LOGGER.info(line);
+//								break;
+//							}
+//						}
+//						in.close();
+//					}
+//					catch (IOException iex) {
+//						iex.printStackTrace();
+//						SearchPage.this.setCursor(Cursor.getDefaultCursor());
+//					}
+				      try {
+				        line = DbAccessor.getSpectrumData(id);
+				      } catch (SQLException e) {
+				        LOGGER.error(e.getMessage(), e);
+				        SearchPage.this.setCursor(Cursor.getDefaultCursor());
+				      }
+				      LOGGER.info("result... " + line);
 					recData = new PackageRecData();
 					
 					// === 化合物名 ===
@@ -2877,15 +2913,16 @@ public class SearchPage extends JFrame {
 				name = (String)resultTable.getValueAt(selRows[0], nameCol);
 				relation = "true";
 				siteName = (String)resultTable.getValueAt(selRows[0], siteNameCol);
-				for (int i = 0; i < siteNameList.length; i++) {
-					if (siteName.equals(siteNameList[i])) {
-						site = Integer.toString(i);
-						break;
-					}
-				}
+//				for (int i = 0; i < siteNameList.length; i++) {
+//					if (siteName.equals(siteNameList[i])) {
+//						site = Integer.toString(i);
+//						break;
+//					}
+//				}
 				String reqUrl = baseUrl + "jsp/"
 						+ MassBankCommon.DISPATCHER_NAME + "?type="
 						+ typeName + "&id=" + id + "&site=" + site + "&relation=" + relation + "&ion=" + ion;
+				LOGGER.info(reqUrl);
 				String precursor = "";
 				PeakData peak = null;
 				try {
@@ -2902,7 +2939,7 @@ public class SearchPage extends JFrame {
 						if (line.equals("")) {		// スペース行を読み飛ばす
 							continue;
 						}
-						
+					    LOGGER.info("relation is "+relation+" " + line);
 						recData = new PackageRecData();
 						
 						// === 化合物名 ===
@@ -2989,6 +3026,7 @@ public class SearchPage extends JFrame {
 			String[] items = temp.split(";");
 			name = URLEncoder.encode(items[0]);
 			String getUrl = baseUrl + "jsp/GetCompoudInfo.jsp?name=" + name + "&site=" + site + "&id=" + id;
+			LOGGER.info(getUrl);
 			String gifMFileName = "";
 			String gifSFileName = "";
 			String formula = "";
@@ -3099,35 +3137,41 @@ public class SearchPage extends JFrame {
 			// === サイト ===
 			recData.setSite(site);
 			
-			String typeName = MassBankCommon.CGI_TBL[MassBankCommon.CGI_TBL_NUM_TYPE][MassBankCommon.CGI_TBL_TYPE_GSDATA];
-			String reqUrl = baseUrl + "jsp/" + MassBankCommon.DISPATCHER_NAME
-					+ "?type=" + typeName + "&id=" + id + "&site=" + site + "&relation=false";
+//			String typeName = MassBankCommon.CGI_TBL[MassBankCommon.CGI_TBL_NUM_TYPE][MassBankCommon.CGI_TBL_TYPE_GSDATA];
+//			String reqUrl = baseUrl + "jsp/" + MassBankCommon.DISPATCHER_NAME
+//					+ "?type=" + typeName + "&id=" + id + "&site=" + site + "&relation=false";
+//			
+//			  LOGGER.info("not calling.. "+reqUrl);
 			
 			String line = "";
 			String findStr;
-			try {
-				URL url = new URL( reqUrl );
-				URLConnection con = url.openConnection();
-				
-				// レスポンス取得
-				BufferedReader in = new BufferedReader( new InputStreamReader(con.getInputStream()) );
-				
-				// レスポンス格納
-				String result;
-				while ( (result = in.readLine()) != null ) {
-					// スペース行を読み飛ばす
-					if ( !result.equals("") ) {
-						line = result;
-						break;
-					}
-				}
-				in.close();
-			}
-			catch (IOException iex) {
-				iex.printStackTrace();
-				SearchPage.this.setCursor(Cursor.getDefaultCursor());
-			}
-			
+//			try {
+//				URL url = new URL( reqUrl );
+//				URLConnection con = url.openConnection();
+//				
+//				// レスポンス取得
+//				BufferedReader in = new BufferedReader( new InputStreamReader(con.getInputStream()) );
+//				
+//				// レスポンス格納
+//				String result;
+//				while ( (result = in.readLine()) != null ) {
+//					// スペース行を読み飛ばす
+//					if ( !result.equals("") ) {
+//						line = result;
+//						break;
+//					}
+//				}
+//				in.close();
+//			}
+//			catch (IOException iex) {
+//			}
+      try {
+        line = DbAccessor.getSpectrumData(id);
+      } catch (SQLException e) {
+        LOGGER.error(e.getMessage(), e);
+        SearchPage.this.setCursor(Cursor.getDefaultCursor());
+      }
+		       LOGGER.info(line);
 			// === 化合物名 ===
 			findStr = "name=";
 			recData.setName(line, findStr);
@@ -3369,7 +3413,8 @@ public class SearchPage extends JFrame {
 						String[] item = (String[]) nameListAll.get(i);
 						String id = item[0];
 						String name = item[1];
-						String site = siteNameList[Integer.parseInt(item[2])];
+//						String site = siteNameList[Integer.parseInt(item[2])];
+						String site = DUMMY_SITENAME;
 						String[] idNameSite = new String[] { id, name, site, String.valueOf(i + 1) };
 						dataModel.addRow(idNameSite);
 					}
@@ -3454,16 +3499,16 @@ public class SearchPage extends JFrame {
 					name = URLEncoder.encode(name);
 					String siteName = (String)eventTbl.getValueAt(row, siteCol);
 					String site = "0";
-					for (int j = 0; j < siteNameList.length; j++) {
-						if (siteName.equals(siteNameList[j])) {
-							site = Integer.toString(j);
-							break;
-						}
-					}
+//					for (int j = 0; j < siteNameList.length; j++) {
+//						if (siteName.equals(siteNameList[j])) {
+//							site = Integer.toString(j);
+//							break;
+//						}
+//					}
 					param += "id=" + name + "\t" + id + "\t" + formula + "\t" + mass + "\t"	+ ion + "\t" + site + "&";
 				}
 				param = param.substring(0, param.length() - 1);
-
+				LOGGER.info("url to take filename" + reqUrl + "<->" + param);
 				URL url = new URL(reqUrl);
 				URLConnection con = url.openConnection();
 				con.setDoOutput(true);
