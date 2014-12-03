@@ -10,7 +10,7 @@ public class FileRecordLogicTest {
 	@Test
 	public void testSync() {
 		MassBankRecordLogic logic = new MassBankRecordLogic();
-		logic.syncFilesRecordsByFolderPath(SystemProperties.getInstance().getFolderPath());
+		logic.syncFilesRecordsByFolderPath(SystemProperties.getInstance().getDirPath());
 	}
 
 }

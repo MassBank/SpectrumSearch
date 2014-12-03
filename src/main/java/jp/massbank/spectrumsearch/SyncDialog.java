@@ -15,6 +15,7 @@ import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JTextField;
 
+import jp.massbank.spectrumsearch.entity.constant.SystemProperties;
 import jp.massbank.spectrumsearch.logic.MassBankRecordLogic;
 
 import org.apache.log4j.Logger;
@@ -26,7 +27,6 @@ public class SyncDialog extends JDialog {
 	private static final Logger LOGGER = Logger.getLogger(SyncDialog.class);
 	private static final String TITLE = "Synchronize MassBank Records";
 	private SearchPage parent;
-	private File cFolder = new File(".");
 	private JTextField txtDirPath;
 	private JFileChooser fileChooser;
 	private JProgressBar progressBar;
@@ -56,12 +56,13 @@ public class SyncDialog extends JDialog {
 	}
 	
 	private void initDirTextField() {
-		txtDirPath = new JTextField((new File("")).getAbsolutePath());
+		txtDirPath = new JTextField((new File(SystemProperties.getInstance().getDirPath())).getAbsolutePath());
+//		txtDirPath = new JTextField((new File("")).getAbsolutePath());
 	}
 	
 	private void initDirChooser() {
 		fileChooser = new JFileChooser();
-		fileChooser.setCurrentDirectory(cFolder);
+		fileChooser.setCurrentDirectory(new File(SystemProperties.getInstance().getDirPath() + "/."));
 		fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 		fileChooser.setAcceptAllFileFilterUsed(false); // disable the "All files" option.
 	}
@@ -133,8 +134,12 @@ public class SyncDialog extends JDialog {
 						LOGGER.info("start sync files");
                         progressBar.setVisible(true);
 						MassBankRecordLogic recordLogic = new MassBankRecordLogic();
-						recordLogic.syncFilesRecordsByFolderPath(txtDirPath.getText());
-//						recordLogic.syncFilesRecordsByFolderPath(SystemProperties.getInstance().getFolderPath());
+						String dirPath = txtDirPath.getText().trim();
+						if (! SystemProperties.getInstance().getDirPath().equals(dirPath)) {
+							SystemProperties.updateParam(SystemProperties.Key.DIR_PATH, dirPath);
+							SystemProperties.loadParams();
+						}
+						recordLogic.syncFilesRecordsByFolderPath(dirPath);
                         progressBar.setVisible(false);
 						LOGGER.info("end sync files");
                     }
@@ -146,7 +151,7 @@ public class SyncDialog extends JDialog {
 	}
 	
 	private JButton getBtnDirChooser() {
-		JButton btn = new JButton("Folder"); 
+		JButton btn = new JButton("Change"); 
 		btn.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
