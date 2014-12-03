@@ -27,7 +27,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import jp.massbank.spectrumsearch.db.DbAccessor;
-import jp.massbank.spectrumsearch.db.Instrument;
+import jp.massbank.spectrumsearch.db.entity.Instrument;
 
 import org.apache.log4j.Logger;
 
@@ -57,11 +57,15 @@ public class GetInstInfo {
 	 * @param baseUrl ベースURL
 	 * @throws SQLException 
 	 */
-	public GetInstInfo( String baseUrl ) throws SQLException {
-		String urlParam = "ver=2";
-//		getInformation(baseUrl, urlParam);
-		getInformationNew();
+	public GetInstInfo() throws SQLException {
+		getDbInformation();
 	}
+	
+//	public GetInstInfo( String baseUrl ) throws SQLException {
+//		String urlParam = "ver=2";
+////		getInformation(baseUrl, urlParam);
+//		getInformationNew();
+//	}
 
 	/**
 	 * コンストラクタ
@@ -134,7 +138,7 @@ public class GetInstInfo {
 			}
 		}
 	}
-	private void getInformationNew() throws SQLException {
+	private void getDbInformation() throws SQLException {
 	  instList = DbAccessor.getAllInstrument();
 	  msList = DbAccessor.getMsType();
 //	     instNo = new ArrayList[1];

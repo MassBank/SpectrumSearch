@@ -15,7 +15,7 @@ public class GetInstInfoTest {
   @Test
   public void testGetTypeGroup() throws SQLException {
     DbAccessor.getConnection();
-    GetInstInfo sut = new GetInstInfo("");
+    GetInstInfo sut = new GetInstInfo();
     LOGGER.info(sut.getTypeGroup());
   }
 

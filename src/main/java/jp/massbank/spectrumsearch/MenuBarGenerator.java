@@ -33,12 +33,13 @@ import org.apache.log4j.Logger;
 class MenuBarGenerator {
   private static final Logger LOGGER = Logger.getLogger(MenuBarGenerator.class);
 
-  static JMenuBar generateMenuBar(SearchPage targetFrame) {
+  static JMenuBar generateMenuBar(final SearchPage targetFrame) {
 
     JMenuBar menuBar;
     JMenu menu;
     // JMenu submenu;
     JMenuItem menuItem;
+    JMenuItem menuItemSync;
     // JRadioButtonMenuItem rbMenuItem;
     // JCheckBoxMenuItem cbMenuItem;
 
@@ -55,9 +56,19 @@ class MenuBarGenerator {
     // menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_1, ActionEvent.ALT_MASK));
     menuItem.addActionListener(new QueryFileLoader(targetFrame));
     // menuItem.getAccessibleContext().setAccessibleDescription("This doesn't really do anything");
-
+    
+    // a menu for sync files content into database
+    menuItemSync = new JMenuItem("Synchronous MassBank Records");
+	menuItemSync.addActionListener(new ActionListener() {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			SyncDialog dialog = new SyncDialog(targetFrame);
+			dialog.showDialog();
+		}
+	});
 
     menu.add(menuItem);
+    menu.add(menuItemSync);
     menu.addSeparator();
 
     menuItem = new JMenuItem("Exit");

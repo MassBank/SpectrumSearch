@@ -283,7 +283,8 @@ public class SearchPage extends JFrame {
 		initCutoffInfo();
 //		LOGGER.info(confPath);
 		// 装置種別情報初期化
-		instInfo = new GetInstInfo(confPath);
+		instInfo = new GetInstInfo();
+//		instInfo = new GetInstInfo(confPath);
 		initInstInfo();
 		
 		// MS種別情報初期化

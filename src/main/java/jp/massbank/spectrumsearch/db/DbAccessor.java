@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
+import jp.massbank.spectrumsearch.db.entity.Instrument;
+
 import org.apache.log4j.Logger;
 
 
@@ -23,7 +25,7 @@ public class DbAccessor {
 //    connectionProps.put("user", "root");
 //    connectionProps.put("password", "");
 
-    conn = DriverManager.getConnection("jdbc:derby:C:/temp/massbankdb", connectionProps);
+    conn = DriverManager.getConnection("jdbc:derby:./src/test/testdata/massbankdb", connectionProps);
     // TODO this url should be changed to refer inside of this project.
 //    conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/keio", connectionProps);
 
@@ -47,9 +49,9 @@ public class DbAccessor {
       while (rs.next()) {
 
         Instrument ins = new Instrument();
-        ins.no = rs.getInt(1);
-        ins.type = rs.getString(2);
-        ins.name = rs.getString(3);
+        ins.setNo(rs.getInt(1));
+        ins.setType(rs.getString(2));
+        ins.setName(rs.getString(3));
         result.add(ins);
       }
     }
