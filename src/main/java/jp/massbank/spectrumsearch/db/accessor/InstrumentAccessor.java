@@ -92,17 +92,17 @@ public class InstrumentAccessor extends AbstractDbAccessor<Instrument> {
 	}
 
 	public void dropTable() {
-		execStmt("DROP TABLE INSTRUMENT");
+		execStmt("DROP TABLE " + Instrument.TABLE);
 	}
 	
 	@Override
 	public void createTable() {
 		StringBuilder sb = new StringBuilder();
-		sb.append("CREATE TABLE INSTRUMENT ");
+		sb.append("CREATE TABLE " + Instrument.TABLE +" ");
 		sb.append("(");
-		sb.append("INSTRUMENT_NO INT NOT NULL GENERATED ALWAYS AS IDENTITY CONSTRAINT INSTRUMENT_PK PRIMARY KEY,");
-		sb.append("INSTRUMENT_TYPE 	VARCHAR(255),");
-		sb.append("INSTRUMENT_NAME 	VARCHAR(255)");
+		sb.append(Instrument.Columns.INSTRUMENT_NO + " INT NOT NULL GENERATED ALWAYS AS IDENTITY CONSTRAINT INSTRUMENT_PK PRIMARY KEY,");
+		sb.append(Instrument.Columns.INSTRUMENT_TYPE + " 	VARCHAR(255),");
+		sb.append(Instrument.Columns.INSTRUMENT_NAME + "	VARCHAR(255)");
 		sb.append(")");
 		execStmt(sb.toString());
 	}
