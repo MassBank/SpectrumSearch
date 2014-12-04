@@ -8,13 +8,23 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
+import jp.massbank.spectrumsearch.db.accessor.DbAccessor;
 import jp.massbank.spectrumsearch.db.accessor.InstrumentAccessor;
+import jp.massbank.spectrumsearch.db.accessor.MassSpectrometryAccessor;
+import jp.massbank.spectrumsearch.db.accessor.RecordAccessor;
+import jp.massbank.spectrumsearch.db.entity.Instrument;
+import jp.massbank.spectrumsearch.db.entity.MassSpectrometry;
+import jp.massbank.spectrumsearch.db.entity.Record;
 import jp.massbank.spectrumsearch.entity.constant.Constant;
 import jp.massbank.spectrumsearch.entity.type.MassBankRecordLine;
 import jp.massbank.spectrumsearch.file.entity.MassBankRecord;
+import jp.massbank.spectrumsearch.util.DbUtil;
 import jp.massbank.spectrumsearch.util.MassBankRecordReader;
 
 import org.apache.log4j.Logger;
@@ -22,31 +32,31 @@ import org.apache.log4j.Logger;
 public class MassBankRecordLogic {
 	
 	private static final Logger LOGGER = Logger.getLogger(MassBankRecordLogic.class);
+	private RecordAccessor recordAccessor;
 	private InstrumentAccessor instrumentAccessor;
+	private MassSpectrometryAccessor massSpectrometryAccessor;
 	
 	public MassBankRecordLogic() {
+		this.recordAccessor = new RecordAccessor();
 		this.instrumentAccessor = new InstrumentAccessor();
+		this.massSpectrometryAccessor = new MassSpectrometryAccessor();
 	}
 	
 	public void syncFilesRecordsByFolderPath(String pathname) {
-//		DbUtil.createSchemaIfNotExist();
+		DbUtil.createSchemaIfNotExist();
 		
-//		this.instrumentAccessor.deleteAll();
-		
-//		Instrument oInstrument = this.instrumentAccessor.getInstrumentByType("TYPE_A");
-//    	if (oInstrument == null) {
-//    		Instrument i = new Instrument();
-//    		i.setType("TYPE_A");
-//    		i.setName("NAME_A");
-//    		this.instrumentAccessor.insertInstrument(i);
-//    	}
+		try {
+			DbAccessor.createConnection();
+			this.recordAccessor.deleteAll();
+			this.instrumentAccessor.deleteAll();
+			this.massSpectrometryAccessor.deleteAll();
+			DbAccessor.closeConnection();
+		} catch (SQLException e) {
+			LOGGER.error(e.getMessage(), e);
+		}
 		
 		syncFolderInfo(pathname);
 		
-//		List<Instrument> instruments = instrumentAccessor.getAllInstruments();
-//		for (Instrument instrument : instruments) {
-//			System.out.println(instrument.getType());
-//		}
 	}
 	
 	private void syncFolderInfo(String pathname) {
@@ -58,7 +68,7 @@ public class MassBankRecordLogic {
 			File item = listfiles[i];
 			if (! item.isHidden()) {
 		        if (item.isDirectory()) {
-		        	LOGGER.info("start sync folder -> " + item);
+//		        	LOGGER.info("start sync folder -> " + item);
 		        	
 		            File[] internalFiles = item.listFiles();
 		            for (int j = 0; j < 1; j++) {
@@ -69,27 +79,78 @@ public class MassBankRecordLogic {
 			                    String name = item2.getAbsolutePath();
 			                    syncFolderInfo(name);
 			                } else {
-			                	// open connection
+			                	// read the file content
 			                	MassBankRecord massBankRecord = getFileRecordByFile(item2);
-			                	// commit or rollback all data
-			                	// close connection
-//			                	Instrument oInstrument = this.instrumentAccessor.getInstrumentByType(recordData.getInstrumentType());
-//			                	if (oInstrument == null) {
-//			                		Instrument instrument = new Instrument();
-//			                		instrument.setType(recordData.getInstrumentType());
-//			                		instrument.setName(recordData.getInstrumentName());
-//			                		this.instrumentAccessor.insertInstrument(instrument);
-//			                	}
+//			                	validateMassBankRecord(massBankRecord);
+			                	// open connection
+			                	try {
+									DbAccessor.createConnection();
+//									DbAccessor.setAutoCommit(false);
+									
+									Record record = new Record();
+									record.setId(massBankRecord.getId());
+									record.setTitle(massBankRecord.getTitle());
+									this.recordAccessor.insertRecord(record);
+									
+				                	Instrument oInstrument = this.instrumentAccessor.getInstrumentByType(massBankRecord.getAcInstrument().getType());
+				                	if (oInstrument == null) {
+				                		Instrument instrument = new Instrument();
+				                		instrument.setType(massBankRecord.getAcInstrument().getType());
+				                		instrument.setName(massBankRecord.getAcInstrument().getName());
+				                		this.instrumentAccessor.insertInstrument(instrument);
+				                	}
+				                	
+				                	if (massBankRecord.getAcMassSpectrometryMap() != null) {
+				                		for (Entry<String, String> entry : massBankRecord.getAcMassSpectrometryMap().entrySet()) {
+				                			MassSpectrometry massSpectrometry = new MassSpectrometry();
+				                			massSpectrometry.setType(entry.getKey());
+				                			massSpectrometry.setValue(entry.getValue());
+				                			massSpectrometry.setRecordId(massBankRecord.getId());
+				                			massSpectrometryAccessor.insertMassSpectrometry(massSpectrometry);
+				                		}
+				                	}
+				                	
+									// commit or rollback all data
+//									DbAccessor.commit();
+									// close connection
+								} catch (SQLException e) {
+									LOGGER.error(e.getMessage(), e);
+//									try {
+//										DbAccessor.rollback();
+//									} catch (SQLException e1) {
+//										LOGGER.error(e.getMessage(), e);
+//									}
+								} finally {
+									try {
+										DbAccessor.closeConnection();
+									} catch (SQLException e) {
+										LOGGER.error(e.getMessage(), e);
+									}
+								}
 			                }
 		            	}
 		            }
-	            	LOGGER.info("end sync folder -> " + item);
+//	            	LOGGER.info("end sync folder -> " + item);
 		        } else {
 		        	LOGGER.info(item);
 		        }
 			}
 		}
 		LOGGER.info("time duration to read files : " + (System.currentTimeMillis() - s)/1000 + "s");
+	}
+	
+	private void validateMassBankRecord(MassBankRecord massBankRecord) {
+		if (massBankRecord != null) {
+		if (massBankRecord.getPkPeak() != null && massBankRecord.getPkPeak().getPeakMap() != null) {
+			for (Map<String, String> map : massBankRecord.getPkPeak().getPeakMap()) {
+				if (map.keySet().size() > 3) {
+					LOGGER.error("invalid peak data : " + massBankRecord.getId());
+				}
+			}
+		} else {
+			LOGGER.error("no peak data : " + massBankRecord.getId());
+		}
+		}
 	}
 	
 	private MassBankRecord getFileRecordByFile(File file) {
@@ -132,13 +193,13 @@ public class MassBankRecordLogic {
 						}
 					}
 				} else {
-					LOGGER.warn("no read : (" + file.getName() + ") :" + strLine);
+//					LOGGER.warn("no read : (" + file.getName() + ") :" + strLine);
 				}
 			}
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage(), e);
 		}
-		LOGGER.info("read a file: (" + file.getName() + ") - lines : (" + lineCount + ") " + (System.currentTimeMillis() - s) + "ms");
+//		LOGGER.info("read a file: (" + file.getName() + ") - lines : (" + lineCount + ") " + (System.currentTimeMillis() - s) + "ms");
 		return result;
 	}
 	

@@ -4,7 +4,7 @@ import static org.junit.Assert.*;
 
 import java.sql.SQLException;
 
-import jp.massbank.spectrumsearch.db.DbAccessor;
+import jp.massbank.spectrumsearch.db.OldDbAccessor;
 
 import org.apache.log4j.Logger;
 import org.junit.Test;
@@ -14,7 +14,7 @@ public class GetInstInfoTest {
 
   @Test
   public void testGetTypeGroup() throws SQLException {
-    DbAccessor.getConnection();
+    OldDbAccessor.getConnection();
     GetInstInfo sut = new GetInstInfo();
     LOGGER.info(sut.getTypeGroup());
   }

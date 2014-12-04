@@ -17,39 +17,39 @@ public class DbAccessorTest {
   @Test
   public void testGetConnection() throws SQLException {
 
-    Connection conn = DbAccessor.getConnection();
+    Connection conn = OldDbAccessor.getConnection();
     LOGGER.info(conn.getMetaData().getURL());
   }
 
   @Test
   public void testGetAllInstrument() throws SQLException {
-    DbAccessor.getConnection();
-    List<Instrument> result = DbAccessor.getAllInstrument();
+    OldDbAccessor.getConnection();
+    List<Instrument> result = OldDbAccessor.getAllInstrument();
     LOGGER.info(result);
   }
   
   @Test
   public void testGetMsType() throws SQLException {
-    DbAccessor.getConnection();
-    List<String> result = DbAccessor.getMsType();
+    OldDbAccessor.getConnection();
+    List<String> result = OldDbAccessor.getMsType();
     LOGGER.info(result);
   }
   
   @Test
   public void testGetSpectrumNameByName() throws SQLException {
-    DbAccessor.getConnection();
-    List<String> result = DbAccessor.getSpectrumNameByName(null, null);
+    OldDbAccessor.getConnection();
+    List<String> result = OldDbAccessor.getSpectrumNameByName(null, null);
     LOGGER.info(result.size());
     for (String str : result){
       
       LOGGER.info(str);
     }
-    result = DbAccessor.getSpectrumNameByName("GABA", "end");
+    result = OldDbAccessor.getSpectrumNameByName("GABA", "end");
     LOGGER.info(result.size());
     for (String str : result){
       LOGGER.info(str);
     }
-    result = DbAccessor.getSpectrumNameByName("[M+H]+", "start");
+    result = OldDbAccessor.getSpectrumNameByName("[M+H]+", "start");
     LOGGER.info(result.size());
     for (String str : result){
       LOGGER.info(str);
@@ -59,8 +59,8 @@ public class DbAccessorTest {
   
   @Test
   public void testGetSpectrumData() throws SQLException {
-    DbAccessor.getConnection();
-    String result = DbAccessor.getSpectrumData("KO000001", false, 0);
+    OldDbAccessor.getConnection();
+    String result = OldDbAccessor.getSpectrumData("KO000001", false, 0);
     LOGGER.info(result);
   }
 }

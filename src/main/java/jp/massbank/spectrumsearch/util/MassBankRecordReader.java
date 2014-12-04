@@ -23,7 +23,7 @@ public class MassBankRecordReader {
 	
 	public static MassBankRecordLine getRecordLine(String line) {
 		for (MassBankRecordLine recordLine : MassBankRecordLine.values()) {
-			if (line.startsWith(recordLine.getKey())) {
+			if (line.startsWith(recordLine.getKey().concat(":")) || line.startsWith(recordLine.getKey().concat(";"))) {
 				return recordLine;
 			}
 		}
@@ -31,7 +31,7 @@ public class MassBankRecordReader {
 	}
 	
 	public static String getValueAsString(String line, MassBankRecordLine recordLine) {
-		return line.replace(recordLine.getKey(), EMPTY).replace(":",  EMPTY).replace(";", EMPTY).trim();
+		return line.replace(recordLine.getKey().concat(":"), EMPTY).replace(recordLine.getKey().concat(";"), EMPTY).trim();
 	}
 	
 	public static List<String> getValueAsStringList(String line, MassBankRecordLine recordLine) {

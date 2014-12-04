@@ -15,8 +15,8 @@ import jp.massbank.spectrumsearch.db.entity.Instrument;
 import org.apache.log4j.Logger;
 
 
-public class DbAccessor {
-  static final Logger LOGGER = Logger.getLogger(DbAccessor.class);
+public class OldDbAccessor {
+  static final Logger LOGGER = Logger.getLogger(OldDbAccessor.class);
   static Connection conn = null;
 
   public static Connection getConnection() throws SQLException {

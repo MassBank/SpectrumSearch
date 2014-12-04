@@ -89,7 +89,10 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 
-import jp.massbank.spectrumsearch.db.DbAccessor;
+import jp.massbank.spectrumsearch.db.OldDbAccessor;
+import jp.massbank.spectrumsearch.db.accessor.DbAccessor;
+import jp.massbank.spectrumsearch.db.accessor.RecordAccessor;
+import jp.massbank.spectrumsearch.db.entity.Record;
 import jp.massbank.spectrumsearch.model.PackageRecData;
 import jp.massbank.spectrumsearch.model.PackageSpecData;
 import jp.massbank.spectrumsearch.model.PeakData;
@@ -116,7 +119,6 @@ public class SearchPage extends JFrame {
     appli.setTitle("Spectrum Search | massbank.jp");
     appli.setSize(1200, 700);
     try {
-      DbAccessor.getConnection();
       appli.init();
       appli.setVisible(true);
     } catch (SQLException e) {
@@ -1015,14 +1017,21 @@ public class SearchPage extends JFrame {
 			searchName = searchName.replace("*", "");
 //			param = "name=" + searchName + wc;
 		}
-		List<String> result = null;
+		List<String> result = new ArrayList<String>();
 		try {
-		  result = DbAccessor.getSpectrumNameByName(searchName, wcValue);
-    } catch (SQLException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-      return;
-    }
+			DbAccessor.createConnection();
+			RecordAccessor recordAccessor = new RecordAccessor();
+			List<Record> recordList = recordAccessor.getRecordListByName(searchName, wcValue);
+			DbAccessor.closeConnection();
+			for (Record record : recordList) {
+				result.add(String.format("%s\t%s\t0", record.getTitle(), record.getId()));
+			}
+//		  result = OldDbAccessor.getSpectrumNameByName(searchName, wcValue);
+		} catch (SQLException e) {
+	      // TODO Auto-generated catch block
+	      e.printStackTrace();
+	      return;
+	    }
 		// サーブレット呼び出し-マルチスレッドでCGIを起動
 //		String cgiType = MassBankCommon.CGI_TBL[MassBankCommon.CGI_TBL_NUM_TYPE][MassBankCommon.CGI_TBL_TYPE_GNAME];
 //		LOGGER.info(baseUrl + "  >>  cgiType >>" + cgiType + "  >>  param >>" + param);
@@ -2827,7 +2836,7 @@ public class SearchPage extends JFrame {
 //						SearchPage.this.setCursor(Cursor.getDefaultCursor());
 //					}
 				      try {
-				        line = DbAccessor.getSpectrumData(id);
+				        line = OldDbAccessor.getSpectrumData(id);
 				      } catch (SQLException e) {
 				        LOGGER.error(e.getMessage(), e);
 				        SearchPage.this.setCursor(Cursor.getDefaultCursor());
@@ -3167,7 +3176,7 @@ public class SearchPage extends JFrame {
 //			catch (IOException iex) {
 //			}
       try {
-        line = DbAccessor.getSpectrumData(id);
+        line = OldDbAccessor.getSpectrumData(id);
       } catch (SQLException e) {
         LOGGER.error(e.getMessage(), e);
         SearchPage.this.setCursor(Cursor.getDefaultCursor());

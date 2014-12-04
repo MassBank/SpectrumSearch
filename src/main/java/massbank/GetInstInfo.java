@@ -26,7 +26,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-import jp.massbank.spectrumsearch.db.DbAccessor;
+import jp.massbank.spectrumsearch.db.OldDbAccessor;
+import jp.massbank.spectrumsearch.db.accessor.DbAccessor;
+import jp.massbank.spectrumsearch.db.accessor.InstrumentAccessor;
+import jp.massbank.spectrumsearch.db.accessor.MassSpectrometryAccessor;
 import jp.massbank.spectrumsearch.db.entity.Instrument;
 
 import org.apache.log4j.Logger;
@@ -139,8 +142,15 @@ public class GetInstInfo {
 		}
 	}
 	private void getDbInformation() throws SQLException {
-	  instList = DbAccessor.getAllInstrument();
-	  msList = DbAccessor.getMsType();
+		DbAccessor.createConnection();
+		
+		InstrumentAccessor instrumentAccessor = new InstrumentAccessor();
+		instList = instrumentAccessor.getAllInstruments();
+		
+		MassSpectrometryAccessor massSpectrometryAccessor = new MassSpectrometryAccessor();
+		msList = massSpectrometryAccessor.getValuesByType("MS_TYPE");
+		
+		DbAccessor.closeConnection();
 //	     instNo = new ArrayList[1];
 //	        instType = new ArrayList[urlList.length];
 //	        instName = new ArrayList[urlList.length];

@@ -1,20 +1,15 @@
 package jp.massbank.spectrumsearch.db.accessor;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
-
-import jp.massbank.spectrumsearch.entity.constant.SystemProperties;
 
 import org.apache.log4j.Logger;
 
-public abstract class AbstractDbAccessor<T> {
+public abstract class AbstractDbAccessor<T> extends DbAccessor {
 	
 	private static final Logger LOGGER = Logger.getLogger(AbstractDbAccessor.class);
 	
@@ -22,12 +17,14 @@ public abstract class AbstractDbAccessor<T> {
 	//http://zetcode.com/db/apachederbytutorial/jdbc/
 	
 //	private static String dbURL = "jdbc:derby:./src/test/testdata/massbankdb";
-	private static String dbURL = "jdbc:derby:" + SystemProperties.getInstance().getDatabasePath(); // Embedded Connection
-	private static Connection conn = null;
+//	private static String dbURL = "jdbc:derby:" + SystemProperties.getInstance().getDatabasePath(); // Embedded Connection
+//	private static Connection conn = null;
 	private static Statement stmt = null;
 	private static PreparedStatement prepStmt = null;
 	
 	protected abstract T convert(ResultSet rs) throws SQLException;
+	public abstract void dropTable();
+	public abstract void createTable();
 	
 	protected T uniqueGeneric(String sql) {
 		List<T> list = listGeneric(sql);
@@ -41,7 +38,7 @@ public abstract class AbstractDbAccessor<T> {
 	protected List<T> listGeneric(String sql) {
 		List<T> result = new ArrayList<T>();
 		try {
-			createConnection();
+//			createConnection();
 			createStatment();
 			result = listResult(sql);
         } catch (Exception e) {
@@ -49,7 +46,7 @@ public abstract class AbstractDbAccessor<T> {
         } finally {
         	try {
         		closeStatment();
-	        	closeConnection();
+//	        	closeConnection();
         	} catch (SQLException e) {
         		LOGGER.error(e.getMessage(), e);
         	}
@@ -57,9 +54,28 @@ public abstract class AbstractDbAccessor<T> {
 		return result;
 	}
 	
+	protected List<String> listString(String sql) {
+		List<String> result = new ArrayList<String>();
+		try {
+//			createConnection();
+			createStatment();
+			result = listResulrString(sql);
+		} catch (Exception e) {
+			LOGGER.error(e.getMessage(), e);
+		} finally {
+			try {
+				closeStatment();
+//	        	closeConnection();
+			} catch (SQLException e) {
+				LOGGER.error(e.getMessage(), e);
+			}
+		}
+		return result;
+	}
+	
 	protected boolean insert(String sql) {
 		try {
-			createConnection();
+//			createConnection();
 			createStatment();
 			return stmt.execute(sql);
         } catch (Exception e) {
@@ -67,7 +83,7 @@ public abstract class AbstractDbAccessor<T> {
         } finally {
         	try {
         		closeStatment();
-	        	closeConnection();
+//	        	closeConnection();
         	} catch (SQLException e) {
         		LOGGER.error(e.getMessage(), e);
         	}
@@ -75,9 +91,26 @@ public abstract class AbstractDbAccessor<T> {
 		return false;
 	}
 	
+	protected void addBatch(String sql) {
+		try {
+			createStatment();
+			stmt.addBatch(sql);
+		} catch (SQLException e) {
+			LOGGER.error(e.getMessage(), e);
+		}
+	}
+	
+	public void executeBatch() {
+		try {
+			stmt.executeBatch();
+		} catch (SQLException e) {
+			LOGGER.error(e.getMessage(), e);
+		}
+	}
+	
 	protected int insertWithReturn(String sql) {
 		try {
-			createConnection();
+//			createConnection();
 			createPreparedStatement(sql);
 			int affectedRows = prepStmt.executeUpdate();
 			
@@ -98,7 +131,7 @@ public abstract class AbstractDbAccessor<T> {
 		} finally {
 			try {
 				closePreparedStatement();
-				closeConnection();
+//				closeConnection();
 			} catch (SQLException e) {
 				LOGGER.error(e.getMessage(), e);
 			}
@@ -109,7 +142,7 @@ public abstract class AbstractDbAccessor<T> {
 	
 	protected boolean delete(String sql) {
 		try {
-			createConnection();
+//			createConnection();
 			createStatment();
 			return stmt.execute(sql);
         } catch (Exception e) {
@@ -117,7 +150,7 @@ public abstract class AbstractDbAccessor<T> {
         } finally {
         	try {
         		closeStatment();
-	        	closeConnection();
+//	        	closeConnection();
         	} catch (SQLException e) {
         		LOGGER.error(e.getMessage(), e);
         	}
@@ -125,13 +158,14 @@ public abstract class AbstractDbAccessor<T> {
 		return false;
 	}
 	
-	protected void createTable(String sql) {
+	protected void execStmt(String sql) {
 		try {
-			createConnection();
+//			createConnection();
 			createStatment();
 			stmt.execute(sql);
 		} catch (SQLException e) {
 			if ("X0Y32".equals(e.getSQLState())) {
+				LOGGER.info(sql);
 				LOGGER.info("Table already exist");
 			} else {
 				LOGGER.error(e.getMessage(), e);
@@ -139,7 +173,7 @@ public abstract class AbstractDbAccessor<T> {
 		} finally {
 			try {
 				closeStatment();
-				closeConnection();
+//				closeConnection();
 			} catch (SQLException e) {
 				LOGGER.error(e.getMessage(), e);
 			}
@@ -148,36 +182,36 @@ public abstract class AbstractDbAccessor<T> {
 	
 	// private methods
 	
-	private void createConnection() {
-        try {
-        	if (conn == null || conn.isClosed()) {
-	        	Properties connectionProps = new Properties();
-	        	// connectionProps.put("user", "massbank");
-	        	// connectionProps.put("password", "massbank");
-	        	
-	            // Get a connection
-	            conn = DriverManager.getConnection(dbURL + ";create=true", connectionProps); 
-        	}
-        } catch (Exception e) {
-        	LOGGER.error(e.getMessage(), e);
-        }
-    }
+//	private void createConnection() {
+//        try {
+//        	if (conn == null || conn.isClosed()) {
+//	        	Properties connectionProps = new Properties();
+//	        	// connectionProps.put("user", "massbank");
+//	        	// connectionProps.put("password", "massbank");
+//	        	
+//	            // Get a connection
+//	            conn = DriverManager.getConnection(dbURL + ";create=true", connectionProps); 
+//        	}
+//        } catch (Exception e) {
+//        	LOGGER.error(e.getMessage(), e);
+//        }
+//    }
 	
-	private void closeConnection() {
-		if (conn != null) {
-	        try {
-	        	// shutdown single database
-	            DriverManager.getConnection(dbURL + ";shutdown=true");
-	            conn.close();
-	        } catch (SQLException e) {
-	        	if ("08006".equals(e.getSQLState())) {
-	        		LOGGER.info("Derby shut down normally");
-	        	} else {
-	        		LOGGER.error(e.getMessage(), e);
-	        	}
-	        }
-		}           
-    }
+//	private void closeConnection() {
+//		if (conn != null) {
+//	        try {
+//	        	// shutdown single database
+//	            DriverManager.getConnection(dbURL + ";shutdown=true");
+//	            conn.close();
+//	        } catch (SQLException e) {
+//	        	if ("08006".equals(e.getSQLState())) {
+//	        		LOGGER.info("Derby shut down normally");
+//	        	} else {
+//	        		LOGGER.error(e.getMessage(), e);
+//	        	}
+//	        }
+//		}           
+//    }
 	
 	private void createStatment() throws SQLException {
 		if (conn != null || !conn.isClosed()) {
@@ -217,6 +251,20 @@ public abstract class AbstractDbAccessor<T> {
 			ResultSet rs = stmt.executeQuery(sql);
 			while(rs.next()) {
 				result.add(convert(rs));
+			}
+			if (rs != null) {
+				rs.close();
+			}
+		}
+		return result;
+	}
+	
+	private List<String> listResulrString(String sql) throws SQLException {
+		List<String> result = new ArrayList<String>();
+		if (stmt != null) {
+			ResultSet rs = stmt.executeQuery(sql);
+			while(rs.next()) {
+				result.add(rs.getString(1));
 			}
 			if (rs != null) {
 				rs.close();

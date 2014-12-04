@@ -29,7 +29,7 @@ public class InstrumentAccessor extends AbstractDbAccessor<Instrument> {
 		return result;
 	}
 
-	public Instrument insertInstrument(Instrument instrument) {
+	public void insertInstrument(Instrument instrument) {
 		String insertQuery = "INSERT INTO " + Instrument.TABLE + " " +
 				"(" + 
 					Instrument.Columns.INSTRUMENT_TYPE + "," + 
@@ -38,8 +38,32 @@ public class InstrumentAccessor extends AbstractDbAccessor<Instrument> {
 					instrument.getType() + "','" + 
 					instrument.getName() + 
 				"')";
-		int no = insertWithReturn(insertQuery);
-		return getInstrumentById(no);
+		insert(insertQuery);
+	}
+	
+//	public Instrument insertInstrument(Instrument instrument) {
+//		String insertQuery = "INSERT INTO " + Instrument.TABLE + " " +
+//				"(" + 
+//				Instrument.Columns.INSTRUMENT_TYPE + "," + 
+//				Instrument.Columns.INSTRUMENT_NAME + 
+//				") values ('" + 
+//				instrument.getType() + "','" + 
+//				instrument.getName() + 
+//				"')";
+//		int no = insertWithReturn(insertQuery);
+//		return getInstrumentById(no);
+//	}
+	
+	public void bulkInsertInstrument(Instrument instrument) {
+		String insertQuery = "INSERT IGNORE INTO " + Instrument.TABLE + " " +
+				"(" + 
+				Instrument.Columns.INSTRUMENT_TYPE + "," + 
+				Instrument.Columns.INSTRUMENT_NAME + 
+				") values ('" + 
+				instrument.getType() + "','" + 
+				instrument.getName() + 
+				"')";
+		addBatch(insertQuery);
 	}
 	
 	public Instrument getInstrumentById(int no) {
@@ -67,6 +91,11 @@ public class InstrumentAccessor extends AbstractDbAccessor<Instrument> {
 		delete(deleteQuery);
 	}
 
+	public void dropTable() {
+		execStmt("DROP TABLE INSTRUMENT");
+	}
+	
+	@Override
 	public void createTable() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("CREATE TABLE INSTRUMENT ");
@@ -75,7 +104,7 @@ public class InstrumentAccessor extends AbstractDbAccessor<Instrument> {
 		sb.append("INSTRUMENT_TYPE 	VARCHAR(255),");
 		sb.append("INSTRUMENT_NAME 	VARCHAR(255)");
 		sb.append(")");
-		createTable(sb.toString());
+		execStmt(sb.toString());
 	}
 	
 }
