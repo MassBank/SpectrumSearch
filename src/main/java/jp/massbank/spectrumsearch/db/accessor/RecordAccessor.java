@@ -4,8 +4,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
-import jp.massbank.spectrumsearch.db.entity.Instrument;
 import jp.massbank.spectrumsearch.db.entity.Record;
+import jp.massbank.spectrumsearch.util.QueryBuilder;
 
 public class RecordAccessor extends AbstractDbAccessor<Record> {
 
@@ -43,7 +43,7 @@ public class RecordAccessor extends AbstractDbAccessor<Record> {
 	
 	@Override
 	public void dropTable() {
-		execStmt("DROP TABLE " + Record.TABLE);
+		execStmt(QueryBuilder.getDropTable(Record.TABLE));
 	}
 
 	@Override

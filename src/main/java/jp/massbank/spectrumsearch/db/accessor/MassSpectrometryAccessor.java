@@ -4,17 +4,20 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
+import jp.massbank.spectrumsearch.db.entity.Instrument;
 import jp.massbank.spectrumsearch.db.entity.MassSpectrometry;
+import jp.massbank.spectrumsearch.db.entity.Peak;
+import jp.massbank.spectrumsearch.util.QueryBuilder;
 
 public class MassSpectrometryAccessor extends AbstractDbAccessor<MassSpectrometry> {
 
 	@Override
 	protected MassSpectrometry convert(ResultSet rs) throws SQLException {
 		MassSpectrometry result = new MassSpectrometry();
-		result.setNo(rs.getInt(1));
-		result.setType(rs.getString(2));
-		result.setValue(rs.getString(3));
-		result.setRecordId(rs.getString(4));
+		result.setId(rs.getInt(MassSpectrometry.Columns.MASS_SPECTROMETRY_ID));
+		result.setType(rs.getString(MassSpectrometry.Columns.MASS_SPECTROMETRY_TYPE));
+		result.setValue(rs.getString(MassSpectrometry.Columns.MASS_SPECTROMETRY_VALUE));
+		result.setRecordId(rs.getString(MassSpectrometry.Columns.RECORD_ID));
 		return result;
 	}
 	
@@ -45,7 +48,7 @@ public class MassSpectrometryAccessor extends AbstractDbAccessor<MassSpectrometr
 	}
 
 	public void dropTable() {
-		execStmt("DROP TABLE MASS_SPECTROMETRY");
+		execStmt(QueryBuilder.getDropTable(MassSpectrometry.TABLE));
 	}
 	
 	@Override
@@ -53,10 +56,10 @@ public class MassSpectrometryAccessor extends AbstractDbAccessor<MassSpectrometr
 		StringBuilder sb = new StringBuilder();
 		sb.append("CREATE TABLE MASS_SPECTROMETRY ");
 		sb.append("(");
-		sb.append("MASS_SPECTROMETRY_NO INT NOT NULL GENERATED ALWAYS AS IDENTITY CONSTRAINT MASS_SPECTROMETRY_PK PRIMARY KEY,");
-		sb.append("MASS_SPECTROMETRY_TYPE 	VARCHAR(255),");
-		sb.append("MASS_SPECTROMETRY_VALUE 	VARCHAR(255),");
-		sb.append("RECORD_ID VARCHAR(100)");
+		sb.append(MassSpectrometry.Columns.MASS_SPECTROMETRY_ID + " INT NOT NULL GENERATED ALWAYS AS IDENTITY CONSTRAINT MASS_SPECTROMETRY_PK PRIMARY KEY,");
+		sb.append(MassSpectrometry.Columns.MASS_SPECTROMETRY_TYPE + " VARCHAR(255),");
+		sb.append(MassSpectrometry.Columns.MASS_SPECTROMETRY_VALUE + " VARCHAR(255),");
+		sb.append(MassSpectrometry.Columns.RECORD_ID + " VARCHAR(20)");
 		sb.append(")");
 		execStmt(sb.toString());
 	}

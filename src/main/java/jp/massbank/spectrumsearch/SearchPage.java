@@ -3176,7 +3176,9 @@ public class SearchPage extends JFrame {
 //			catch (IOException iex) {
 //			}
       try {
-        line = OldDbAccessor.getSpectrumData(id);
+    	  DbAccessor.createConnection();
+    	  line = OldDbAccessor.getSpectrumData(id);
+    	  DbAccessor.closeConnection();
       } catch (SQLException e) {
         LOGGER.error(e.getMessage(), e);
         SearchPage.this.setCursor(Cursor.getDefaultCursor());

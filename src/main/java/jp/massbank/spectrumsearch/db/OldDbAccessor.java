@@ -49,7 +49,7 @@ public class OldDbAccessor {
       while (rs.next()) {
 
         Instrument ins = new Instrument();
-        ins.setNo(rs.getInt(1));
+        ins.setId(rs.getInt(1));
         ins.setType(rs.getString(2));
         ins.setName(rs.getString(3));
         result.add(ins);

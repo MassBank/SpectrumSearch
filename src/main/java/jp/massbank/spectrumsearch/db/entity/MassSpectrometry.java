@@ -4,23 +4,23 @@ public class MassSpectrometry {
 	
 	public static final String TABLE = "MASS_SPECTROMETRY";
 	public static final class Columns {
-		public static final String MASS_SPECTROMETRY_NO = "MASS_SPECTROMETRY_NO";
+		public static final String MASS_SPECTROMETRY_ID = "MASS_SPECTROMETRY_ID";
 		public static final String MASS_SPECTROMETRY_TYPE = "MASS_SPECTROMETRY_TYPE";
 		public static final String MASS_SPECTROMETRY_VALUE = "MASS_SPECTROMETRY_VALUE";
 		public static final String RECORD_ID = "RECORD_ID";
 	}
 	
-	private int no;
+	private int id;
 	private String type;
 	private String value;
 	private String recordId;
 
-	public int getNo() {
-		return no;
+	public int getId() {
+		return id;
 	}
 
-	public void setNo(int no) {
-		this.no = no;
+	public void setId(int id) {
+		this.id = id;
 	}
 
 	public String getType() {
