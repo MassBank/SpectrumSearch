@@ -15,7 +15,6 @@ public class Spectrum {
 	private String name;
 	private int ionMode;
 	private float precursorMz;
-	
 	private String recordId;
 
 	public int getId() {

@@ -40,7 +40,7 @@ public enum MassBankRecordLine {
 	PK$PEAK				("PK$PEAK", MassBankRecordLineType.MULTIPLE),
 	// OTHERs
 //	FOLLOWING_LINE		(" ", MassBankRecordLineType.FOLLOWING),
-	FOLLOWING_LINE		("  ", MassBankRecordLineType.FOLLOWING),
+	FOLLOWING_LINE		(" ", MassBankRecordLineType.FOLLOWING),
 	EOF					("//", MassBankRecordLineType.EOF);
 	
 	private String key;

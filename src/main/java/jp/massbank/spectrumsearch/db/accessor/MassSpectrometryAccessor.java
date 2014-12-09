@@ -4,9 +4,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
-import jp.massbank.spectrumsearch.db.entity.Instrument;
 import jp.massbank.spectrumsearch.db.entity.MassSpectrometry;
-import jp.massbank.spectrumsearch.db.entity.Peak;
 import jp.massbank.spectrumsearch.util.QueryBuilder;
 
 public class MassSpectrometryAccessor extends AbstractDbAccessor<MassSpectrometry> {
@@ -28,7 +26,8 @@ public class MassSpectrometryAccessor extends AbstractDbAccessor<MassSpectrometr
 		return listString(sql);
 	}
 	
-	public void insertMassSpectrometry(MassSpectrometry massSpectrometry) {
+	@Override
+	public void insert(MassSpectrometry massSpectrometry) {
 		String insertQuery = "INSERT INTO " + MassSpectrometry.TABLE + " " +
 				"(" + 
 					MassSpectrometry.Columns.MASS_SPECTROMETRY_TYPE + "," + 
@@ -42,13 +41,15 @@ public class MassSpectrometryAccessor extends AbstractDbAccessor<MassSpectrometr
 		insert(insertQuery);
 	}
 	
+	@Override
 	public void deleteAll() {
 		String deleteQuery = "DELETE FROM " + MassSpectrometry.TABLE;
 		delete(deleteQuery);
 	}
 
+	@Override
 	public void dropTable() {
-		execStmt(QueryBuilder.getDropTable(MassSpectrometry.TABLE));
+		executeStatement(QueryBuilder.getDropTable(MassSpectrometry.TABLE));
 	}
 	
 	@Override
@@ -61,7 +62,7 @@ public class MassSpectrometryAccessor extends AbstractDbAccessor<MassSpectrometr
 		sb.append(MassSpectrometry.Columns.MASS_SPECTROMETRY_VALUE + " VARCHAR(255),");
 		sb.append(MassSpectrometry.Columns.RECORD_ID + " VARCHAR(20)");
 		sb.append(")");
-		execStmt(sb.toString());
+		executeStatement(sb.toString());
 	}
 
 }

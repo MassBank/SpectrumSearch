@@ -16,7 +16,6 @@ public class InstrumentAccessor extends AbstractDbAccessor<Instrument> {
 		result.setId(rs.getInt(Instrument.Columns.INSTRUMENT_ID));
 		result.setType(rs.getString(Instrument.Columns.INSTRUMENT_TYPE));
 		result.setName(rs.getString(Instrument.Columns.INSTRUMENT_NAME));
-		result.setRecordId(rs.getString(Instrument.Columns.RECORD_ID));
 		return result;
 	}
 	
@@ -25,19 +24,6 @@ public class InstrumentAccessor extends AbstractDbAccessor<Instrument> {
 		String selectQuery = "SELECT * FROM " + Instrument.TABLE;
 		result = listGeneric(selectQuery);
 		return result;
-	}
-
-	public void insertInstrument(Instrument instrument) {
-		String insertQuery = "INSERT INTO " + Instrument.TABLE + " " +
-				"(" + 
-					Instrument.Columns.INSTRUMENT_TYPE + "," + 
-					Instrument.Columns.INSTRUMENT_NAME + "," +
-					Instrument.Columns.RECORD_ID + 
-				") values (" +
-					"'" + instrument.getType() + "'," + 
-					"'" + instrument.getName() + "'," +
-					"'" + instrument.getRecordId() + "')";
-		insert(insertQuery);
 	}
 	
 //	public Instrument insertInstrument(Instrument instrument) {
@@ -77,13 +63,35 @@ public class InstrumentAccessor extends AbstractDbAccessor<Instrument> {
 		return uniqueGeneric(selectQuery);
 	}
 	
+	public Instrument getInstrument(String type, String name) {
+		String selectQuery = "SELECT * FROM " + Instrument.TABLE + 
+				" WHERE " + 
+				Instrument.Columns.INSTRUMENT_TYPE + " = '" + type + "' and " + 
+				Instrument.Columns.INSTRUMENT_NAME + " = '" + name + "'";
+		return uniqueGeneric(selectQuery);
+	}
+	
+	@Override
+	public void insert(Instrument instrument) {
+		String insertQuery = "INSERT INTO " + Instrument.TABLE + " " +
+				"(" + 
+				Instrument.Columns.INSTRUMENT_TYPE + "," + 
+				Instrument.Columns.INSTRUMENT_NAME +
+				") values (" +
+				"'" + instrument.getType() + "'," + 
+				"'" + instrument.getName() + "')";
+		insert(insertQuery);
+	}
+	
+	@Override
 	public void deleteAll() {
 		String deleteQuery = "DELETE FROM " + Instrument.TABLE;
 		delete(deleteQuery);
 	}
 
+	@Override
 	public void dropTable() {
-		execStmt(QueryBuilder.getDropTable(Instrument.TABLE));
+		executeStatement(QueryBuilder.getDropTable(Instrument.TABLE));
 	}
 	
 	@Override
@@ -93,10 +101,9 @@ public class InstrumentAccessor extends AbstractDbAccessor<Instrument> {
 		sb.append("(");
 		sb.append(Instrument.Columns.INSTRUMENT_ID + " INT NOT NULL GENERATED ALWAYS AS IDENTITY CONSTRAINT INSTRUMENT_PK PRIMARY KEY,");
 		sb.append(Instrument.Columns.INSTRUMENT_TYPE + " VARCHAR(255),");
-		sb.append(Instrument.Columns.INSTRUMENT_NAME + " VARCHAR(255),");
-		sb.append(Instrument.Columns.RECORD_ID + " VARCHAR(20)");
+		sb.append(Instrument.Columns.INSTRUMENT_NAME + " VARCHAR(255)");
 		sb.append(")");
-		execStmt(sb.toString());
+		executeStatement(sb.toString());
 	}
 	
 }

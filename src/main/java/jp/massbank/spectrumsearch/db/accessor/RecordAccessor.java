@@ -14,28 +14,36 @@ public class RecordAccessor extends AbstractDbAccessor<Record> {
 		Record result = new Record();
 		result.setId(rs.getString(Record.Columns.RECORD_ID));
 		result.setTitle(rs.getString(Record.Columns.RECORD_TITLE));
+		result.setInstrumentId(rs.getInt(Record.Columns.INSTRUMENT_ID));
 		return result;
 	}
 	
+	public Record getRecordById(String recordId) {
+		String sql = "SELECT * FROM " + Record.TABLE + " WHERE " + Record.Columns.RECORD_ID + " = '" + recordId + "'";
+		return uniqueGeneric(sql);
+	}
+
 	public List<Record> getRecordListByName(String searchName, String wcValue) {
-		String sql = "SELECT " + 
-				Record.Columns.RECORD_ID + "," + 
-				Record.Columns.RECORD_TITLE + 
-				" FROM " + Record.TABLE;
+		// TODO
+		String sql = "SELECT * FROM " + Record.TABLE;
 		return listGeneric(sql);
 	}
 
-	public void insertRecord(Record record) {
+	@Override
+	public void insert(Record record) {
 		String insertQuery = "INSERT INTO " + Record.TABLE + " " +
 				"(" + 
 					Record.Columns.RECORD_ID + "," + 
-					Record.Columns.RECORD_TITLE + 
-				") values ("
-					+ "'" + record.getId() + "',"
-					+ "'" + record.getTitle() + "')";
+					Record.Columns.RECORD_TITLE + "," + 
+					Record.Columns.INSTRUMENT_ID + 
+				") values (" +
+					"'" + record.getId() + "'," + 
+					"'" + record.getTitle() + "'," +
+					record.getInstrumentId() + ")";
 		insert(insertQuery);
 	}
 	
+	@Override
 	public void deleteAll() {
 		String deleteQuery = "DELETE FROM " + Record.TABLE;
 		delete(deleteQuery);
@@ -43,7 +51,7 @@ public class RecordAccessor extends AbstractDbAccessor<Record> {
 	
 	@Override
 	public void dropTable() {
-		execStmt(QueryBuilder.getDropTable(Record.TABLE));
+		executeStatement(QueryBuilder.getDropTable(Record.TABLE));
 	}
 
 	@Override
@@ -52,9 +60,10 @@ public class RecordAccessor extends AbstractDbAccessor<Record> {
 		sb.append("CREATE TABLE " + Record.TABLE + " ");
 		sb.append("(");
 		sb.append(Record.Columns.RECORD_ID + " VARCHAR(20) NOT NULL CONSTRAINT RECORD_PK PRIMARY KEY,");
-		sb.append(Record.Columns.RECORD_TITLE + " VARCHAR(255)");
+		sb.append(Record.Columns.RECORD_TITLE + " VARCHAR(255),");
+		sb.append(Record.Columns.INSTRUMENT_ID + " INT");
 		sb.append(")");
-		execStmt(sb.toString());
+		executeStatement(sb.toString());
 	}
 
 }

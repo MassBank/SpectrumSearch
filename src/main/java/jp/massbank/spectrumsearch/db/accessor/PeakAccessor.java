@@ -16,37 +16,39 @@ public class PeakAccessor extends AbstractDbAccessor<Peak> {
 		result.setMz(rs.getDouble(Peak.Columns.MZ));
 		result.setIntensity(rs.getFloat(Peak.Columns.INTENSITY));
 		result.setRelativeIntensity(rs.getInt(Peak.Columns.RELATIVE_INTENSITY));
+		result.setRecordId(rs.getString(Peak.Columns.RECORD_ID));
 		return result;
 	}
 	
-	public List<Peak> getAllPeakListByRecordId(String recordId) {
-		String sql = "SELECT * from PEAK where ID='" + recordId + "' order by " + Peak.Columns.MZ;
+	public List<Peak> getOrderedPeakListByRecordId(String recordId) {
+		String sql = "SELECT * from PEAK where " + Peak.Columns.RECORD_ID + "='" + recordId + "' order by " + Peak.Columns.MZ;
 		return listGeneric(sql);
 	}
 	
-	public void insertPeak(Peak peak) {
+	@Override
+	public void insert(Peak peak) {
 		String insertQuery = "INSERT INTO " + Peak.TABLE + " " +
 				"(" + 
 				Peak.Columns.MZ + "," + 
 				Peak.Columns.INTENSITY + "," + 
-				Peak.Columns.RELATIVE_INTENSITY + 
+				Peak.Columns.RELATIVE_INTENSITY + "," +  
 				Peak.Columns.RECORD_ID + 
-				") values ('" + 
-					peak.getMz() + "','" + 
-					peak.getIntensity() + "','" + 
-					peak.getRelativeIntensity() + "','" + 
-					peak.getRecordId() + 
-				"')";
+				") values (" +
+				peak.getMz() + "," + 
+				peak.getIntensity() + "," + 
+				peak.getRelativeIntensity() + "," +
+				"'" + peak.getRecordId() + "')";
 		insert(insertQuery);
 	}
 	
+	@Override
 	public void deleteAll() {
 		delete(QueryBuilder.getDeleteAll(Peak.TABLE));
 	}
 
 	@Override
 	public void dropTable() {
-		execStmt(QueryBuilder.getDropTable(Peak.TABLE));
+		executeStatement(QueryBuilder.getDropTable(Peak.TABLE));
 	}
 
 	@Override
@@ -60,7 +62,7 @@ public class PeakAccessor extends AbstractDbAccessor<Peak> {
 		sb.append(Peak.Columns.RELATIVE_INTENSITY + " INT,");
 		sb.append(Peak.Columns.RECORD_ID + " VARCHAR(20)");
 		sb.append(")");
-		execStmt(sb.toString());
+		executeStatement(sb.toString());
 	}
 
 }

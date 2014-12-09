@@ -7,13 +7,11 @@ public class Instrument {
 		public static final String INSTRUMENT_ID = "INSTRUMENT_ID";
 		public static final String INSTRUMENT_TYPE = "INSTRUMENT_TYPE";
 		public static final String INSTRUMENT_NAME = "INSTRUMENT_NAME";
-		public static final String RECORD_ID = "RECORD_ID";
 	}
 	
 	private int id;
 	private String type;
 	private String name;
-	private String recordId;
   
   	public int getId() {
 		return id;
@@ -37,14 +35,6 @@ public class Instrument {
 	
 	public void setName(String name) {
 		this.name = name;
-	}
-
-	public String getRecordId() {
-		return recordId;
-	}
-
-	public void setRecordId(String recordId) {
-		this.recordId = recordId;
 	}
 
 	@Override

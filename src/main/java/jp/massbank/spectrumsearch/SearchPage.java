@@ -89,10 +89,10 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 
-import jp.massbank.spectrumsearch.db.OldDbAccessor;
 import jp.massbank.spectrumsearch.db.accessor.DbAccessor;
 import jp.massbank.spectrumsearch.db.accessor.RecordAccessor;
 import jp.massbank.spectrumsearch.db.entity.Record;
+import jp.massbank.spectrumsearch.logic.SpectrumLogic;
 import jp.massbank.spectrumsearch.model.PackageRecData;
 import jp.massbank.spectrumsearch.model.PackageSpecData;
 import jp.massbank.spectrumsearch.model.PeakData;
@@ -2836,7 +2836,11 @@ public class SearchPage extends JFrame {
 //						SearchPage.this.setCursor(Cursor.getDefaultCursor());
 //					}
 				      try {
-				        line = OldDbAccessor.getSpectrumData(id);
+				    	  DbAccessor.createConnection();
+				    	  SpectrumLogic spectrumLogic = new SpectrumLogic();
+				    	  line = spectrumLogic.getChildInfo(id, ion);
+				    	  DbAccessor.closeConnection();
+//				        line = OldDbAccessor.getSpectrumData(id);
 				      } catch (SQLException e) {
 				        LOGGER.error(e.getMessage(), e);
 				        SearchPage.this.setCursor(Cursor.getDefaultCursor());
@@ -3177,7 +3181,9 @@ public class SearchPage extends JFrame {
 //			}
       try {
     	  DbAccessor.createConnection();
-    	  line = OldDbAccessor.getSpectrumData(id);
+    	  SpectrumLogic spectrumLogic = new SpectrumLogic();
+    	  line = spectrumLogic.getChildInfo(id);
+//    	  line = OldDbAccessor.getSpectrumData(id);
     	  DbAccessor.closeConnection();
       } catch (SQLException e) {
         LOGGER.error(e.getMessage(), e);

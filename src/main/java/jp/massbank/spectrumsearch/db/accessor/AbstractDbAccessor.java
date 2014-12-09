@@ -23,6 +23,8 @@ public abstract class AbstractDbAccessor<T> extends DbAccessor {
 	private static PreparedStatement prepStmt = null;
 	
 	protected abstract T convert(ResultSet rs) throws SQLException;
+	public abstract void insert(T t);
+	public abstract void deleteAll();
 	public abstract void dropTable();
 	public abstract void createTable();
 	
@@ -59,7 +61,7 @@ public abstract class AbstractDbAccessor<T> extends DbAccessor {
 		try {
 //			createConnection();
 			createStatment();
-			result = listResulrString(sql);
+			result = listResultString(sql);
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage(), e);
 		} finally {
@@ -158,7 +160,7 @@ public abstract class AbstractDbAccessor<T> extends DbAccessor {
 		return false;
 	}
 	
-	protected void execStmt(String sql) {
+	protected void executeStatement(String sql) {
 		try {
 //			createConnection();
 			createStatment();
@@ -259,7 +261,7 @@ public abstract class AbstractDbAccessor<T> extends DbAccessor {
 		return result;
 	}
 	
-	private List<String> listResulrString(String sql) throws SQLException {
+	private List<String> listResultString(String sql) throws SQLException {
 		List<String> result = new ArrayList<String>();
 		if (stmt != null) {
 			ResultSet rs = stmt.executeQuery(sql);

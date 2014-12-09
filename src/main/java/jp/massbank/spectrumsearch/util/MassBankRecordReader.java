@@ -23,7 +23,8 @@ public class MassBankRecordReader {
 	
 	public static MassBankRecordLine getRecordLine(String line) {
 		for (MassBankRecordLine recordLine : MassBankRecordLine.values()) {
-			if (line.startsWith(recordLine.getKey().concat(":")) || line.startsWith(recordLine.getKey().concat(";"))) {
+			if (line.startsWith(recordLine.getKey().concat(":")) || line.startsWith(recordLine.getKey().concat(";")) || 
+					(MassBankRecordLine.FOLLOWING_LINE == recordLine || MassBankRecordLine.EOF == recordLine) && line.startsWith(recordLine.getKey())) {
 				return recordLine;
 			}
 		}

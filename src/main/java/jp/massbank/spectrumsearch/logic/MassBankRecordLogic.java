@@ -19,16 +19,20 @@ import jp.massbank.spectrumsearch.db.accessor.InstrumentAccessor;
 import jp.massbank.spectrumsearch.db.accessor.MassSpectrometryAccessor;
 import jp.massbank.spectrumsearch.db.accessor.PeakAccessor;
 import jp.massbank.spectrumsearch.db.accessor.RecordAccessor;
+import jp.massbank.spectrumsearch.db.accessor.SpectrumAccessor;
 import jp.massbank.spectrumsearch.db.entity.Instrument;
 import jp.massbank.spectrumsearch.db.entity.MassSpectrometry;
 import jp.massbank.spectrumsearch.db.entity.Peak;
 import jp.massbank.spectrumsearch.db.entity.Record;
+import jp.massbank.spectrumsearch.db.entity.Spectrum;
 import jp.massbank.spectrumsearch.entity.constant.Constant;
+import jp.massbank.spectrumsearch.entity.type.IonModeType;
 import jp.massbank.spectrumsearch.entity.type.MassBankRecordLine;
 import jp.massbank.spectrumsearch.file.entity.MassBankRecord;
 import jp.massbank.spectrumsearch.util.DbUtil;
 import jp.massbank.spectrumsearch.util.MassBankRecordReader;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
 public class MassBankRecordLogic {
@@ -38,12 +42,14 @@ public class MassBankRecordLogic {
 	private InstrumentAccessor instrumentAccessor;
 	private MassSpectrometryAccessor massSpectrometryAccessor;
 	private PeakAccessor peakAccessor;
+	private SpectrumAccessor spectrumAccessor;
 	
 	public MassBankRecordLogic() {
 		this.recordAccessor = new RecordAccessor();
 		this.instrumentAccessor = new InstrumentAccessor();
 		this.massSpectrometryAccessor = new MassSpectrometryAccessor();
 		this.peakAccessor = new PeakAccessor();
+		this.spectrumAccessor = new SpectrumAccessor();
 	}
 	
 	public void syncFilesRecordsByFolderPath(String pathname) {
@@ -55,6 +61,7 @@ public class MassBankRecordLogic {
 			this.instrumentAccessor.deleteAll();
 			this.massSpectrometryAccessor.deleteAll();
 			this.peakAccessor.deleteAll();
+			this.spectrumAccessor.deleteAll();
 			DbAccessor.closeConnection();
 		} catch (SQLException e) {
 			LOGGER.error(e.getMessage(), e);
@@ -93,20 +100,26 @@ public class MassBankRecordLogic {
 //									DbAccessor.setAutoCommit(false);
 									// TODO implement rollback feature
 									
-									// save record
-									Record record = new Record();
-									record.setId(massBankRecord.getId());
-									record.setTitle(massBankRecord.getTitle());
-									this.recordAccessor.insertRecord(record);
 									// save instrument
-				                	Instrument oInstrument = this.instrumentAccessor.getInstrumentByType(massBankRecord.getAcInstrument().getType());
+				                	Instrument oInstrument = this.instrumentAccessor.getInstrument(
+				                			massBankRecord.getAcInstrument().getType(),
+				                			massBankRecord.getAcInstrument().getName());
 				                	if (oInstrument == null) {
 				                		Instrument instrument = new Instrument();
 				                		instrument.setType(massBankRecord.getAcInstrument().getType());
 				                		instrument.setName(massBankRecord.getAcInstrument().getName());
-				                		instrument.setRecordId(massBankRecord.getId());
-				                		this.instrumentAccessor.insertInstrument(instrument);
+				                		this.instrumentAccessor.insert(instrument);
+				                		
+				                		oInstrument = this.instrumentAccessor.getInstrument(
+					                			massBankRecord.getAcInstrument().getType(),
+					                			massBankRecord.getAcInstrument().getName());
 				                	}
+				                	// save record
+				                	Record record = new Record();
+				                	record.setId(massBankRecord.getId());
+				                	record.setTitle(massBankRecord.getTitle());
+				                	record.setInstrumentId(oInstrument.getId());
+				                	this.recordAccessor.insert(record);
 				                	// save mass spectrometry
 				                	if (massBankRecord.getAcMassSpectrometryMap() != null) {
 				                		for (Entry<String, String> entry : massBankRecord.getAcMassSpectrometryMap().entrySet()) {
@@ -114,7 +127,7 @@ public class MassBankRecordLogic {
 				                			massSpectrometry.setType(entry.getKey());
 				                			massSpectrometry.setValue(entry.getValue());
 				                			massSpectrometry.setRecordId(massBankRecord.getId());
-				                			massSpectrometryAccessor.insertMassSpectrometry(massSpectrometry);
+				                			massSpectrometryAccessor.insert(massSpectrometry);
 				                		}
 				                	}
 				                	// save peak
@@ -124,8 +137,21 @@ public class MassBankRecordLogic {
 				                			peak.setMz(Double.parseDouble(pValue.get("m/z")));
 				                			peak.setIntensity(Double.parseDouble(pValue.get("int.")));
 				                			peak.setRelativeIntensity(Integer.parseInt(pValue.get("rel.int.")));
-				                			this.peakAccessor.insertPeak(peak);
+				                			peak.setRecordId(massBankRecord.getId());
+				                			this.peakAccessor.insert(peak);
 				                		}
+				                	}
+				                	// save spectrum
+				                	String strPrecursorMz = massBankRecord.getMsFocusedIonMap().get("PRECURSOR_M/Z");
+				                	String strIonMode = massBankRecord.getAcMassSpectrometryMap().get("ION_MODE");
+				                	if (StringUtils.isNotBlank(strPrecursorMz) && StringUtils.isNotBlank(strIonMode)) {
+				                		Spectrum spectrum = new Spectrum();
+				                		spectrum.setName(massBankRecord.getTitle());
+					                	spectrum.setPrecursorMz(Float.parseFloat(strPrecursorMz));
+					                	spectrum.setIonMode(IonModeType.parseInt(strIonMode));
+					                	this.spectrumAccessor.insert(spectrum);
+				                	} else {
+				                		LOGGER.warn("No Spectrum Info.: " + massBankRecord.getId());
 				                	}
 				                	
 									// commit or rollback all data
