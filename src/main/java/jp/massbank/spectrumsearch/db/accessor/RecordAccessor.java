@@ -26,14 +26,14 @@ public class RecordAccessor extends AbstractDbAccessor<Record> {
 		return uniqueGeneric(sql);
 	}
 	
-	public List<Record> getRecords() {
+	public List<Record> getAllRecords() {
 		String sql = "SELECT * FROM " + Record.TABLE;
 		return listGeneric(sql);
 	}
-
-	public List<Record> getRecordListByName(String searchName, String wcValue) {
-		// TODO
-		String sql = "SELECT * FROM " + Record.TABLE;
+	
+	public List<Record> getRecordsByName(String searchName) {
+		String sql = String.format("SELECT * FROM %s WHERE UPPER(%s) LIKE '%s'", 
+				Record.TABLE, Record.Columns.RECORD_TITLE, searchName.toUpperCase());
 		return listGeneric(sql);
 	}
 

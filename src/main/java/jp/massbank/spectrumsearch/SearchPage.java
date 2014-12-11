@@ -94,6 +94,7 @@ import jp.massbank.spectrumsearch.db.accessor.RecordAccessor;
 import jp.massbank.spectrumsearch.db.entity.Record;
 import jp.massbank.spectrumsearch.entity.param.SearchQueryParam;
 import jp.massbank.spectrumsearch.logic.CompoundLogic;
+import jp.massbank.spectrumsearch.logic.RecordLogic;
 import jp.massbank.spectrumsearch.logic.SpectrumLogic;
 import jp.massbank.spectrumsearch.logic.search.SearchLogic;
 import jp.massbank.spectrumsearch.model.PackageRecData;
@@ -1011,58 +1012,19 @@ public class SearchPage extends JFrame {
 	 */
 	private void getSpectrumForQuery(String searchName) {
 		
-		String param = "";
-		String wcValue = null;
-		if (!searchName.equals("")) {
-//			String wc = "&wc=";
-		  
-			boolean wcStart = false;
-			boolean wcEnd = false;
-			if (searchName.substring(0, 1).equals("*")) {
-				wcStart = true;
-			}
-			if (searchName.substring(searchName.length() - 1).equals("*")) {
-				wcEnd = true;
-			}
-
-			if (wcStart) {
-				if (wcEnd) {
-				  wcValue= "both";
-				} else {
-				  wcValue= "start";
-				}
-			} else {
-				if (wcEnd) {
-				  wcValue= "end";
-				} else {
-				  wcValue = "";
-				}
-			}
-			searchName = searchName.replace("*", "");
-//			param = "name=" + searchName + wc;
-		}
 		List<String> result = new ArrayList<String>();
 		try {
 			DbAccessor.createConnection();
-			RecordAccessor recordAccessor = new RecordAccessor();
-			List<Record> recordList = recordAccessor.getRecordListByName(searchName, wcValue);
+			RecordLogic recordLogic = new RecordLogic();
+			List<Record> recordList = recordLogic.getRecordListByKeyword(searchName);
 			DbAccessor.closeConnection();
 			for (Record record : recordList) {
 				result.add(String.format("%s\t%s\t0", record.getTitle(), record.getId()));
 			}
-//		  result = OldDbAccessor.getSpectrumNameByName(searchName, wcValue);
 		} catch (SQLException e) {
-	      // TODO Auto-generated catch block
-	      e.printStackTrace();
+	      LOGGER.error(e.getMessage(), e);
 	      return;
 	    }
-		// サーブレット呼び出し-マルチスレッドでCGIを起動
-//		String cgiType = MassBankCommon.CGI_TBL[MassBankCommon.CGI_TBL_NUM_TYPE][MassBankCommon.CGI_TBL_TYPE_GNAME];
-//		LOGGER.info(baseUrl + "  >>  cgiType >>" + cgiType + "  >>  param >>" + param);
-//		ArrayList<String> result = mbcommon.execMultiDispatcher(baseUrl, cgiType, param);
-		
-		
-		
 		
 		DefaultTableModel dataModel = (DefaultTableModel) querySorter.getTableModel();
 		dataModel.setRowCount(0);

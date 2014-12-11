@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import jp.massbank.spectrumsearch.db.accessor.DbAccessor;
 import jp.massbank.spectrumsearch.db.accessor.InstrumentAccessor;
 import jp.massbank.spectrumsearch.db.accessor.MassSpectrometryAccessor;
+import jp.massbank.spectrumsearch.db.accessor.MsTypeAccessor;
 import jp.massbank.spectrumsearch.db.accessor.PeakAccessor;
 import jp.massbank.spectrumsearch.db.accessor.RecordAccessor;
 import jp.massbank.spectrumsearch.db.accessor.SpectrumAccessor;
@@ -38,6 +39,10 @@ public class DbUtil {
 			SpectrumAccessor spectrumAccessor = new SpectrumAccessor();
 			spectrumAccessor.dropTable();
 			spectrumAccessor.createTable();
+			
+			MsTypeAccessor msTypeAccessor = new MsTypeAccessor();
+			msTypeAccessor.dropTable();
+			msTypeAccessor.createTable();
 			
 			DbAccessor.closeConnection();
 		} catch (SQLException e) {

@@ -26,11 +26,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-import jp.massbank.spectrumsearch.db.OldDbAccessor;
 import jp.massbank.spectrumsearch.db.accessor.DbAccessor;
 import jp.massbank.spectrumsearch.db.accessor.InstrumentAccessor;
-import jp.massbank.spectrumsearch.db.accessor.MassSpectrometryAccessor;
+import jp.massbank.spectrumsearch.db.accessor.MsTypeAccessor;
 import jp.massbank.spectrumsearch.db.entity.Instrument;
+import jp.massbank.spectrumsearch.db.entity.MsType;
 
 import org.apache.log4j.Logger;
 
@@ -49,7 +49,7 @@ public class GetInstInfo {
   @Deprecated
     ArrayList<String>[] msType = null;
 
-  List<String> msList = null;
+  List<MsType> msList = null;
   List<Instrument> instList = null;
   
 	//	private int index = 0;
@@ -61,7 +61,16 @@ public class GetInstInfo {
 	 * @throws SQLException 
 	 */
 	public GetInstInfo() throws SQLException {
-		getDbInformation();
+		DbAccessor.createConnection();
+		
+		InstrumentAccessor instrumentAccessor = new InstrumentAccessor();
+		instList = instrumentAccessor.getAllInstruments();
+		
+		MsTypeAccessor msTypeAccessor = new MsTypeAccessor();
+		msList = msTypeAccessor.getAllMsTypes();
+//		msList = massSpectrometryAccessor.getDistinctValuesBySubTag("MS_TYPE");
+		
+		DbAccessor.closeConnection();
 	}
 	
 //	public GetInstInfo( String baseUrl ) throws SQLException {
@@ -141,16 +150,7 @@ public class GetInstInfo {
 			}
 		}
 	}
-	private void getDbInformation() throws SQLException {
-		DbAccessor.createConnection();
-		
-		InstrumentAccessor instrumentAccessor = new InstrumentAccessor();
-		instList = instrumentAccessor.getAllInstruments();
-		
-		MassSpectrometryAccessor massSpectrometryAccessor = new MassSpectrometryAccessor();
-		msList = massSpectrometryAccessor.getValuesByType("MS_TYPE");
-		
-		DbAccessor.closeConnection();
+	private void getInformation() throws SQLException {
 //	     instNo = new ArrayList[1];
 //	        instType = new ArrayList[urlList.length];
 //	        instName = new ArrayList[urlList.length];
@@ -262,11 +262,11 @@ public class GetInstInfo {
 	 * MS_TYPEを取得（重複なしで全サイト分を取得）
 	 */
 	public String[] getMsAll() {
-		ArrayList<String> msTypeList = new ArrayList<String>();
-		for ( String msType : msList ) {
+		List<String> msTypeList = new ArrayList<String>();
+		for ( MsType msType : msList ) {
 //				String type = msType[i].get(j);
 				if ( !msTypeList.contains(msType) ) {
-					msTypeList.add( msType );
+					msTypeList.add( msType.getName() );
 				}
 		}
 //        for ( int i = 0; i < this.msType.length; i++ ) {

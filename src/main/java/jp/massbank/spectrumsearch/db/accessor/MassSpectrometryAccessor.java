@@ -19,7 +19,7 @@ public class MassSpectrometryAccessor extends AbstractDbAccessor<MassSpectrometr
 		return result;
 	}
 	
-	public List<String> getValuesByType(String type) {
+	public List<String> getDistinctValuesBySubTag(String type) {
 		String sql = "SELECT DISTINCT " + MassSpectrometry.Columns.MASS_SPECTROMETRY_VALUE + 
 				" FROM " + MassSpectrometry.TABLE + 
 				" WHERE " + MassSpectrometry.Columns.MASS_SPECTROMETRY_TYPE + " = '" + type + "'";

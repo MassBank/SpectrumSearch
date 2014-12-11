@@ -35,6 +35,7 @@ public class DbAccessor {
 			
 			// Get a connection
 			conn = DriverManager.getConnection(dbURL + ";create=true", connectionProps);
+			LOGGER.info("Derby start");
 			executeCustomFunctions();
 		}
     }

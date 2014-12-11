@@ -62,9 +62,5 @@ public class SpectrumLogic {
 		return sb.toString();
 //		String pattern = "^([^;]*; [^;]*;).*";
 	}
-	
-	public static void main(String[] args) {
-		System.out.println(Math.log(5.5));
-	}
 
 }

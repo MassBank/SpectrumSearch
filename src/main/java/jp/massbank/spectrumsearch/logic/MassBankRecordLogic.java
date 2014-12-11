@@ -17,11 +17,13 @@ import java.util.Map.Entry;
 import jp.massbank.spectrumsearch.db.accessor.DbAccessor;
 import jp.massbank.spectrumsearch.db.accessor.InstrumentAccessor;
 import jp.massbank.spectrumsearch.db.accessor.MassSpectrometryAccessor;
+import jp.massbank.spectrumsearch.db.accessor.MsTypeAccessor;
 import jp.massbank.spectrumsearch.db.accessor.PeakAccessor;
 import jp.massbank.spectrumsearch.db.accessor.RecordAccessor;
 import jp.massbank.spectrumsearch.db.accessor.SpectrumAccessor;
 import jp.massbank.spectrumsearch.db.entity.Instrument;
 import jp.massbank.spectrumsearch.db.entity.MassSpectrometry;
+import jp.massbank.spectrumsearch.db.entity.MsType;
 import jp.massbank.spectrumsearch.db.entity.Peak;
 import jp.massbank.spectrumsearch.db.entity.Record;
 import jp.massbank.spectrumsearch.db.entity.Spectrum;
@@ -43,6 +45,7 @@ public class MassBankRecordLogic {
 	private MassSpectrometryAccessor massSpectrometryAccessor;
 	private PeakAccessor peakAccessor;
 	private SpectrumAccessor spectrumAccessor;
+	private MsTypeAccessor msTypeAccessor;
 	
 	public MassBankRecordLogic() {
 		this.recordAccessor = new RecordAccessor();
@@ -50,6 +53,7 @@ public class MassBankRecordLogic {
 		this.massSpectrometryAccessor = new MassSpectrometryAccessor();
 		this.peakAccessor = new PeakAccessor();
 		this.spectrumAccessor = new SpectrumAccessor();
+		this.msTypeAccessor = new MsTypeAccessor();
 	}
 	
 	public void syncFilesRecordsByFolderPath(String pathname) {
@@ -62,6 +66,7 @@ public class MassBankRecordLogic {
 			this.massSpectrometryAccessor.deleteAll();
 			this.peakAccessor.deleteAll();
 			this.spectrumAccessor.deleteAll();
+			this.msTypeAccessor.deleteAll();
 			DbAccessor.closeConnection();
 		} catch (SQLException e) {
 			LOGGER.error(e.getMessage(), e);
@@ -114,6 +119,16 @@ public class MassBankRecordLogic {
 			                				oInstrument = this.instrumentAccessor.getInstrument(
 			                						massBankRecord.getAcInstrument().getType(),
 			                						massBankRecord.getAcInstrument().getName());
+			                			}
+			                			
+			                			String strMsType = massBankRecord.getAcMassSpectrometryMap().get("MS_TYPE");
+			                			MsType oMsType = this.msTypeAccessor.getMsTypeByName(strMsType);
+			                			if (oMsType == null) {
+			                				MsType msType = new MsType();
+			                				msType.setName(strMsType);
+			                				this.msTypeAccessor.insert(msType);
+			                				
+			                				oMsType = this.msTypeAccessor.getMsTypeByName(strMsType);
 			                			}
 			                			
 			                			// save record
