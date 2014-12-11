@@ -40,8 +40,8 @@ public class SpectrumLogic {
 		
 		Spectrum spectrum = this.spectrumAccessor.getSpectrumByRecordId(recordId);
 		if (spectrum != null) {
-			if (StringUtils.isNotBlank(spectrum.getName())) {
-				sb.append(String.format("\tname=%s\t", spectrum.getName()));
+			if (StringUtils.isNotBlank(spectrum.getTitle())) {
+				sb.append(String.format("\tname=%s\t", spectrum.getTitle()));
 			}
 			sb.append(String.format("\tprecursor=%s\t", spectrum.getPrecursorMz()));
 		}
@@ -64,7 +64,7 @@ public class SpectrumLogic {
 	}
 	
 	public static void main(String[] args) {
-		System.out.println(Integer.parseInt("POSITIVE"));
+		System.out.println(Math.log(5.5));
 	}
 
 }

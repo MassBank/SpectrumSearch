@@ -6,6 +6,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
+
 public class MassBankRecord {
 	
 	// Record Specific Information
@@ -41,6 +43,10 @@ public class MassBankRecord {
 	// Peak Information
 	private List<Map<String, String>> pkAnnotationMap;
 	private PkPeak pkPeak;
+	
+	public boolean isAvailable() {
+		return StringUtils.isNotBlank(id);
+	}
 
 	public String getId() {
 		return id;

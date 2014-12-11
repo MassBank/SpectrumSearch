@@ -1,9 +1,7 @@
 package jp.massbank.spectrumsearch.db.accessor;
 
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,8 +17,8 @@ public abstract class AbstractDbAccessor<T> extends DbAccessor {
 //	private static String dbURL = "jdbc:derby:./src/test/testdata/massbankdb";
 //	private static String dbURL = "jdbc:derby:" + SystemProperties.getInstance().getDatabasePath(); // Embedded Connection
 //	private static Connection conn = null;
-	private static Statement stmt = null;
-	private static PreparedStatement prepStmt = null;
+//	private static Statement stmt = null;
+//	private static PreparedStatement prepStmt = null;
 	
 	protected abstract T convert(ResultSet rs) throws SQLException;
 	public abstract void insert(T t);
@@ -114,13 +112,13 @@ public abstract class AbstractDbAccessor<T> extends DbAccessor {
 		try {
 //			createConnection();
 			createPreparedStatement(sql);
-			int affectedRows = prepStmt.executeUpdate();
+			int affectedRows = pstmt.executeUpdate();
 			
 			if (affectedRows == 0) {
 	            throw new SQLException("Creating failed, no rows affected.");
 	        }
 			
-			try (ResultSet generatedKeys = prepStmt.getGeneratedKeys()) {
+			try (ResultSet generatedKeys = pstmt.getGeneratedKeys()) {
 	            if (generatedKeys.next()) {
 	                return generatedKeys.getInt(1);
 	            } else {
@@ -215,38 +213,6 @@ public abstract class AbstractDbAccessor<T> extends DbAccessor {
 //		}           
 //    }
 	
-	private void createStatment() throws SQLException {
-		if (conn != null || !conn.isClosed()) {
-			stmt = conn.createStatement();
-		}
-	}
-	
-	private void closeStatment() throws SQLException {
-		if (stmt != null) {
-            stmt.close();
-        }
-	}
-	
-	private void createPreparedStatement(String sql) throws SQLException {
-		if (conn != null || !conn.isClosed()) {
-			prepStmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-		}
-	}
-	
-	private void closePreparedStatement() throws SQLException {
-		if (prepStmt != null) {
-			prepStmt.close();
-		}
-	}
-	
-	private T uniqueResult(String sql) throws SQLException {
-		List<T> result = listResult(sql);
-		if (result.size() > 0) {
-			return result.get(0);
-		}
-		return null;
-	}
-	
 	private List<T> listResult(String sql) throws SQLException {
 		List<T> result = new ArrayList<T>();
 		if (stmt != null) {
@@ -274,5 +240,5 @@ public abstract class AbstractDbAccessor<T> extends DbAccessor {
 		}
 		return result;
 	}
-
+	
 }

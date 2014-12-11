@@ -541,7 +541,9 @@ public class PeakPanel extends JPanel {
 					// プリカーサーm/zに三角マーク付け
 					if ( !precursor.equals("") ) {
 						
-						int pre = Integer.parseInt(precursor);
+						Double d = Double.parseDouble(precursor);
+						int pre = d.intValue();
+//						int pre = Integer.parseInt(precursor);
 						int preX = MARGIN + (int)((pre - massStart) * xscale) - (int)Math.floor(xscale / 8);
 
 						// プリカーサーm/zがグラフ内の場合のみ描画

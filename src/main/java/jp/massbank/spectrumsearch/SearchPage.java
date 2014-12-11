@@ -92,7 +92,10 @@ import javax.swing.table.DefaultTableModel;
 import jp.massbank.spectrumsearch.db.accessor.DbAccessor;
 import jp.massbank.spectrumsearch.db.accessor.RecordAccessor;
 import jp.massbank.spectrumsearch.db.entity.Record;
+import jp.massbank.spectrumsearch.entity.param.SearchQueryParam;
+import jp.massbank.spectrumsearch.logic.CompoundLogic;
 import jp.massbank.spectrumsearch.logic.SpectrumLogic;
+import jp.massbank.spectrumsearch.logic.search.SearchLogic;
 import jp.massbank.spectrumsearch.model.PackageRecData;
 import jp.massbank.spectrumsearch.model.PackageSpecData;
 import jp.massbank.spectrumsearch.model.PeakData;
@@ -100,6 +103,7 @@ import jp.massbank.spectrumsearch.model.UserFileData;
 import massbank.GetInstInfo;
 import massbank.MassBankCommon;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
 /**
@@ -265,9 +269,9 @@ public class SearchPage extends JFrame {
 
 		// 環境設定ファイルから連携サイトのURLを取得
 		// 暫定代入
-        String confPath = "http://www.massbank.jp/";
+//        String confPath = "http://www.massbank.jp/";
 //        String confPath = getCodeBase().toString();
-		confPath = confPath.replaceAll("/jsp", "");
+//		confPath = confPath.replaceAll("/jsp", "");
 //		GetConfig conf = new GetConfig(confPath);
 //		siteNameList = conf.getSiteName();
 //		baseUrl = conf.getServerUrl();
@@ -779,21 +783,31 @@ public class SearchPage extends JFrame {
 		}
 
 		// POSTデータを作成
-		StringBuffer post = new StringBuffer();
-		if (isRecInteg)
-			post.append( "INTEG=true&" );
-		else if (isRecActu)
-			post.append( "INTEG=false&" );
-		if (PRECURSOR > 0) {
-			post.append( "PRE=" + PRECURSOR + "&");
+		final SearchQueryParam param = new SearchQueryParam();
+//		StringBuffer post = new StringBuffer();
+		if (isRecInteg) {
+			param.setInteg(true);
+//			post.append( "INTEG=true&" );
+		} else if (isRecActu) {
+			param.setInteg(false);
+//			post.append( "INTEG=false&" );
 		}
-		post.append( "CUTOFF=" + CUTOFF_THRESHOLD + "&" );
-		post.append( "TOLERANCE=" + TOLERANCE + "&" );
-		if (tolUnit2.isSelected())
-			post.append( "TOLUNIT=ppm&" );
-		else
-			post.append( "TOLUNIT=unit&" );
-		post.append( "INST=" );
+		if (PRECURSOR > 0) {
+			param.setPrecursor(PRECURSOR);
+//			post.append( "PRE=" + PRECURSOR + "&");
+		}
+		param.setCutoff(CUTOFF_THRESHOLD);
+//		post.append( "CUTOFF=" + CUTOFF_THRESHOLD + "&" );
+		param.setTolerance(TOLERANCE);
+//		post.append( "TOLERANCE=" + TOLERANCE + "&" );
+		if (tolUnit2.isSelected()) {
+			param.setTolUnit("ppm");
+//			post.append( "TOLUNIT=ppm&" );
+		} else {
+			param.setTolUnit("unit");
+//			post.append( "TOLUNIT=unit&" );
+		}
+//		post.append( "INST=" );
 		StringBuffer instTmp = new StringBuffer();
 		boolean isInstAll = true;
 		for (Iterator i=isInstCheck.keySet().iterator(); i.hasNext(); ) {
@@ -814,9 +828,10 @@ public class SearchPage extends JFrame {
 			}
 			instTmp.append( "ALL" );
 		}
-		post.append( instTmp.toString() + "&" );
+		param.setInstType(instTmp.toString());
+//		post.append( instTmp.toString() + "&" );
 		
-		post.append( "MS=" );
+//		post.append( "MS=" );
 		StringBuffer msTmp = new StringBuffer();
 		boolean isMsAll = true;
 		for (Iterator i=isMsCheck.keySet().iterator(); i.hasNext(); ) {
@@ -837,21 +852,27 @@ public class SearchPage extends JFrame {
 			}
 			msTmp.append( "ALL" );
 		}
-		post.append( msTmp.toString() + "&" );
+		param.setMsType(msTmp.toString());
+//		post.append( msTmp.toString() + "&" );
 		
 		
 		if (isIonRadio.get("Posi")) {
-			post.append( "ION=1&" );
+			param.setIon(1);
+//			post.append( "ION=1&" );
 		} else if (isIonRadio.get("Nega")) {
-			post.append( "ION=-1&" );
+			param.setIon(-1);
+//			post.append( "ION=-1&" );
 		} else {
-			post.append( "ION=0&");
+			param.setIon(0);
+//			post.append( "ION=0&");
 		}
 		
-		post.append( "VAL=" );
+//		post.append( "VAL=" );
+		StringBuffer psTmp = new StringBuffer();
 		for (int i = 0; i < ps.length; i++) {
-			post.append( ps[i].replace("\t", ",") + "@" );
+			psTmp.append( ps[i].replace("\t", ",") + "@" );
 		}
+		param.setPeak(psTmp.toString());
 
 		// 画面操作を無効する
 		setOperationEnbled(false);
@@ -859,16 +880,19 @@ public class SearchPage extends JFrame {
 		// 検索中ダイアログ表示する
 		dlg.setVisible(true);
 
-		this.param = post.toString();
+//		this.param = post.toString();
 		this.ps = ps;
 		SwingWorker worker = new SwingWorker() {
 			private ArrayList<String> result = null;
 
 			public Object construct() {
 				// サーブレット呼び出し-マルチスレッドでCGIを起動
-				String cgiType = MassBankCommon.CGI_TBL[MassBankCommon.CGI_TBL_NUM_TYPE][MassBankCommon.CGI_TBL_TYPE_SEARCH];
-				result = mbcommon.execMultiDispatcher(baseUrl, cgiType, SearchPage.this.param);
+				SearchLogic searchLogic = new SearchLogic();
+				result = searchLogic.getSearchResult(param);
 				return null;
+//				String cgiType = MassBankCommon.CGI_TBL[MassBankCommon.CGI_TBL_NUM_TYPE][MassBankCommon.CGI_TBL_TYPE_SEARCH];
+//				result = mbcommon.execMultiDispatcher(baseUrl, cgiType, SearchPage.this.param);
+//				return null;
 			}
 
 			public void finished() {
@@ -887,7 +911,7 @@ public class SearchPage extends JFrame {
 					siteList = new String[total];
 					for (int i = 0; i < total; i++) {
 						String line = (String) result.get(i);
-						String[] item = line.split("\t");
+						String[] item = line.replace("\n", StringUtils.EMPTY).split("\t");
 						String id = item[0];
 						String name = item[1];
 
@@ -920,7 +944,7 @@ public class SearchPage extends JFrame {
 						// SiteName
                         String siteName = DUMMY_SITENAME;
 //                        String siteName = siteNameList[Integer.parseInt(item[4])];
-						siteList[i] = item[4];
+//						siteList[i] = item[4];
 
 						// Name, Score, Hit, ID, Ion, SiteName, No.
 						Object[] rowData = { name, dblScore, ihit, id, ion, siteName, (i + 1) };
@@ -3039,18 +3063,36 @@ public class SearchPage extends JFrame {
 			String temp = recData.getName();
 			String[] items = temp.split(";");
 			name = URLEncoder.encode(items[0]);
-			String getUrl = baseUrl + "jsp/GetCompoudInfo.jsp?name=" + name + "&site=" + site + "&id=" + id;
-			LOGGER.info(getUrl);
+//			String getUrl = baseUrl + "jsp/GetCompoudInfo.jsp?name=" + name + "&site=" + site + "&id=" + id;
+//			LOGGER.info(getUrl);
 			String gifMFileName = "";
 			String gifSFileName = "";
 			String formula = "";
 			String emass = "";
 			try {
-				URL url = new URL(getUrl);
-				URLConnection con = url.openConnection();
-				BufferedReader in = new BufferedReader( new InputStreamReader(con.getInputStream()) );
-				String line = "";
-				while ( (line = in.readLine()) != null ) {
+//				URL url = new URL(getUrl);
+//				URLConnection con = url.openConnection();
+//				BufferedReader in = new BufferedReader( new InputStreamReader(con.getInputStream()) );
+//				String line = "";
+//				while ( (line = in.readLine()) != null ) {
+//					if ( line.indexOf("GIF:") >= 0 ) {
+//						gifMFileName = line.replace("GIF:", "");
+//					}
+//					else if ( line.indexOf("GIF_SMALL:") >= 0 ) {
+//						gifSFileName = line.replace("GIF_SMALL:", "");
+//					}
+//					else if ( line.indexOf("FORMULA:") >= 0 ) {
+//						formula = line.replace("FORMULA:", "");
+//					}
+//					else if ( line.indexOf("EXACT_MASS:") >= 0 ) {
+//						emass = line.replace("EXACT_MASS:", "");
+//					}
+//				}
+				DbAccessor.createConnection();
+				CompoundLogic compoundLogic = new CompoundLogic();
+				List<String> infoList = compoundLogic.getInfo(id, name, Integer.parseInt(site));
+				DbAccessor.closeConnection();
+				for (String line : infoList) {
 					if ( line.indexOf("GIF:") >= 0 ) {
 						gifMFileName = line.replace("GIF:", "");
 					}
