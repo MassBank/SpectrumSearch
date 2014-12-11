@@ -64,7 +64,7 @@ public class SystemProperties {
 	}
 	
 	public String getDatabasePath() {
-		return getDirPath() + "/" + Key.DATABASE_NAME;
+		return getDirPath() + "/" + props.getProperty(Key.DATABASE_NAME);
 	}
 	
 }
