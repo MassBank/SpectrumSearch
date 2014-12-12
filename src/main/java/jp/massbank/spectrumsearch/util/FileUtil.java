@@ -19,6 +19,8 @@ public class FileUtil {
 
 	private static final Logger LOGGER = Logger.getLogger(FileUtil.class);
 	
+	// TODO system.properties read and write
+	
 	public static List<Site> getServers() {
 		List<Site> result = new ArrayList<Site>();
 		try {

@@ -91,6 +91,8 @@ import javax.swing.table.DefaultTableModel;
 
 import jp.massbank.spectrumsearch.db.accessor.DbAccessor;
 import jp.massbank.spectrumsearch.db.entity.Record;
+import jp.massbank.spectrumsearch.entity.gui.GuiDbTableRow;
+import jp.massbank.spectrumsearch.entity.gui.GuiResultTableRow;
 import jp.massbank.spectrumsearch.entity.param.SearchQueryParam;
 import jp.massbank.spectrumsearch.logic.CompoundLogic;
 import jp.massbank.spectrumsearch.logic.RecordLogic;
@@ -222,6 +224,8 @@ public class SearchPage extends JFrame {
 	private String[] siteList ;
 	
 	public static String[] siteNameList = new String[]{"Keio Univ."};
+	
+	private Map<String, GuiDbTableRow> guiDbTableRowMap;
 
 	private JPanel parentPanel2 = null;
 
@@ -262,6 +266,9 @@ public class SearchPage extends JFrame {
 	 * @throws SQLException 
 	 */
 	public void init() throws SQLException {
+		
+		// init variables
+		guiDbTableRowMap = new HashMap<String, GuiDbTableRow>();
 
 	    // アプレット初期画面サイズ取得
 		initAppletWidth = getWidth();
@@ -906,51 +913,47 @@ public class SearchPage extends JFrame {
 				int total = 0;
 				if (result != null && result.size() > 0) {
 					total = result.size();
-					DefaultTableModel dataModel = (DefaultTableModel)resultSorter.getTableModel();
 
+					List<GuiResultTableRow> guiResultTableRows = new ArrayList<GuiResultTableRow>();
 					// 検索結果をDBTableにセット
-//					siteList = new String[total];
 					for (int i = 0; i < total; i++) {
 						String line = (String) result.get(i);
 						String[] item = line.replace("\n", StringUtils.EMPTY).split("\t");
-						String id = item[0];
-						String name = item[1];
-
+						String recordId = item[0];
+						String recordTitle = item[1];
 						// Score, Hit
-						String score = "";
-						String hit = "";
+						String strScore = StringUtils.EMPTY;
+						String strHit = StringUtils.EMPTY;
 						String hitScore = item[2];
 						int pos = hitScore.indexOf(".");
 						if (pos > 0) {
-							score = "0" + hitScore.substring(pos);
-							hit = hitScore.substring(0, pos);
+							strScore = "0" + hitScore.substring(pos);
+							strHit = hitScore.substring(0, pos);
 						} else {
-							score = "0";
-							hit = hitScore;
+							strScore = "0";
+							strHit = hitScore;
 						}
-						Double dblScore = Double.parseDouble(score);
-						Integer ihit = Integer.parseInt(hit);
+						Double score = Double.parseDouble(strScore);
+						Integer hit = Integer.parseInt(strHit);
 
 						// Ion
 						int iIon = Integer.parseInt(item[3]);
-						String ion = "";
+						String strIonMode = StringUtils.EMPTY;
 						if (iIon > 0) {
-							ion = "P";
+							strIonMode = "P";
 						} else if (iIon < 0) {
-							ion = "N";
+							strIonMode = "N";
 						} else {
-							ion = "-";
+							strIonMode = "-";
 						}
 
 						// SiteName
-                        String siteName = SiteUtil.getSiteNameByRecordId(id);
-//                        String siteName = siteNameList[Integer.parseInt(item[4])];
-//						siteList[i] = item[4];
-
-						// Name, Score, Hit, ID, Ion, SiteName, No.
-						Object[] rowData = { name, dblScore, ihit, id, ion, siteName, (i + 1) };
-						dataModel.addRow(rowData);
+                        String contributor = SiteUtil.getSiteNameByRecordId(recordId);
+						GuiResultTableRow guiResultTableRow = new GuiResultTableRow((i + 1), recordId, recordTitle, contributor, score, hit, strIonMode);
+						guiResultTableRows.add(guiResultTableRow);
 					}
+					
+					fillGuiResultTableData(guiResultTableRows);
 				}
 
 				PeakData peak = new PeakData(SearchPage.this.ps);
@@ -1028,34 +1031,47 @@ public class SearchPage extends JFrame {
 	      return;
 	    }
 		
-		DefaultTableModel dataModel = (DefaultTableModel) querySorter.getTableModel();
-		dataModel.setRowCount(0);
-		if (result == null || result.size() == 0) {
-			return;
-		}
-
-		// ソート
-		Collections.sort(result);
-
-		nameList.clear();
+		List<GuiDbTableRow> oGuiDbTableRows = new ArrayList<GuiDbTableRow>();
 		for (int i = 0; i < result.size(); i++) {
 			String nameId = (String) result.get(i);
 			String[] cutNameId = nameId.split("\t");
-			String name = cutNameId[0];
-
-			String id = cutNameId[1];
-//			String site = cutNameId[2];
+			String index = String.valueOf(i + 1);
+			String recordId = cutNameId[1];
+			String recordTitle = cutNameId[0];
 			String sitePrefix = cutNameId[2];
-
-			String[] cutIdNameSite = new String[] { id, name, sitePrefix };
-			nameList.add(cutIdNameSite);
-
-			String siteName = SiteUtil.getSiteNameByRecordIdPrefix(sitePrefix);
-//			site = siteNameList[Integer.parseInt(site)];
-			String[] idNameSite2 = new String[] { id, name, siteName, String.valueOf(i + 1) };
-
-			// 取得値をテーブルにセット
-			dataModel.addRow(idNameSite2);
+			String contributor = SiteUtil.getSiteNameByRecordIdPrefix(sitePrefix);
+			GuiDbTableRow guiDbTableRow = new GuiDbTableRow(index, recordId, recordTitle, contributor);
+			oGuiDbTableRows.add(guiDbTableRow);
+		}
+		
+		if (StringUtils.isBlank(searchName)) {
+			for (GuiDbTableRow row : oGuiDbTableRows) {
+				guiDbTableRowMap.put(row.getRecordId(), row);
+			}
+		}
+		
+		fillGuiDbTableData(oGuiDbTableRows);
+	}
+	
+	private void fillGuiDbTableData(List<GuiDbTableRow> rows) {
+		DefaultTableModel dataModel = (DefaultTableModel) querySorter.getTableModel();
+		dataModel.setRowCount(0);
+		Collections.sort(rows);
+		if (rows != null && rows.size() > 0) {
+			for (GuiDbTableRow row : rows) {
+				dataModel.addRow(new String[] { row.getRecordId(), row.getRecordTitle(), row.getContributor(), row.getIndex() });
+			}
+		}
+	}
+	
+	private void fillGuiResultTableData(List<GuiResultTableRow> rows) {
+		DefaultTableModel dataModel = (DefaultTableModel)resultSorter.getTableModel();
+		dataModel.setRowCount(0);
+		Collections.sort(rows);
+		if (rows != null && rows.size() > 0) {
+			for (GuiResultTableRow row : rows) {
+				dataModel.addRow(new Object[] { row.getRecordTitle(), row.getScore(), row.getHit(), row.getRecordId(), row.getIonMode(), row.getContributor(), row.getIndex() });
+			}
 		}
 	}
 	
@@ -3123,25 +3139,8 @@ public class SearchPage extends JFrame {
 			int idCol = queryDbTable.getColumnModel().getColumnIndex(COL_LABEL_ID);
 			int nameCol = queryDbTable.getColumnModel().getColumnIndex(COL_LABEL_NAME);
 			
-			// nameListからのレコード情報取得用インデックス特定
-			int nameListIndex = -1;
-			if (!querySorter.isSorting()) {
-				// ソート無しの場合
-				nameListIndex = selRow;
-			} else {
-				// ソート有りの場合
-				String tmpId = (String) queryDbTable.getValueAt(selRow, idCol);
-				for (int i = 0; i < nameList.size(); i++) {
-					if (nameList.get(i)[0].equals(tmpId)) {
-						nameListIndex = i;
-						break;
-					}
-				}
-			}
-			String idName[] = (String[]) nameList.get(nameListIndex);
-			String id = idName[0];
-			String site = idName[2];
-			
+			String id = (String) queryDbTable.getValueAt(selRow, idCol);
+			String site = guiDbTableRowMap.get(id).getContributor();
 			
 			// PackageView表示クエリーデータ設定
 			PackageRecData recData = new PackageRecData();
@@ -3407,10 +3406,9 @@ public class SearchPage extends JFrame {
 			SearchPage.this.setCursor(waitCursor);
 
 			// 未検索の場合
-			if (nameListAll.size() == 0) {
+			if (guiDbTableRowMap.isEmpty()) {
 				// スペクトル取得
-				getSpectrumForQuery("");
-				nameListAll = new ArrayList(nameList);
+				getSpectrumForQuery(StringUtils.EMPTY);
 			}
 			// 既検索の場合
 			else {
@@ -3425,26 +3423,10 @@ public class SearchPage extends JFrame {
 				// PackageView初期化
 				pkgView.initAllRecInfo();
 				
-				DefaultTableModel dm = (DefaultTableModel)resultSorter.getTableModel();
-				dm.setRowCount(0);
 				hitLabel.setText(" ");
-//				nameList = new ArrayList(nameListAll);
-				try {
-					DefaultTableModel dataModel = (DefaultTableModel) querySorter.getTableModel();
-					queryDbTable.clearSelection();
-					dataModel.setRowCount(0);
-					for (int i = 0; i < nameListAll.size(); i++) {
-						String[] item = (String[]) nameListAll.get(i);
-						String id = item[0];
-						String name = item[1];
-//						String site = siteNameList[Integer.parseInt(item[2])];
-						String siteName = SiteUtil.getSiteNameByRecordIdPrefix(item[2]);
-						String[] idNameSite = new String[] { id, name, siteName, String.valueOf(i + 1) };
-						dataModel.addRow(idNameSite);
-					}
-				} catch (Exception ex) {
-					ex.printStackTrace();
-				}
+				queryDbTable.clearSelection();
+				
+				fillGuiDbTableData(new ArrayList<GuiDbTableRow>(guiDbTableRowMap.values()));
 			}
 			// マウスカーソルをデフォルトカーソルに
 			SearchPage.this.setCursor(Cursor.getDefaultCursor());
