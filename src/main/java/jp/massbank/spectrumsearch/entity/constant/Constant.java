@@ -3,6 +3,9 @@ package jp.massbank.spectrumsearch.entity.constant;
 public final class Constant {
 
 	public static final String ENCODING = "UTF-8";
+	
+	public static final String SYS_PROPERTIES_FILE_NAME = "system.properties";
+	public static final String SERVERS_CONFIG_FILE_NAME = "massbank.conf";
 
 	public static class Seperator {
 		public static final String DOLLAR = "$";

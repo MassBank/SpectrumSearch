@@ -90,7 +90,6 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 
 import jp.massbank.spectrumsearch.db.accessor.DbAccessor;
-import jp.massbank.spectrumsearch.db.accessor.RecordAccessor;
 import jp.massbank.spectrumsearch.db.entity.Record;
 import jp.massbank.spectrumsearch.entity.param.SearchQueryParam;
 import jp.massbank.spectrumsearch.logic.CompoundLogic;
@@ -101,6 +100,7 @@ import jp.massbank.spectrumsearch.model.PackageRecData;
 import jp.massbank.spectrumsearch.model.PackageSpecData;
 import jp.massbank.spectrumsearch.model.PeakData;
 import jp.massbank.spectrumsearch.model.UserFileData;
+import jp.massbank.spectrumsearch.util.SiteUtil;
 import massbank.GetInstInfo;
 import massbank.MassBankCommon;
 
@@ -113,7 +113,6 @@ import org.apache.log4j.Logger;
 public class SearchPage extends JFrame {
   private static final long serialVersionUID = 1L;
   private static final Logger LOGGER = Logger.getLogger(SearchPage.class);
-  static final String DUMMY_SITENAME = "dmyname";
 
   public static void main(String[] args) {
     LOGGER.info("Application start!");
@@ -221,8 +220,8 @@ public class SearchPage extends JFrame {
 	private ArrayList nameListAll = new ArrayList();
 
 	private String[] siteList ;
-
-//	public static String[] siteNameList = new String[]{"Keio Univ."};
+	
+	public static String[] siteNameList = new String[]{"Keio Univ."};
 
 	private JPanel parentPanel2 = null;
 
@@ -276,6 +275,7 @@ public class SearchPage extends JFrame {
 //		GetConfig conf = new GetConfig(confPath);
 //		siteNameList = conf.getSiteName();
 //		baseUrl = conf.getServerUrl();
+		siteNameList = SiteUtil.getSiteNamesArray();
 		
 		// Cookie情報ユーティリティ初期化
 		cm = new CookieManager( "SerchApplet", 30, true);
@@ -909,7 +909,7 @@ public class SearchPage extends JFrame {
 					DefaultTableModel dataModel = (DefaultTableModel)resultSorter.getTableModel();
 
 					// 検索結果をDBTableにセット
-					siteList = new String[total];
+//					siteList = new String[total];
 					for (int i = 0; i < total; i++) {
 						String line = (String) result.get(i);
 						String[] item = line.replace("\n", StringUtils.EMPTY).split("\t");
@@ -943,7 +943,7 @@ public class SearchPage extends JFrame {
 						}
 
 						// SiteName
-                        String siteName = DUMMY_SITENAME;
+                        String siteName = SiteUtil.getSiteNameByRecordId(id);
 //                        String siteName = siteNameList[Integer.parseInt(item[4])];
 //						siteList[i] = item[4];
 
@@ -1016,10 +1016,12 @@ public class SearchPage extends JFrame {
 		try {
 			DbAccessor.createConnection();
 			RecordLogic recordLogic = new RecordLogic();
+			LOGGER.info("search records by keyword || " + searchName);
 			List<Record> recordList = recordLogic.getRecordListByKeyword(searchName);
 			DbAccessor.closeConnection();
 			for (Record record : recordList) {
-				result.add(String.format("%s\t%s\t0", record.getTitle(), record.getId()));
+				String prefix = SiteUtil.getServerPrefixByRecordId(record.getId());
+				result.add(String.format("%s\t%s\t%s", record.getTitle(), record.getId(), prefix));
 			}
 		} catch (SQLException e) {
 	      LOGGER.error(e.getMessage(), e);
@@ -1042,14 +1044,15 @@ public class SearchPage extends JFrame {
 			String name = cutNameId[0];
 
 			String id = cutNameId[1];
-			String site = cutNameId[2];
+//			String site = cutNameId[2];
+			String sitePrefix = cutNameId[2];
 
-			String[] cutIdNameSite = new String[] { id, name, site };
+			String[] cutIdNameSite = new String[] { id, name, sitePrefix };
 			nameList.add(cutIdNameSite);
 
+			String siteName = SiteUtil.getSiteNameByRecordIdPrefix(sitePrefix);
 //			site = siteNameList[Integer.parseInt(site)];
-			site = DUMMY_SITENAME;
-			String[] idNameSite2 = new String[] { id, name, site, String.valueOf(i + 1) };
+			String[] idNameSite2 = new String[] { id, name, siteName, String.valueOf(i + 1) };
 
 			// 取得値をテーブルにセット
 			dataModel.addRow(idNameSite2);
@@ -3187,7 +3190,6 @@ public class SearchPage extends JFrame {
     	  DbAccessor.createConnection();
     	  SpectrumLogic spectrumLogic = new SpectrumLogic();
     	  line = spectrumLogic.getChildInfo(id);
-//    	  line = OldDbAccessor.getSpectrumData(id);
     	  DbAccessor.closeConnection();
       } catch (SQLException e) {
         LOGGER.error(e.getMessage(), e);
@@ -3426,7 +3428,7 @@ public class SearchPage extends JFrame {
 				DefaultTableModel dm = (DefaultTableModel)resultSorter.getTableModel();
 				dm.setRowCount(0);
 				hitLabel.setText(" ");
-				nameList = new ArrayList(nameListAll);
+//				nameList = new ArrayList(nameListAll);
 				try {
 					DefaultTableModel dataModel = (DefaultTableModel) querySorter.getTableModel();
 					queryDbTable.clearSelection();
@@ -3436,8 +3438,8 @@ public class SearchPage extends JFrame {
 						String id = item[0];
 						String name = item[1];
 //						String site = siteNameList[Integer.parseInt(item[2])];
-						String site = DUMMY_SITENAME;
-						String[] idNameSite = new String[] { id, name, site, String.valueOf(i + 1) };
+						String siteName = SiteUtil.getSiteNameByRecordIdPrefix(item[2]);
+						String[] idNameSite = new String[] { id, name, siteName, String.valueOf(i + 1) };
 						dataModel.addRow(idNameSite);
 					}
 				} catch (Exception ex) {

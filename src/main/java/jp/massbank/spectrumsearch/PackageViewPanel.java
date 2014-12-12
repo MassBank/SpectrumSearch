@@ -76,6 +76,7 @@ import javax.swing.table.DefaultTableModel;
 
 import jp.massbank.spectrumsearch.model.PackageRecData;
 import jp.massbank.spectrumsearch.model.PackageSpecData;
+import jp.massbank.spectrumsearch.util.SiteUtil;
 import massbank.MassBankCommon;
 
 import org.apache.log4j.Logger;
@@ -583,7 +584,7 @@ public class PackageViewPanel extends JPanel {
 //			else {
 //				recordData[6] = "";
 //			}
-			recordData[6] = SearchPage.DUMMY_SITENAME;
+			recordData[6] = SiteUtil.getSiteNameByRecordIdPrefix(recData.getSite());
 			recordData[7] = recData.getScore();
 			recordData[8] = recData.getHitPeakNum();
 			recordData[9] = String.valueOf(recData.getPeakNum());

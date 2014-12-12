@@ -14,13 +14,12 @@ public class SystemProperties {
 	private static final Logger LOGGER = Logger.getLogger(SystemProperties.class);
 	
 	private static SystemProperties INSTANCE = new SystemProperties();
-	private static final String SYS_PROPS_FILE_NAME = "system.properties";
 	private static final String STS_PROPS_FILE_PATH;
 	
 	private static Properties props;
 	
 	static {
-		URL classPath = SystemProperties.class.getClassLoader().getResource(SYS_PROPS_FILE_NAME);
+		URL classPath = SystemProperties.class.getClassLoader().getResource(Constant.SYS_PROPERTIES_FILE_NAME);
 		STS_PROPS_FILE_PATH = classPath.getPath();
 	}
 	
