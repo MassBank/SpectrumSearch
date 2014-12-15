@@ -7,11 +7,11 @@ import org.junit.Test;
 
 public class FileRecordLogicTest {
 	
-	@Test
-	public void testSync() {
-		MassBankRecordLogic logic = new MassBankRecordLogic();
-		logic.syncFilesRecordsByFolderPath(SystemProperties.getInstance().getDirPath());
-	}
+//	@Test
+//	public void testSync() {
+//		MassBankRecordLogic logic = new MassBankRecordLogic();
+//		logic.syncFilesRecordsByFolderPath(SystemProperties.getInstance().getDirPath());
+//	}
 	
 //	@Test
 //	public void testQuery() throws SQLException {
@@ -46,4 +46,8 @@ public class FileRecordLogicTest {
 //		DbAccessor.closeConnection();
 //	}
 
+	@Test
+	public void testParse() {
+		System.out.println(("1,2").split(","));
+	}
 }

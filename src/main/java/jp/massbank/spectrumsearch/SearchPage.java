@@ -95,6 +95,7 @@ import jp.massbank.spectrumsearch.entity.db.Record;
 import jp.massbank.spectrumsearch.entity.gui.GuiDbTableRow;
 import jp.massbank.spectrumsearch.entity.gui.GuiResultTableRow;
 import jp.massbank.spectrumsearch.entity.param.SearchQueryParam;
+import jp.massbank.spectrumsearch.entity.type.IonModeType;
 import jp.massbank.spectrumsearch.logic.CompoundLogic;
 import jp.massbank.spectrumsearch.logic.RecordLogic;
 import jp.massbank.spectrumsearch.logic.SpectrumLogic;
@@ -141,8 +142,8 @@ public class SearchPage extends JFrame {
 	private GetInstInfo instInfo = null;
 	
 	private static int PRECURSOR = -1;
-	private static float TOLERANCE = SystemProperties.getInstance().getTolerance();
-	public static int CUTOFF_THRESHOLD = SystemProperties.getInstance().getCutoffThreshold();
+	private static float TOLERANCE;
+	public static int CUTOFF_THRESHOLD;
 	private static final int LEFT_PANEL_WIDTH = 430;
 
 	private static final int TAB_ORDER_DB = 0;
@@ -246,13 +247,13 @@ public class SearchPage extends JFrame {
 	
 	public static final int MAX_DISPLAY_NUM = 30;				// Package View最大表示可能件数
 	
-	private CookieManager cm;							// Cookie Manager
+//	private CookieManager cm;							// Cookie Manager
 //	private final String COOKIE_PRE = "PRE";			// Cookie情報キー（PRECURSOR）
-	private final String COOKIE_TOL = "TOL";			// Cookie情報キー（TOLERANCE）
-	private final String COOKIE_CUTOFF = "CUTOFF"; 	// Cookie情報キー（COOKIE_CUTOFF）
-	private final String COOKIE_INST = "INST";			// Cookie情報キー（INSTRUMENT）
-	private final String COOKIE_MS = "MS";				// Cookie情報キー（MS）
-	private final String COOKIE_ION = "ION";			// Cookie情報キー（ION）
+//	private final String COOKIE_TOL = "TOL";			// Cookie情報キー（TOLERANCE）
+//	private final String COOKIE_CUTOFF = "CUTOFF"; 	// Cookie情報キー（COOKIE_CUTOFF）
+//	private final String COOKIE_INST = "INST";			// Cookie情報キー（INSTRUMENT）
+//	private final String COOKIE_MS = "MS";				// Cookie情報キー（MS）
+//	private final String COOKIE_ION = "ION";			// Cookie情報キー（ION）
 
 	private final JRadioButton dispSelected = new JRadioButton("selected", true);
 	private final JRadioButton dispRelated = new JRadioButton("related");
@@ -286,7 +287,7 @@ public class SearchPage extends JFrame {
 		siteNameList = SiteUtil.getSiteNamesArray();
 		
 		// Cookie情報ユーティリティ初期化
-		cm = new CookieManager( "SerchApplet", 30, true);
+//		cm = new CookieManager( "SerchApplet", 30, true);
 		
 		// Precursor m/z情報初期化
 		initPreInfo();
@@ -865,10 +866,12 @@ public class SearchPage extends JFrame {
 //		post.append( msTmp.toString() + "&" );
 		
 		
-		if (isIonRadio.get("Posi")) {
+//		if (isIonRadio.get("Posi")) {
+		if (isIonRadio.get(IonModeType.POSITIVE.getKey())) {
 			param.setIon(1);
 //			post.append( "ION=1&" );
-		} else if (isIonRadio.get("Nega")) {
+//		} else if (isIonRadio.get("Nega")) {
+		} else if (isIonRadio.get(IonModeType.NEGATIVE.getKey())) {
 			param.setIon(-1);
 //			post.append( "ION=-1&" );
 		} else {
@@ -1189,57 +1192,71 @@ public class SearchPage extends JFrame {
 	 * Tolerance情報初期化
 	 */
 	private void initTolInfo() {
-		// Cookie情報用リストにCookieからTolerance状態を取得
-      ArrayList<String> valueList = cm.getCookie(COOKIE_TOL);
-		
-		// Cookieが存在する場合
-		if (valueList.size() != 0) {
-			try {
-				TOLERANCE = Float.valueOf(valueList.get(0));
-			} catch (Exception e) {
-				// TOLERANCEはデフォルト値を使用
-			}
-			
-			if (valueList.contains(tolUnit2.getText())) {
-				tolUnit1.setSelected(false);
-				tolUnit2.setSelected(true);
-			} else {
-				tolUnit1.setSelected(true);
-				tolUnit2.setSelected(false);
-			}
+		// set search param 'Tolerance'
+		TOLERANCE = SystemProperties.getInstance().getDefaultTolerance();
+		// set search param 'Tolerance unit'
+		String toleranceUnit = SystemProperties.getInstance().getDefaultToleranceUnit();
+		if (tolUnit2.getText().equals(toleranceUnit)) {
+			tolUnit1.setSelected(false);
+			tolUnit2.setSelected(true);
 		} else {
-			TOLERANCE = SystemProperties.getInstance().getTolerance();
-			valueList.add(String.valueOf(TOLERANCE));
-			if (tolUnit1.isSelected()) {
-				valueList.add(tolUnit1.getText());	
-			}
-			else {
-				valueList.add(tolUnit2.getText());
-			}
-			cm.setCookie(COOKIE_TOL, valueList);
+			tolUnit1.setSelected(true);
+			tolUnit2.setSelected(false);
 		}
+		
+//		// Cookie情報用リストにCookieからTolerance状態を取得
+//      ArrayList<String> valueList = cm.getCookie(COOKIE_TOL);
+//		
+//		// Cookieが存在する場合
+//		if (valueList.size() != 0) {
+//			try {
+//				TOLERANCE = Float.valueOf(valueList.get(0));
+//			} catch (Exception e) {
+//				// TOLERANCEはデフォルト値を使用
+//			}
+//			
+//			if (valueList.contains(tolUnit2.getText())) {
+//				tolUnit1.setSelected(false);
+//				tolUnit2.setSelected(true);
+//			} else {
+//				tolUnit1.setSelected(true);
+//				tolUnit2.setSelected(false);
+//			}
+//		} else {
+//			TOLERANCE = SystemProperties.getInstance().getDefaultTolerance();
+//			valueList.add(String.valueOf(TOLERANCE));
+//			if (tolUnit1.isSelected()) {
+//				valueList.add(tolUnit1.getText());	
+//			}
+//			else {
+//				valueList.add(tolUnit2.getText());
+//			}
+//			cm.setCookie(COOKIE_TOL, valueList);
+//		}
 	}
 	
 	/**
 	 * Cutoff Threshold情報初期化
 	 */
 	private void initCutoffInfo() {
-		// Cookie情報用リストにCookieからCutoff Threshold状態を取得
-		ArrayList<String> valueList = cm.getCookie(COOKIE_CUTOFF);
+		CUTOFF_THRESHOLD = SystemProperties.getInstance().getDefaultCutoffThreshold();
 		
-		// Cookieが存在する場合
-		if (valueList.size() != 0) {
-			try {
-              CUTOFF_THRESHOLD = Integer.parseInt(valueList.get(0));
-//              CUTOFF_THRESHOLD = Integer.valueOf(valueList.get(0));
-			} catch (Exception e) {
-				// CUTOFF_THRESHOLDはデフォルト値を使用
-			}
-		} else {
-			CUTOFF_THRESHOLD = SystemProperties.getInstance().getCutoffThreshold();
-			valueList.add(String.valueOf(CUTOFF_THRESHOLD));
-			cm.setCookie(COOKIE_CUTOFF, valueList);
-		}
+//		// Cookie情報用リストにCookieからCutoff Threshold状態を取得
+//		ArrayList<String> valueList = cm.getCookie(COOKIE_CUTOFF);
+//		
+//		// Cookieが存在する場合
+//		if (valueList.size() != 0) {
+//			try {
+//              CUTOFF_THRESHOLD = Integer.parseInt(valueList.get(0));
+////              CUTOFF_THRESHOLD = Integer.valueOf(valueList.get(0));
+//			} catch (Exception e) {
+//				// CUTOFF_THRESHOLDはデフォルト値を使用
+//			}
+//		} else {
+//			CUTOFF_THRESHOLD = SystemProperties.getInstance().getCutoffThreshold();
+//			valueList.add(String.valueOf(CUTOFF_THRESHOLD));
+//			cm.setCookie(COOKIE_CUTOFF, valueList);
+//		}
 	}
 	
 	/**
@@ -1254,16 +1271,17 @@ public class SearchPage extends JFrame {
 		instGroup = instInfo.getTypeGroup();
 		
 		// Cookie情報用リストにCookieから装置種別の選択状態を取得
-        ArrayList<String> valueGetList = cm.getCookie(COOKIE_INST);
-		ArrayList<String> valueSetList = new ArrayList<String>();
+        List<String> valueGetList = Arrays.asList(SystemProperties.getInstance().getDefaultInstanceList());
+//        ArrayList<String> valueGetList = cm.getCookie(COOKIE_INST);
+		List<String> valueSetList = new ArrayList<String>();
 		
 		boolean checked = false;
-	      LOGGER.info("instInfo.getTypeGroup().size() -> " + instGroup.size());
+	    LOGGER.info("instInfo.getTypeGroup().size() -> " + instGroup.size());
 		for (Iterator i=instGroup.keySet().iterator(); i.hasNext(); ) {
 			String key = (String)i.next();
 			
 			List<String> list = instGroup.get(key);
-		      LOGGER.info("instGroup.get(  "+key+"  ).size() -> " + list.size());
+		    LOGGER.info("instGroup.get(  "+key+"  ).size() -> " + list.size());
 			for ( int j = 0; j < list.size(); j++ ) {
 				String val = list.get(j);
 			
@@ -1314,7 +1332,8 @@ public class SearchPage extends JFrame {
 		
 		// 初回読み込み時にCookie情報が存在しない場合はCookieに設定
 		if (valueGetList.size() == 0) {
-			cm.setCookie(COOKIE_INST, valueSetList);
+			SystemProperties.setDefaultInstanceList(valueSetList);
+//			cm.setCookie(COOKIE_INST, valueSetList);
 		}
 	}
 	
@@ -1329,8 +1348,9 @@ public class SearchPage extends JFrame {
 		isMsCheck = new HashMap<String, Boolean>();
 		
 		// Cookie情報用リストにCookieからMS種別の選択状態を取得
-        ArrayList<String> valueGetList = cm.getCookie(COOKIE_MS);
-		ArrayList<String> valueSetList = new ArrayList<String>();
+		List<String> valueGetList = Arrays.asList(SystemProperties.getInstance().getDefaultMsList());
+//        ArrayList<String> valueGetList = cm.getCookie(COOKIE_MS);
+		List<String> valueSetList = new ArrayList<String>();
 		
 		boolean checked = false;
 		
@@ -1381,7 +1401,8 @@ public class SearchPage extends JFrame {
 		
 		// 初回読み込み時にCookie情報が存在しない場合はCookieに設定
 		if (valueGetList.size() == 0) {
-			cm.setCookie(COOKIE_MS, valueSetList);
+			SystemProperties.setDefaultMsList(valueSetList);
+//			cm.setCookie(COOKIE_MS, valueSetList);
 		}
 	}
 	
@@ -1389,15 +1410,22 @@ public class SearchPage extends JFrame {
 	 * イオン種別情報初期化
 	 */
 	private void initIonInfo() {
-		final String keyPosi = "Posi";
-		final String keyNega = "Nega";
-		final String keyBoth = "Both";
+		final String keyPosi = IonModeType.POSITIVE.getKey();
+		final String keyNega = IonModeType.NEGATIVE.getKey();
+		final String keyBoth = IonModeType.BOTH.getKey();
+//		final String keyPosi = "Posi";
+//		final String keyNega = "Nega";
+//		final String keyBoth = "Both";
 		
 		ionRadio = new LinkedHashMap<String, JRadioButton>();
 		isIonRadio = new HashMap<String, Boolean>();
 		
 		// Cookie情報用リストにCookieからイオン種別の選択状態を取得
-        ArrayList<String> valueList = cm.getCookie(COOKIE_ION);
+		List<String> valueList = new ArrayList<String>();
+		for (String val : SystemProperties.getInstance().getDefaultIonList()) {
+			valueList.add(val.toUpperCase());
+		}
+//        ArrayList<String> valueList = cm.getCookie(COOKIE_ION);
 		
 		JRadioButton ionPosi = new JRadioButton("Positive");
 		JRadioButton ionNega = new JRadioButton("Negative");
@@ -1414,7 +1442,8 @@ public class SearchPage extends JFrame {
 			ionNega.setSelected(false);
 			ionBoth.setSelected(false);
 			valueList.add(keyPosi);
-			cm.setCookie(COOKIE_ION, valueList);
+			SystemProperties.setDefaultIonList(valueList);
+//			cm.setCookie(COOKIE_ION, valueList);
 		}
 		
 		ionRadio.put(keyPosi, ionPosi);
@@ -2040,24 +2069,26 @@ public class SearchPage extends JFrame {
 			if (isChange) {
 				
 				// Cookie情報用リスト
-				ArrayList<String> valueList = new ArrayList<String>();
+//				ArrayList<String> valueList = new ArrayList<String>();
 				
 				TOLERANCE = Float.parseFloat(tolField.getText());
-				valueList.add(String.valueOf(TOLERANCE));
+				SystemProperties.setDefaultTolerance(TOLERANCE);
+				
+//				valueList.add(String.valueOf(TOLERANCE));
 				
 				isTolUnit1 = tolUnit1.isSelected();
 				isTolUnit2 = tolUnit2.isSelected();
 				if (tolUnit2.isSelected()) {
-					valueList.add(tolUnit2.getText());
-				}
-				else {
-					valueList.add(tolUnit1.getText());
+					SystemProperties.setDefaultToleranceUnit(tolUnit2.getText());
+//					valueList.add(tolUnit2.getText());
+				} else {
+					SystemProperties.setDefaultToleranceUnit(tolUnit1.getText());
+//					valueList.add(tolUnit1.getText());
 				}
 				
 				// Tolerance値をCookieに設定
-				cm.setCookie(COOKIE_TOL, valueList);
-			}
-			else {
+//				cm.setCookie(COOKIE_TOL, valueList);
+			} else {
 				tolUnit1.setSelected(isTolUnit1);
 				tolUnit2.setSelected(isTolUnit2);
 			}
@@ -2086,13 +2117,15 @@ public class SearchPage extends JFrame {
 			if (isChange) {
 				
 				// Cookie情報用リスト
-				ArrayList<String> valueList = new ArrayList<String>();
+//				ArrayList<String> valueList = new ArrayList<String>();
 				
 				CUTOFF_THRESHOLD = Integer.parseInt(cutoffField.getText());
-				valueList.add(String.valueOf(CUTOFF_THRESHOLD));
+				SystemProperties.setDefaultCutoffThreshold(CUTOFF_THRESHOLD);
 				
-				// Cutoff Threshold値をCookieに設定
-				cm.setCookie(COOKIE_CUTOFF, valueList);
+//				valueList.add(String.valueOf(CUTOFF_THRESHOLD));
+				
+//				// Cutoff Threshold値をCookieに設定
+//				cm.setCookie(COOKIE_CUTOFF, valueList);
 			}
 		}
 		
@@ -2212,7 +2245,8 @@ public class SearchPage extends JFrame {
 			}
 			// 装置種別選択状態をCookieに設定
 			if (isChange) {
-				cm.setCookie(COOKIE_INST, valueList);
+				SystemProperties.setDefaultInstanceList(valueList);
+//				cm.setCookie(COOKIE_INST, valueList);
 			}
 		}
 		
@@ -2306,7 +2340,8 @@ public class SearchPage extends JFrame {
 			}
 			// MS種別選択状態をCookieに設定
 			if (isChange) {
-				cm.setCookie(COOKIE_MS, valueList);
+				SystemProperties.setDefaultMsList(valueList);
+//				cm.setCookie(COOKIE_MS, valueList);
 			}
 		}
 		
@@ -2360,7 +2395,8 @@ public class SearchPage extends JFrame {
 			}
 			// イオン種別選択状態をCookieに設定
 			if (isChange) {
-				cm.setCookie(COOKIE_ION, valueList);
+				SystemProperties.setDefaultIonList(valueList);
+//				cm.setCookie(COOKIE_ION, valueList);
 			}
 		}
 		
@@ -2768,9 +2804,11 @@ public class SearchPage extends JFrame {
 			String site = "0";
 			PackageRecData recData = null;
 
-			if (isIonRadio.get("Posi")) {
+//			if (isIonRadio.get("Posi")) {
+			if (isIonRadio.get(IonModeType.POSITIVE.getKey())) {
 				ion = 1;
-			} else if (isIonRadio.get("Nega")) {
+//			} else if (isIonRadio.get("Nega")) {
+			} else if (isIonRadio.get(IonModeType.NEGATIVE.getKey())) {
 				ion = -1;
 			} else {
 				ion = 0;

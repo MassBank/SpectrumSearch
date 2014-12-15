@@ -5,8 +5,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URL;
+import java.util.List;
 import java.util.Properties;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
 public class SystemProperties {
@@ -26,8 +28,12 @@ public class SystemProperties {
 	public static final class Key {
 		public static final String DIR_PATH = "massbank.record.dir.path"; 
 		public static final String DATABASE_NAME = "massbank.db.name"; 
-		public static final String CUTOFF_THRESHOLD = "cutoff.threshold"; 
-		public static final String TOLERANCE = "tolerance"; 
+		public static final String SYS_PARAM_DEFAULT_CUTOFF_THRESHOLD = "search.param.default.cutoff.threshold"; 
+		public static final String SYS_PARAM_DEFAULT_TOLERANCE = "search.param.default.tolerance"; 
+		public static final String SYS_PARAM_DEFAULT_TOLERANCE_UNIT = "search.param.default.tolerance.unit"; 
+		public static final String SYS_PARAM_DEFAULT_INST_LIST = "search.param.default.instance.list"; 
+		public static final String SYS_PARAM_DEFAULT_MS_LIST = "search.param.default.ms"; 
+		public static final String SYS_PARAM_DEFAULT_ION_LIST = "search.param.default.ion"; 
 	}
 	
 	private SystemProperties() {
@@ -49,6 +55,7 @@ public class SystemProperties {
 		}
 	}
 
+	// setters
 	public static void updateParam(String key, String value) {
 		try {
 			props.setProperty(key, value);
@@ -60,6 +67,31 @@ public class SystemProperties {
 		}
 	}
 	
+	public static void setDefaultCutoffThreshold(int value) {
+		updateParam(Key.SYS_PARAM_DEFAULT_CUTOFF_THRESHOLD, String.valueOf(value));
+	}
+	
+	public static void setDefaultTolerance(float value) {
+		updateParam(Key.SYS_PARAM_DEFAULT_TOLERANCE, String.valueOf(value));
+	}
+	
+	public static void setDefaultToleranceUnit(String unit) {
+		updateParam(Key.SYS_PARAM_DEFAULT_TOLERANCE_UNIT, unit);
+	}
+	
+	public static void setDefaultInstanceList(List<String> valueSetList) {
+		updateParam(Key.SYS_PARAM_DEFAULT_INST_LIST, toValue(valueSetList));
+	}
+	
+	public static void setDefaultMsList(List<String> valueSetList) {
+		updateParam(Key.SYS_PARAM_DEFAULT_MS_LIST, toValue(valueSetList));
+	}
+	
+	public static void setDefaultIonList(List<String> valueSetList) {
+		updateParam(Key.SYS_PARAM_DEFAULT_ION_LIST, toValue(valueSetList));
+	}
+	
+	// getters
 	public String getDirPath() {
 		return props.getProperty(Key.DIR_PATH);
 	}
@@ -68,12 +100,46 @@ public class SystemProperties {
 		return getDirPath() + "/" + props.getProperty(Key.DATABASE_NAME);
 	}
 	
-	public int getCutoffThreshold() {
-		return Integer.parseInt(props.getProperty(Key.CUTOFF_THRESHOLD));
+	public int getDefaultCutoffThreshold() {
+		return Integer.parseInt(props.getProperty(Key.SYS_PARAM_DEFAULT_CUTOFF_THRESHOLD));
 	}
 	
-	public float getTolerance() {
-		return Float.parseFloat(props.getProperty(Key.TOLERANCE));
+	public float getDefaultTolerance() {
+		return Float.parseFloat(props.getProperty(Key.SYS_PARAM_DEFAULT_TOLERANCE));
+	}
+	
+	public String getDefaultToleranceUnit() {
+		return props.getProperty(Key.SYS_PARAM_DEFAULT_TOLERANCE_UNIT);
+	}
+	
+	public String[] getDefaultInstanceList() {
+		return toArray(props.getProperty(Key.SYS_PARAM_DEFAULT_INST_LIST));
+	}
+	
+	public String[] getDefaultMsList() {
+		return toArray(props.getProperty(Key.SYS_PARAM_DEFAULT_MS_LIST));
+	}
+	
+	public String[] getDefaultIonList() {
+		return toArray(props.getProperty(Key.SYS_PARAM_DEFAULT_ION_LIST));
+	}
+	
+	// private
+	private static String toValue(List<String> list) {
+		StringBuilder sb = new StringBuilder();
+		for (String item : list) {
+			sb.append(item);
+			sb.append(",");
+		}
+		String result = sb.toString();
+		return result.substring(0, result.length() - 1);
+	}
+	
+	private String[] toArray(String value) {
+		if (StringUtils.isNotBlank(value)) {
+			return value.split(",");
+		}
+		return new String[0];
 	}
 	
 }
