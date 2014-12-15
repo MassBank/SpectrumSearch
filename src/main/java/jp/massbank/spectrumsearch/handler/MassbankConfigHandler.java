@@ -37,11 +37,11 @@ public class MassbankConfigHandler extends DefaultHandler {
 		case "Related":
 			servers.add(server);
 			break;
-		case "Name":
-			server.setName(content);
-			break;
 		case "LongName":
 			server.setLongName(content);
+			break;
+		case "Name":
+			server.setName(content);
 			break;
 		case "Prefix":
 			if (StringUtils.isNotBlank(content)) {

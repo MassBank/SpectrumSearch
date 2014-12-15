@@ -41,7 +41,7 @@ public class SiteUtil {
 	public static String getSiteNameByRecordIdPrefix(String prefix) {
 		Site site = getSiteByRecordIdPrefix(prefix);
 		if (site != null) {
-			return site.getLongName();
+			return site.getName();
 		}
 		return StringUtils.EMPTY;
 	}
