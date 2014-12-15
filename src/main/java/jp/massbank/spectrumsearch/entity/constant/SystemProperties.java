@@ -26,6 +26,8 @@ public class SystemProperties {
 	public static final class Key {
 		public static final String DIR_PATH = "massbank.record.dir.path"; 
 		public static final String DATABASE_NAME = "massbank.db.name"; 
+		public static final String CUTOFF_THRESHOLD = "cutoff.threshold"; 
+		public static final String TOLERANCE = "tolerance"; 
 	}
 	
 	private SystemProperties() {
@@ -64,6 +66,14 @@ public class SystemProperties {
 	
 	public String getDatabasePath() {
 		return getDirPath() + "/" + props.getProperty(Key.DATABASE_NAME);
+	}
+	
+	public int getCutoffThreshold() {
+		return Integer.parseInt(props.getProperty(Key.CUTOFF_THRESHOLD));
+	}
+	
+	public float getTolerance() {
+		return Float.parseFloat(props.getProperty(Key.TOLERANCE));
 	}
 	
 }

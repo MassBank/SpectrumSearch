@@ -90,6 +90,7 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 
 import jp.massbank.spectrumsearch.accessor.DbAccessor;
+import jp.massbank.spectrumsearch.entity.constant.SystemProperties;
 import jp.massbank.spectrumsearch.entity.db.Record;
 import jp.massbank.spectrumsearch.entity.gui.GuiDbTableRow;
 import jp.massbank.spectrumsearch.entity.gui.GuiResultTableRow;
@@ -140,8 +141,8 @@ public class SearchPage extends JFrame {
 	private GetInstInfo instInfo = null;
 	
 	private static int PRECURSOR = -1;
-	private static float TOLERANCE = 0.3f;
-	public static int CUTOFF_THRESHOLD = 5;
+	private static float TOLERANCE = SystemProperties.getInstance().getTolerance();
+	public static int CUTOFF_THRESHOLD = SystemProperties.getInstance().getCutoffThreshold();
 	private static final int LEFT_PANEL_WIDTH = 430;
 
 	private static final int TAB_ORDER_DB = 0;
@@ -1207,7 +1208,7 @@ public class SearchPage extends JFrame {
 				tolUnit2.setSelected(false);
 			}
 		} else {
-			TOLERANCE = 0.3f;
+			TOLERANCE = SystemProperties.getInstance().getTolerance();
 			valueList.add(String.valueOf(TOLERANCE));
 			if (tolUnit1.isSelected()) {
 				valueList.add(tolUnit1.getText());	
@@ -1235,7 +1236,7 @@ public class SearchPage extends JFrame {
 				// CUTOFF_THRESHOLDはデフォルト値を使用
 			}
 		} else {
-			CUTOFF_THRESHOLD = 5;
+			CUTOFF_THRESHOLD = SystemProperties.getInstance().getCutoffThreshold();
 			valueList.add(String.valueOf(CUTOFF_THRESHOLD));
 			cm.setCookie(COOKIE_CUTOFF, valueList);
 		}
