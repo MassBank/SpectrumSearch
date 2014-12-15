@@ -1,10 +1,10 @@
-package jp.massbank.spectrumsearch.db.accessor;
+package jp.massbank.spectrumsearch.accessor;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
-import jp.massbank.spectrumsearch.db.entity.Record;
+import jp.massbank.spectrumsearch.entity.db.Record;
 import jp.massbank.spectrumsearch.util.QueryBuilder;
 
 public class RecordAccessor extends AbstractDbAccessor<Record> {

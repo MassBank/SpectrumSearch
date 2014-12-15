@@ -1,4 +1,4 @@
-package jp.massbank.spectrumsearch.file.entity;
+package jp.massbank.spectrumsearch.entity.file;
 
 import java.util.ArrayList;
 import java.util.HashMap;

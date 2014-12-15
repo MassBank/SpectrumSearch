@@ -1,4 +1,4 @@
-package jp.massbank.spectrumsearch.db.entity;
+package jp.massbank.spectrumsearch.entity.db;
 
 public class MsType {
 	

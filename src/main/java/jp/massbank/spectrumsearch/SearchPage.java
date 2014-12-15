@@ -89,8 +89,8 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 
-import jp.massbank.spectrumsearch.db.accessor.DbAccessor;
-import jp.massbank.spectrumsearch.db.entity.Record;
+import jp.massbank.spectrumsearch.accessor.DbAccessor;
+import jp.massbank.spectrumsearch.entity.db.Record;
 import jp.massbank.spectrumsearch.entity.gui.GuiDbTableRow;
 import jp.massbank.spectrumsearch.entity.gui.GuiResultTableRow;
 import jp.massbank.spectrumsearch.entity.param.SearchQueryParam;

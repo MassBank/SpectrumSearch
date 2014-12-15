@@ -1,4 +1,4 @@
-package jp.massbank.spectrumsearch.db.accessor;
+package jp.massbank.spectrumsearch.accessor;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -190,7 +190,7 @@ public class DbAccessor {
 			try {
 				conn.createStatement().execute(
 						"CREATE FUNCTION  CONCAT(DATA VARCHAR(32000)) RETURNS VARCHAR(32000) " +
-						"EXTERNAL NAME 'jp.massbank.spectrumsearch.db.function.DbFunction.concat' " +
+						"EXTERNAL NAME 'jp.massbank.spectrumsearch.util.DbUtil.concat' " +
 						"LANGUAGE JAVA PARAMETER STYLE JAVA"
 						);
 			} catch (SQLException e) {
@@ -199,7 +199,7 @@ public class DbAccessor {
 			try {
 				conn.createStatement().execute(
 						"CREATE FUNCTION  LPAD(DATA VARCHAR(32000), LENGTH INTEGER, PADCHAR CHAR(1)) RETURNS VARCHAR(32000) " +
-								"EXTERNAL NAME 'jp.massbank.spectrumsearch.db.function.DbFunction.lpad' " +
+								"EXTERNAL NAME 'jp.massbank.spectrumsearch.util.DbUtil.lpad' " +
 								"LANGUAGE JAVA PARAMETER STYLE JAVA"
 						);
 			} catch (SQLException e) {
@@ -208,7 +208,7 @@ public class DbAccessor {
 			try {
 				conn.createStatement().execute(
 						"CREATE FUNCTION  CASTDOUBLE(DATA DOUBLE) RETURNS VARCHAR(32000) " +
-								"EXTERNAL NAME 'jp.massbank.spectrumsearch.db.function.DbFunction.castDouble' " +
+								"EXTERNAL NAME 'jp.massbank.spectrumsearch.util.DbUtil.castDouble' " +
 								"LANGUAGE JAVA PARAMETER STYLE JAVA"
 						);
 			} catch (SQLException e) {
@@ -217,7 +217,7 @@ public class DbAccessor {
 			try {
 				conn.createStatement().execute(
 						"CREATE FUNCTION  CASTINTEGER(DATA INT) RETURNS VARCHAR(32000) " +
-								"EXTERNAL NAME 'jp.massbank.spectrumsearch.db.function.DbFunction.castInteger' " +
+								"EXTERNAL NAME 'jp.massbank.spectrumsearch.util.DbUtil.castInteger' " +
 								"LANGUAGE JAVA PARAMETER STYLE JAVA"
 						);
 			} catch (SQLException e) {

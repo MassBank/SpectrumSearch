@@ -26,11 +26,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-import jp.massbank.spectrumsearch.db.accessor.DbAccessor;
-import jp.massbank.spectrumsearch.db.accessor.InstrumentAccessor;
-import jp.massbank.spectrumsearch.db.accessor.MsTypeAccessor;
-import jp.massbank.spectrumsearch.db.entity.Instrument;
-import jp.massbank.spectrumsearch.db.entity.MsType;
+import jp.massbank.spectrumsearch.accessor.DbAccessor;
+import jp.massbank.spectrumsearch.accessor.InstrumentAccessor;
+import jp.massbank.spectrumsearch.accessor.MsTypeAccessor;
+import jp.massbank.spectrumsearch.entity.db.Instrument;
+import jp.massbank.spectrumsearch.entity.db.MsType;
 
 import org.apache.log4j.Logger;
 

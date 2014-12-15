@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import jp.massbank.spectrumsearch.db.accessor.DbAccessor;
+import jp.massbank.spectrumsearch.accessor.DbAccessor;
 import jp.massbank.spectrumsearch.entity.constant.Constant;
 import jp.massbank.spectrumsearch.entity.param.HitPeak;
 import jp.massbank.spectrumsearch.entity.param.ResScore;

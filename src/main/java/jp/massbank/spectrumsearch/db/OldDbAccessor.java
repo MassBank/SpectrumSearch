@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
-import jp.massbank.spectrumsearch.db.entity.Instrument;
+import jp.massbank.spectrumsearch.entity.db.Instrument;
 
 import org.apache.log4j.Logger;
 

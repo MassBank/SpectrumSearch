@@ -6,7 +6,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 
-import jp.massbank.spectrumsearch.db.entity.Instrument;
+import jp.massbank.spectrumsearch.entity.db.Instrument;
 
 import org.apache.log4j.Logger;
 import org.junit.Test;

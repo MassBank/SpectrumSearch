@@ -2,12 +2,12 @@ package jp.massbank.spectrumsearch.logic;
 
 import java.util.List;
 
-import jp.massbank.spectrumsearch.db.accessor.PeakAccessor;
-import jp.massbank.spectrumsearch.db.accessor.RecordAccessor;
-import jp.massbank.spectrumsearch.db.accessor.SpectrumAccessor;
-import jp.massbank.spectrumsearch.db.entity.Peak;
-import jp.massbank.spectrumsearch.db.entity.Record;
-import jp.massbank.spectrumsearch.db.entity.Spectrum;
+import jp.massbank.spectrumsearch.accessor.PeakAccessor;
+import jp.massbank.spectrumsearch.accessor.RecordAccessor;
+import jp.massbank.spectrumsearch.accessor.SpectrumAccessor;
+import jp.massbank.spectrumsearch.entity.db.Peak;
+import jp.massbank.spectrumsearch.entity.db.Record;
+import jp.massbank.spectrumsearch.entity.db.Spectrum;
 
 import org.apache.commons.lang3.StringUtils;
 

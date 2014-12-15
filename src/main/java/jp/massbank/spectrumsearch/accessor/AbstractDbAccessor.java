@@ -1,4 +1,4 @@
-package jp.massbank.spectrumsearch.db.accessor;
+package jp.massbank.spectrumsearch.accessor;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

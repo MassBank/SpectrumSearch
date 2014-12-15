@@ -3,8 +3,8 @@ package jp.massbank.spectrumsearch.logic;
 import java.util.ArrayList;
 import java.util.List;
 
-import jp.massbank.spectrumsearch.db.accessor.RecordAccessor;
-import jp.massbank.spectrumsearch.db.entity.Record;
+import jp.massbank.spectrumsearch.accessor.RecordAccessor;
+import jp.massbank.spectrumsearch.entity.db.Record;
 
 public class CompoundLogic {
 	

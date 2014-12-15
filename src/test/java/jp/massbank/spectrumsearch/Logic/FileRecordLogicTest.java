@@ -1,13 +1,5 @@
 package jp.massbank.spectrumsearch.Logic;
 
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
-import jp.massbank.spectrumsearch.db.accessor.DbAccessor;
-import jp.massbank.spectrumsearch.db.accessor.RecordAccessor;
-import jp.massbank.spectrumsearch.db.entity.Record;
 import jp.massbank.spectrumsearch.entity.constant.SystemProperties;
 import jp.massbank.spectrumsearch.logic.MassBankRecordLogic;
 
@@ -15,11 +7,11 @@ import org.junit.Test;
 
 public class FileRecordLogicTest {
 	
-//	@Test
-//	public void testSync() {
-//		MassBankRecordLogic logic = new MassBankRecordLogic();
-//		logic.syncFilesRecordsByFolderPath(SystemProperties.getInstance().getDirPath());
-//	}
+	@Test
+	public void testSync() {
+		MassBankRecordLogic logic = new MassBankRecordLogic();
+		logic.syncFilesRecordsByFolderPath(SystemProperties.getInstance().getDirPath());
+	}
 	
 //	@Test
 //	public void testQuery() throws SQLException {
@@ -43,15 +35,15 @@ public class FileRecordLogicTest {
 //		System.out.println("end");
 //	}
 	
-	@Test
-	public void testSearchQuery() throws SQLException {
-		DbAccessor.createConnection();
-		String keyword = "d%p_s";
-		RecordAccessor recordAccessor = new RecordAccessor();
-		List<Record> result = new ArrayList<Record>();
-		result = recordAccessor.getRecordsByName(keyword);
-		System.out.println(result.size());
-		DbAccessor.closeConnection();
-	}
+//	@Test
+//	public void testSearchQuery() throws SQLException {
+//		DbAccessor.createConnection();
+//		String keyword = "d%p_s";
+//		RecordAccessor recordAccessor = new RecordAccessor();
+//		List<Record> result = new ArrayList<Record>();
+//		result = recordAccessor.getRecordsByName(keyword);
+//		System.out.println(result.size());
+//		DbAccessor.closeConnection();
+//	}
 
 }

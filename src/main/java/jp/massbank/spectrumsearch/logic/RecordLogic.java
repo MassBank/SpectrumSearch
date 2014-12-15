@@ -3,10 +3,10 @@ package jp.massbank.spectrumsearch.logic;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang3.StringUtils;
+import jp.massbank.spectrumsearch.accessor.RecordAccessor;
+import jp.massbank.spectrumsearch.entity.db.Record;
 
-import jp.massbank.spectrumsearch.db.accessor.RecordAccessor;
-import jp.massbank.spectrumsearch.db.entity.Record;
+import org.apache.commons.lang3.StringUtils;
 
 public class RecordLogic {
 	
