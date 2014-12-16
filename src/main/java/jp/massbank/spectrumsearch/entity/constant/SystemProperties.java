@@ -31,9 +31,9 @@ public class SystemProperties {
 		public static final String SYS_PARAM_DEFAULT_CUTOFF_THRESHOLD = "search.param.default.cutoff.threshold"; 
 		public static final String SYS_PARAM_DEFAULT_TOLERANCE = "search.param.default.tolerance"; 
 		public static final String SYS_PARAM_DEFAULT_TOLERANCE_UNIT = "search.param.default.tolerance.unit"; 
-		public static final String SYS_PARAM_DEFAULT_INST_LIST = "search.param.default.instance.list"; 
-		public static final String SYS_PARAM_DEFAULT_MS_LIST = "search.param.default.ms"; 
-		public static final String SYS_PARAM_DEFAULT_ION_LIST = "search.param.default.ion"; 
+		public static final String SYS_PARAM_DEFAULT_INST_TYPE_LIST = "search.param.default.instance.type.list"; 
+		public static final String SYS_PARAM_DEFAULT_MS_LIST = "search.param.default.ms.list"; 
+		public static final String SYS_PARAM_DEFAULT_ION_LIST = "search.param.default.ion.list"; 
 	}
 	
 	private SystemProperties() {
@@ -79,8 +79,8 @@ public class SystemProperties {
 		updateParam(Key.SYS_PARAM_DEFAULT_TOLERANCE_UNIT, unit);
 	}
 	
-	public static void setDefaultInstanceList(List<String> valueSetList) {
-		updateParam(Key.SYS_PARAM_DEFAULT_INST_LIST, toValue(valueSetList));
+	public static void setDefaultInstanceTypeList(List<String> valueSetList) {
+		updateParam(Key.SYS_PARAM_DEFAULT_INST_TYPE_LIST, toValue(valueSetList));
 	}
 	
 	public static void setDefaultMsList(List<String> valueSetList) {
@@ -112,8 +112,8 @@ public class SystemProperties {
 		return props.getProperty(Key.SYS_PARAM_DEFAULT_TOLERANCE_UNIT);
 	}
 	
-	public String[] getDefaultInstanceList() {
-		return toArray(props.getProperty(Key.SYS_PARAM_DEFAULT_INST_LIST));
+	public String[] getDefaultInstanceTypeList() {
+		return toArray(props.getProperty(Key.SYS_PARAM_DEFAULT_INST_TYPE_LIST));
 	}
 	
 	public String[] getDefaultMsList() {

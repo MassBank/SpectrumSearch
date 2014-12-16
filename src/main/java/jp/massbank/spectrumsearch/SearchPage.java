@@ -1271,7 +1271,7 @@ public class SearchPage extends JFrame {
 		instGroup = instInfo.getTypeGroup();
 		
 		// Cookie情報用リストにCookieから装置種別の選択状態を取得
-        List<String> valueGetList = Arrays.asList(SystemProperties.getInstance().getDefaultInstanceList());
+        List<String> valueGetList = Arrays.asList(SystemProperties.getInstance().getDefaultInstanceTypeList());
 //        ArrayList<String> valueGetList = cm.getCookie(COOKIE_INST);
 		List<String> valueSetList = new ArrayList<String>();
 		
@@ -1332,7 +1332,7 @@ public class SearchPage extends JFrame {
 		
 		// 初回読み込み時にCookie情報が存在しない場合はCookieに設定
 		if (valueGetList.size() == 0) {
-			SystemProperties.setDefaultInstanceList(valueSetList);
+			SystemProperties.setDefaultInstanceTypeList(valueSetList);
 //			cm.setCookie(COOKIE_INST, valueSetList);
 		}
 	}
@@ -2245,7 +2245,7 @@ public class SearchPage extends JFrame {
 			}
 			// 装置種別選択状態をCookieに設定
 			if (isChange) {
-				SystemProperties.setDefaultInstanceList(valueList);
+				SystemProperties.setDefaultInstanceTypeList(valueList);
 //				cm.setCookie(COOKIE_INST, valueList);
 			}
 		}

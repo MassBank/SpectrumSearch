@@ -488,7 +488,10 @@ public class SearchLogic {
 				}
 				sb.append( "\n" );
 			}
-			result.add(sb.toString());
+			String line = sb.toString();
+			if (StringUtils.isNotBlank(line)) {
+				result.add(line);
+			}
 		}
 		return result;
 	}
