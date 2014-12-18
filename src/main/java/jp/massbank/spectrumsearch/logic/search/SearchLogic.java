@@ -43,14 +43,26 @@ public class SearchLogic {
 	public ArrayList<String> getSearchResult(SearchQueryParam param) {
 		ArrayList<String> result = new ArrayList<String>();
 		try {
+			System.out.println("start search result");
+			long s1 = System.currentTimeMillis();
 			DbAccessor.createConnection();
+			long s2 = System.currentTimeMillis();
+			System.out.println("open connection : " + (s2-s1) + " ms");
 			setQueryPeak(param);
+			long s3 = System.currentTimeMillis();
+			System.out.println("setQueryPeak : " + (s3-s2) + " ms");
 			if ( !searchPeak(param) ) {
 				return result;
 			}
+			long s4 = System.currentTimeMillis();
+			System.out.println("searchPeak : " + (s4-s3) + " ms");
 			setScore(param);
+			long s5 = System.currentTimeMillis();
+			System.out.println("setScore : " + (s5-s4) + " ms");
 			result.addAll(outResult());
 			DbAccessor.closeConnection();
+			long s6 = System.currentTimeMillis();
+			System.out.println("close connection : " + (s6-s5) + " ms");
 		} catch (SQLException e) {
 			LOGGER.error(e.getMessage(), e);
 		}

@@ -66,25 +66,25 @@ public class DbAccessor {
 		}           
     }
 	
-	public static int rowCount(String sql) {
-		int result = 0;
-		try {
-			createPreparedStatement(sql);
-			ResultSet rs = pstmt.executeQuery();
-			rs.last();
-			result = rs.getRow();
-			rs.close();
-		} catch (SQLException e) {
-			LOGGER.error(e.getMessage(), e);
-		} finally {
-			try {
-				closePreparedStatement();
-			} catch (SQLException e) {
-				LOGGER.error(e.getMessage(), e);
-			}
-		}
-		return result;
-	}
+//	public static int rowCount(String sql) {
+//		int result = 0;
+//		try {
+//			createPreparedStatement(sql);
+//			ResultSet rs = pstmt.executeQuery();
+//			rs.last();
+//			result = rs.getRow();
+//			rs.close();
+//		} catch (SQLException e) {
+//			LOGGER.error(e.getMessage(), e);
+//		} finally {
+//			try {
+//				closePreparedStatement();
+//			} catch (SQLException e) {
+//				LOGGER.error(e.getMessage(), e);
+//			}
+//		}
+//		return result;
+//	}
 	
 	public static List<Map<Integer, Object>> execQuery(String sql) {
 		List<Map<Integer, Object>> result = new ArrayList<Map<Integer, Object>>();
@@ -140,8 +140,16 @@ public class DbAccessor {
 //		return result;
 //	}
 	
+	public static int[] executeBatch() throws SQLException {
+		if (stmt != null) {
+			return stmt.executeBatch();
+		}
+		return new int[0];
+	}
+	
 	protected void createStatment() throws SQLException {
-		if (conn != null || !conn.isClosed()) {
+		if ((stmt == null || stmt.isClosed()) && 
+				(conn != null || !conn.isClosed())) {
 			stmt = conn.createStatement();
 		}
 	}

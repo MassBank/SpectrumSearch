@@ -37,6 +37,21 @@ public class SpectrumAccessor extends AbstractDbAccessor<Spectrum> {
 		return listString(sql);
 	}
 	
+	public void addBatchInsert(Spectrum spectrum) {
+		String insertQuery = "INSERT INTO " + Spectrum.TABLE + " " +
+				"(" + 
+				Spectrum.Columns.TITLE + "," + 
+				Spectrum.Columns.ION_MODE + "," + 
+				Spectrum.Columns.PRECURSOR_MZ + "," + 
+				Spectrum.Columns.RECORD_ID + 
+				") values (" +
+				"'" + spectrum.getTitle() + "'," +
+				spectrum.getIonMode() + "," + 
+				spectrum.getPrecursorMz() + "," +
+				"'" + spectrum.getRecordId() + "')";
+		addBatch(insertQuery);
+	}
+	
 	@Override
 	public void insert(Spectrum spectrum) {
 		String insertQuery = "INSERT INTO " + Spectrum.TABLE + " " +

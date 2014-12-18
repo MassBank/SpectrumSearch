@@ -42,13 +42,13 @@ public abstract class AbstractDbAccessor<T> extends DbAccessor {
 			createStatment();
 			result = listResult(sql);
         } catch (Exception e) {
-        	LOGGER.error(e.getMessage(), e);
+        	errorLog(sql, e);
         } finally {
         	try {
         		closeStatment();
 //	        	closeConnection();
         	} catch (SQLException e) {
-        		LOGGER.error(e.getMessage(), e);
+        		errorLog(sql, e);
         	}
         }
 		return result;
@@ -61,13 +61,13 @@ public abstract class AbstractDbAccessor<T> extends DbAccessor {
 			createStatment();
 			result = listResultString(sql);
 		} catch (Exception e) {
-			LOGGER.error(e.getMessage(), e);
+			errorLog(sql, e);
 		} finally {
 			try {
 				closeStatment();
 //	        	closeConnection();
 			} catch (SQLException e) {
-				LOGGER.error(e.getMessage(), e);
+				errorLog(sql, e);
 			}
 		}
 		return result;
@@ -79,13 +79,13 @@ public abstract class AbstractDbAccessor<T> extends DbAccessor {
 			createStatment();
 			return stmt.execute(sql);
         } catch (Exception e) {
-        	LOGGER.error(e.getMessage(), e);
+        	errorLog(sql, e);
         } finally {
         	try {
         		closeStatment();
 //	        	closeConnection();
         	} catch (SQLException e) {
-        		LOGGER.error(e.getMessage(), e);
+        		errorLog(sql, e);
         	}
         }
 		return false;
@@ -96,15 +96,7 @@ public abstract class AbstractDbAccessor<T> extends DbAccessor {
 			createStatment();
 			stmt.addBatch(sql);
 		} catch (SQLException e) {
-			LOGGER.error(e.getMessage(), e);
-		}
-	}
-	
-	public void executeBatch() {
-		try {
-			stmt.executeBatch();
-		} catch (SQLException e) {
-			LOGGER.error(e.getMessage(), e);
+			errorLog(sql, e);
 		}
 	}
 	
@@ -127,13 +119,13 @@ public abstract class AbstractDbAccessor<T> extends DbAccessor {
 	        }
 			
 		} catch (Exception e) {
-			LOGGER.error(e.getMessage(), e);
+			errorLog(sql, e);
 		} finally {
 			try {
 				closePreparedStatement();
 //				closeConnection();
 			} catch (SQLException e) {
-				LOGGER.error(e.getMessage(), e);
+				errorLog(sql, e);
 			}
 		}
 		
@@ -146,13 +138,13 @@ public abstract class AbstractDbAccessor<T> extends DbAccessor {
 			createStatment();
 			return stmt.execute(sql);
         } catch (Exception e) {
-        	LOGGER.error(e.getMessage(), e);
+        	errorLog(sql, e);
         } finally {
         	try {
         		closeStatment();
 //	        	closeConnection();
         	} catch (SQLException e) {
-        		LOGGER.error(e.getMessage(), e);
+        		errorLog(sql, e);
         	}
         }
 		return false;
@@ -168,14 +160,14 @@ public abstract class AbstractDbAccessor<T> extends DbAccessor {
 				LOGGER.info(sql);
 				LOGGER.info("Table already exist");
 			} else {
-				LOGGER.error(e.getMessage(), e);
+				errorLog(sql, e);
 			}
 		} finally {
 			try {
 				closeStatment();
 //				closeConnection();
 			} catch (SQLException e) {
-				LOGGER.error(e.getMessage(), e);
+				errorLog(sql, e);
 			}
 		}
 	}
@@ -239,6 +231,11 @@ public abstract class AbstractDbAccessor<T> extends DbAccessor {
 			}
 		}
 		return result;
+	}
+	
+	private void errorLog(String sql, Exception e) {
+		LOGGER.error("error sql:" + sql);
+		LOGGER.error(e.getMessage(), e);
 	}
 	
 }

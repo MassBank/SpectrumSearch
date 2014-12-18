@@ -32,7 +32,10 @@ public class MassBankRecordReader {
 	}
 	
 	public static String getValueAsString(String line, MassBankRecordLine recordLine) {
-		return line.replace(recordLine.getKey().concat(":"), EMPTY).replace(recordLine.getKey().concat(";"), EMPTY).trim();
+		return line.replace(recordLine.getKey().concat(":"), EMPTY)
+					.replace(recordLine.getKey().concat(";"), EMPTY)
+					.replace("'", "''") // avoid sql error
+					.trim();
 	}
 	
 	public static List<String> getValueAsStringList(String line, MassBankRecordLine recordLine) {

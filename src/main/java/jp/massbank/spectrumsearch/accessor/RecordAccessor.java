@@ -37,6 +37,25 @@ public class RecordAccessor extends AbstractDbAccessor<Record> {
 		return listGeneric(sql);
 	}
 
+	public void addBatchInsert(Record record) {
+		String insertQuery = "INSERT INTO " + Record.TABLE + " " +
+				"(" + 
+					Record.Columns.RECORD_ID + "," + 
+					Record.Columns.RECORD_TITLE + "," + 
+					Record.Columns.MS_TYPE + "," + 
+					Record.Columns.FORMULA + "," + 
+					Record.Columns.EXACT_MASS + "," + 
+					Record.Columns.INSTRUMENT_ID + 
+				") values (" +
+					"'" + record.getId() + "'," + 
+					"'" + record.getTitle() + "'," +
+					"'" + record.getMsType() + "'," +
+					"'" + record.getFormula() + "'," +
+					record.getExactMass() + "," +
+					record.getInstrumentId() + ")";
+		addBatch(insertQuery);
+	}
+	
 	@Override
 	public void insert(Record record) {
 		String insertQuery = "INSERT INTO " + Record.TABLE + " " +

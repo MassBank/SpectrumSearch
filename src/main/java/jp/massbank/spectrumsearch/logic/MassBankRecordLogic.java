@@ -72,12 +72,53 @@ public class MassBankRecordLogic {
 			LOGGER.error(e.getMessage(), e);
 		}
 		
-		syncFolderInfo(pathname);
+		try {
+			// open connection
+			DbAccessor.createConnection();
+			syncFolderInfo(pathname);
+		} catch (SQLException e) {
+			LOGGER.error(e.getMessage(), e);
+		} finally {
+			try {
+				// close connection
+				DbAccessor.closeConnection();
+			} catch (SQLException e) {
+				LOGGER.error(e.getMessage(), e);
+			}
+		}
 		
+	}
+	
+	private int getTotalFileCountInFolder(String pathname) {
+		File f = new File(pathname);
+		return getFilesCount(f);
+	}
+	
+	public static int getFilesCount(File file) {
+		File[] files = file.listFiles();
+		int count = 0;
+		for (File f : files) {
+			if (! f.isHidden()) {
+				if (f.isDirectory()) {
+					count += getFilesCount(f);
+				} else {
+					count++;
+				}
+			}
+		}
+
+		return count;
 	}
 	
 	private void syncFolderInfo(String pathname) {
 		long s = System.currentTimeMillis();
+
+		int fileCount = getTotalFileCountInFolder(pathname);
+		int count = 0;
+		
+		List<Instrument> instruments = new ArrayList<Instrument>();
+		List<MsType> msTypes = new ArrayList<MsType>();
+		
 		File f = new File(pathname);
 		File[] listfiles = f.listFiles();
 //		for (int i = 0; i < 3; i++) {
@@ -88,8 +129,8 @@ public class MassBankRecordLogic {
 //		        	LOGGER.info("start sync folder -> " + item);
 		        	
 		            File[] internalFiles = item.listFiles();
-		            for (int j = 0; j < 1; j++) {
-//	            	for (int j = 0; j < internalFiles.length; j++) {
+//		            for (int j = 0; j < 1; j++) {
+	            	for (int j = 0; j < internalFiles.length; j++) {
 		            	File item2 = internalFiles[j];
 		            	if (! item2.isHidden()) {
 			                if (item2.isDirectory()) {
@@ -97,19 +138,32 @@ public class MassBankRecordLogic {
 			                    syncFolderInfo(name);
 			                } else {
 			                	// read the file content
+			                	long s1 = System.currentTimeMillis();
 			                	MassBankRecord massBankRecord = getFileRecordByFile(item2);
+			                	long s2 = System.currentTimeMillis();
+
 			                	if (massBankRecord.isAvailable()) {
 			                		
+//			                		long maxMemory = Runtime.getRuntime().maxMemory();
+//			            			LOGGER.info(
+//			            					"file: " + item2.getPath() +
+//			            					"\nAvai. processors (cores): " + Runtime.getRuntime().availableProcessors() +
+//			            					", Free mem (bytes): " + Runtime.getRuntime().freeMemory() +
+//			            					", Max. mem (bytes): " + (maxMemory == Long.MAX_VALUE ? "no limit" : maxMemory) +
+//			            					", Tot.mem avai. to JVM (bytes): " + Runtime.getRuntime().totalMemory()
+//			            					);
+			                		
 			                		try {
-			                			// open connection
-			                			DbAccessor.createConnection();
-//			                			DbAccessor.setAutoCommit(false);
-			                			// TODO implement rollback feature
 			                			
-			                			// save instrument
-			                			Instrument oInstrument = this.instrumentAccessor.getInstrument(
-			                					massBankRecord.getAcInstrument().getType(),
-			                					massBankRecord.getAcInstrument().getName());
+			                			// INSTRUMENT
+			                			Instrument oInstrument = null;
+			                			for (Instrument instrument : instruments) {
+			                				if (instrument.getType().equals(massBankRecord.getAcInstrument().getType())
+			                						&& instrument.getName().equals(massBankRecord.getAcInstrument().getName())) {
+			                					oInstrument = instrument;
+			                				}
+			                			}
+			                			
 			                			if (oInstrument == null) {
 			                				Instrument instrument = new Instrument();
 			                				instrument.setType(massBankRecord.getAcInstrument().getType());
@@ -119,80 +173,104 @@ public class MassBankRecordLogic {
 			                				oInstrument = this.instrumentAccessor.getInstrument(
 			                						massBankRecord.getAcInstrument().getType(),
 			                						massBankRecord.getAcInstrument().getName());
+			                				
+			                				instruments.add(oInstrument);
 			                			}
 			                			
+			                			// MS_TYPE
 			                			String strMsType = massBankRecord.getAcMassSpectrometryMap().get("MS_TYPE");
-			                			MsType oMsType = this.msTypeAccessor.getMsTypeByName(strMsType);
+			                			
+			                			MsType oMsType = null;
+			                			for (MsType msType : msTypes) {
+			                				if (msType.getName().equals(strMsType)) {
+			                					oMsType = msType;
+			                				}
+			                			}
+			                			
 			                			if (oMsType == null) {
 			                				MsType msType = new MsType();
 			                				msType.setName(strMsType);
 			                				this.msTypeAccessor.insert(msType);
 			                				
 			                				oMsType = this.msTypeAccessor.getMsTypeByName(strMsType);
+			                				msTypes.add(oMsType);
 			                			}
 			                			
-			                			// save record
+			                			DbAccessor.setAutoCommit(false);
+			                			
+			                			// RECORD
 			                			Record record = new Record();
 			                			record.setId(massBankRecord.getId());
 			                			record.setTitle(massBankRecord.getTitle());
-			                			record.setMsType(massBankRecord.getAcMassSpectrometryMap().get("MS_TYPE"));
+			                			record.setMsType(strMsType);
 			                			record.setFormula(massBankRecord.getChFormula());
 			                			record.setExactMass(massBankRecord.getChExtractMass());
 			                			record.setInstrumentId(oInstrument.getId());
-			                			this.recordAccessor.insert(record);
+			                			this.recordAccessor.addBatchInsert(record);
 			                			
-			                			// save mass spectrometry
+			                			// MASS_SPECTROMETRY
 			                			if (massBankRecord.getAcMassSpectrometryMap() != null) {
+			                				List<MassSpectrometry> massSpectrometries = new ArrayList<MassSpectrometry>();
 			                				for (Entry<String, String> entry : massBankRecord.getAcMassSpectrometryMap().entrySet()) {
 			                					MassSpectrometry massSpectrometry = new MassSpectrometry();
 			                					massSpectrometry.setType(entry.getKey());
 			                					massSpectrometry.setValue(entry.getValue());
 			                					massSpectrometry.setRecordId(massBankRecord.getId());
-			                					massSpectrometryAccessor.insert(massSpectrometry);
+			                				}
+			                				if (massSpectrometries.size() > 0) {
+			                					massSpectrometryAccessor.addBatchInsert(massSpectrometries);
 			                				}
 			                			}
-			                			// save peak
+			                			
+			                			// PEAK
 			                			if (massBankRecord.getPkPeak().getPeakMap() != null) {
+			                				List<Peak> peaks = new ArrayList<Peak>();
 			                				for (Map<String, String> pValue : massBankRecord.getPkPeak().getPeakMap()) {
 			                					Peak peak = new Peak();
 			                					peak.setMz(Double.parseDouble(pValue.get("m/z")));
 			                					peak.setIntensity(Double.parseDouble(pValue.get("int.")));
 			                					peak.setRelativeIntensity(Integer.parseInt(pValue.get("rel.int.")));
 			                					peak.setRecordId(massBankRecord.getId());
-			                					this.peakAccessor.insert(peak);
+			                					peaks.add(peak);
+			                				}
+			                				if (peaks.size() > 0) {
+			                					this.peakAccessor.addBatchInsert(peaks);
 			                				}
 			                			}
-			                			// save spectrum
+			                			
+			                			// SPECTRUM
 			                			String strPrecursorMz = massBankRecord.getMsFocusedIonMap().get("PRECURSOR_M/Z");
 			                			String strIonMode = massBankRecord.getAcMassSpectrometryMap().get("ION_MODE");
 			                			if (StringUtils.isNotBlank(strPrecursorMz) && StringUtils.isNotBlank(strIonMode)) {
 			                				Spectrum spectrum = new Spectrum();
 			                				spectrum.setTitle(massBankRecord.getTitle());
-			                				spectrum.setPrecursorMz(Float.parseFloat(strPrecursorMz));
+			                				try {
+			                					spectrum.setPrecursorMz(Float.parseFloat(strPrecursorMz));
+			                				} catch (NumberFormatException e) {
+			                					LOGGER.error(e.getMessage(), e);
+			                				}
 			                				spectrum.setIonMode(IonModeType.parseInt(strIonMode));
 			                				spectrum.setRecordId(massBankRecord.getId());
-			                				this.spectrumAccessor.insert(spectrum);
+			                				this.spectrumAccessor.addBatchInsert(spectrum);
 			                			} else {
 			                				LOGGER.warn("No Spectrum Info.: " + massBankRecord.getId());
 			                			}
 			                			
-			                			// commit or rollback all data
-//			                			DbAccessor.commit();
+			                			DbAccessor.executeBatch();
+			                			// commit
+			                			DbAccessor.commit();
+			                			
 			                		} catch (SQLException e) {
+			                			LOGGER.error("error in file:" + item2.getPath());
 			                			LOGGER.error(e.getMessage(), e);
-//										try {
-//											DbAccessor.rollback();
-//										} catch (SQLException e1) {
-//											LOGGER.error(e.getMessage(), e);
-//										}
-			                		} finally {
-			                			try {
-			                				// close connection
-			                				DbAccessor.closeConnection();
-			                			} catch (SQLException e) {
-			                				LOGGER.error(e.getMessage(), e);
-			                			}
+										try {
+											DbAccessor.rollback();
+										} catch (SQLException e1) {
+											LOGGER.error(e.getMessage(), e);
+										}
 			                		}
+			                		count++;
+			                		LOGGER.info("progress... " + count + "/" + fileCount + " (" + (System.currentTimeMillis() - s1) + "ms / " + (s2-s1) + "ms)");
 			                	}
 			                }
 		            	}
@@ -203,6 +281,7 @@ public class MassBankRecordLogic {
 		        }
 			}
 		}
+		
 		LOGGER.info("time duration to read files : " + (System.currentTimeMillis() - s)/1000 + "s");
 	}
 	

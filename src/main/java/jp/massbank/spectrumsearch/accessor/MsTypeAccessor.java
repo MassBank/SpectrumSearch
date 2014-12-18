@@ -1,14 +1,19 @@
 package jp.massbank.spectrumsearch.accessor;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+
+import org.apache.log4j.Logger;
 
 import jp.massbank.spectrumsearch.entity.db.MsType;
 import jp.massbank.spectrumsearch.util.QueryBuilder;
 
 public class MsTypeAccessor extends AbstractDbAccessor<MsType> {
 
+	private static final Logger LOGGER = Logger.getLogger(MsTypeAccessor.class);
+	
 	@Override
 	protected MsType convert(ResultSet rs) throws SQLException {
 		MsType result = new MsType();
@@ -18,6 +23,8 @@ public class MsTypeAccessor extends AbstractDbAccessor<MsType> {
 	}
 
 	public List<MsType> getAllMsTypes() {
+		getPreparedStatement("SELECT * FROM " + MsType.TABLE);
+		
 		String sql = String.format("SELECT * FROM %s", MsType.TABLE);
 		return listGeneric(sql);
 	}
@@ -32,7 +39,6 @@ public class MsTypeAccessor extends AbstractDbAccessor<MsType> {
 		String insertQuery = "INSERT INTO " + MsType.TABLE + " " +
 				"(" +  MsType.Columns.MS_TYPE_NAME +  ") values (" + "'" + t.getName() + "')";
 		insert(insertQuery);
-		
 	}
 
 	@Override
@@ -54,6 +60,16 @@ public class MsTypeAccessor extends AbstractDbAccessor<MsType> {
 		sb.append(MsType.Columns.MS_TYPE_NAME + " VARCHAR(10)");
 		sb.append(")");
 		executeStatement(sb.toString());
+	}
+	
+	private PreparedStatement getPreparedStatement(String sql) {
+		try {
+			DbAccessor.createPreparedStatement("SELECT * FROM " + MsType.TABLE);
+			return pstmt;
+		} catch (SQLException e) {
+			LOGGER.error(e.getMessage(), e);
+		}
+		return null;
 	}
 
 }

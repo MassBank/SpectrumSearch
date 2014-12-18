@@ -1,5 +1,6 @@
 package jp.massbank.spectrumsearch.entity.type;
 
+
 public enum IonModeType {
 	
 	POSITIVE	(1, "POS"),

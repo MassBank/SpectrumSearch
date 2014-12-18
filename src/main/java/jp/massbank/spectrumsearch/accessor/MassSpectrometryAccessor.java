@@ -26,6 +26,40 @@ public class MassSpectrometryAccessor extends AbstractDbAccessor<MassSpectrometr
 		return listString(sql);
 	}
 	
+	public void addBatchInsert(MassSpectrometry massSpectrometry) {
+		String insertQuery = "INSERT INTO " + MassSpectrometry.TABLE + " " +
+				"(" + 
+				MassSpectrometry.Columns.MASS_SPECTROMETRY_TYPE + "," + 
+				MassSpectrometry.Columns.MASS_SPECTROMETRY_VALUE + "," +
+				MassSpectrometry.Columns.RECORD_ID + 
+				") values (" +
+				"'" + massSpectrometry.getType() + "'," +
+				"'" + massSpectrometry.getValue() + "'," +
+				"'" + massSpectrometry.getRecordId() + "'" +
+				")";
+		addBatch(insertQuery);
+	}
+	
+	public void addBatchInsert(List<MassSpectrometry> massSpectrometries) {
+		StringBuilder sb = new StringBuilder();
+		sb.append("INSERT INTO " + MassSpectrometry.TABLE + " ");
+		sb.append("(");
+		sb.append(MassSpectrometry.Columns.MASS_SPECTROMETRY_TYPE + ",");
+		sb.append(MassSpectrometry.Columns.MASS_SPECTROMETRY_VALUE + ",");
+		sb.append(MassSpectrometry.Columns.RECORD_ID);
+		sb.append(") values ");
+		for (MassSpectrometry massSpectrometry : massSpectrometries) {
+			sb.append("(");
+			sb.append("'" + massSpectrometry.getType() + "',");
+			sb.append("'" + massSpectrometry.getValue() + "',");
+			sb.append("'" + massSpectrometry.getRecordId() + "'");
+			sb.append("),");
+		}
+		String sql = sb.toString().trim();
+		String insertQuery = sql.substring(0, sql.length() - 1);
+		addBatch(insertQuery);
+	}
+	
 	@Override
 	public void insert(MassSpectrometry massSpectrometry) {
 		String insertQuery = "INSERT INTO " + MassSpectrometry.TABLE + " " +

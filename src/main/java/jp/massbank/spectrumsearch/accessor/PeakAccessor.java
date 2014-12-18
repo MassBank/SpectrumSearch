@@ -25,6 +25,43 @@ public class PeakAccessor extends AbstractDbAccessor<Peak> {
 		return listGeneric(sql);
 	}
 	
+	public void addBatchInsert(Peak peak) {
+		String insertQuery = "INSERT INTO " + Peak.TABLE + " " +
+				"(" + 
+				Peak.Columns.MZ + "," + 
+				Peak.Columns.INTENSITY + "," + 
+				Peak.Columns.RELATIVE_INTENSITY + "," +  
+				Peak.Columns.RECORD_ID + 
+				") values (" +
+				peak.getMz() + "," + 
+				peak.getIntensity() + "," + 
+				peak.getRelativeIntensity() + "," +
+				"'" + peak.getRecordId() + "')";
+		addBatch(insertQuery);
+	}
+	
+	public void addBatchInsert(List<Peak> peaks) {
+		StringBuilder sb = new StringBuilder();
+		sb.append("INSERT INTO " + Peak.TABLE + " ");
+		sb.append("(");
+		sb.append(Peak.Columns.MZ + ",");
+		sb.append(Peak.Columns.INTENSITY + ",");
+		sb.append(Peak.Columns.RELATIVE_INTENSITY + ",");
+		sb.append(Peak.Columns.RECORD_ID);
+		sb.append(") values ");
+		for (Peak peak : peaks) {
+			sb.append("(");
+			sb.append(peak.getMz() + ",");
+			sb.append(peak.getIntensity() + ",");
+			sb.append(peak.getRelativeIntensity() + ",");
+			sb.append("'" + peak.getRecordId() + "'");
+			sb.append("), ");
+		}
+		String sql = sb.toString().trim();
+		String insertQuery = sql.substring(0, sql.length() - 1);
+		addBatch(insertQuery);
+	}
+	
 	@Override
 	public void insert(Peak peak) {
 		String insertQuery = "INSERT INTO " + Peak.TABLE + " " +

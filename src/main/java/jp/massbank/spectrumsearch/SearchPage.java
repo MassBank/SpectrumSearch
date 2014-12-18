@@ -115,26 +115,30 @@ import org.apache.log4j.Logger;
  * Start point of this application.
  */
 public class SearchPage extends JFrame {
-  private static final long serialVersionUID = 1L;
-  private static final Logger LOGGER = Logger.getLogger(SearchPage.class);
+	
+	private static final long serialVersionUID = 1L;
+	private static final Logger LOGGER = Logger.getLogger(SearchPage.class);
+	
+	private static final String APPLICATION_TITLE = "Spectrum Search | massbank.jp";
+	
+	public static void main(String[] args) {
+		LOGGER.info("Application start!");
+		LOGGER.info("Spectrum Search version "
+				+ SearchPage.class.getPackage().getImplementationVersion());
 
-  public static void main(String[] args) {
-    LOGGER.info("Application start!");
-    LOGGER.info("Spectrum Search version " + SearchPage.class.getPackage().getImplementationVersion());
-    
-    SearchPage appli = new SearchPage();
-    appli.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-    appli.setTitle("Spectrum Search | massbank.jp");
-    appli.setSize(1200, 700);
-    try {
-      appli.init();
-      appli.setVisible(true);
-    } catch (SQLException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-      System.exit(-1);
-    }
-  }
+		SearchPage appli = new SearchPage();
+		appli.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+		appli.setTitle(APPLICATION_TITLE);
+		appli.setSize(1200, 700);
+		
+		try {
+			appli.init();
+			appli.setVisible(true);
+		} catch (SQLException e) {
+			LOGGER.error(e.getMessage(), e);
+			System.exit(-1);
+		}
+	}
   
   // TODO this will be removed. 
 	static String baseUrl = "http://www.massbank.jp/";
@@ -152,6 +156,10 @@ public class SearchPage extends JFrame {
 	private static final int TAB_VIEW_COMPARE = 0;
 	private static final int TAB_VIEW_PACKAGE = 1;
 
+	private static final String BTN_LABEL_RECORD_SEARCH_BY_NAME = "Search Name";
+	private static final String BTN_LABEL_RECORD_SEARCH_ALL = "All";
+	private static final String BTN_LABEL_SEARCH_PARAM_SETTING = "Search Parameter Setting";
+	
 	public static final String COL_LABEL_NAME = "Name";
 	public static final String COL_LABEL_SCORE = "Score";
 	public static final String COL_LABEL_HIT = "Hit";
@@ -192,12 +200,12 @@ public class SearchPage extends JFrame {
 	private JScrollPane resultPane = null;						// クエリーDBペイン
 	private JScrollPane queryDbPane = null;					// 検索結果ペイン
 	
-	private JButton btnName = new JButton("Search Name");
-	private JButton btnAll = new JButton("All");
+	private JButton btnName = new JButton(BTN_LABEL_RECORD_SEARCH_BY_NAME);
+	private JButton btnAll = new JButton(BTN_LABEL_RECORD_SEARCH_ALL);
 
-	private String saveSearchName = "";
+	private String saveSearchName = StringUtils.EMPTY;
 
-	private JButton etcPropertyButton = new JButton("Search Parameter Setting");
+	private JButton etcPropertyButton = new JButton(BTN_LABEL_SEARCH_PARAM_SETTING);
 	
 	private boolean isRecActu;			// スペクトル検索フラグ(実測スペクトル)
 	private boolean isRecInteg;			// スペクトル検索フラグ(統合スペクトル)
@@ -219,13 +227,13 @@ public class SearchPage extends JFrame {
 
 	private JLabel hitLabel = new JLabel(" ");
 
-	private ArrayList<String[]> nameList = new ArrayList<String[]>();
+//	private ArrayList<String[]> nameList = new ArrayList<String[]>();
 
-	private ArrayList nameListAll = new ArrayList();
+//	private ArrayList nameListAll = new ArrayList();
 
-	private String[] siteList ;
+//	private String[] siteList ;
 	
-	public static String[] siteNameList = new String[]{"Keio Univ."};
+//	public static String[] siteNameList = new String[]{"Keio Univ."};
 	
 	private Map<String, GuiDbTableRow> guiDbTableRowMap;
 
@@ -284,7 +292,8 @@ public class SearchPage extends JFrame {
 //		GetConfig conf = new GetConfig(confPath);
 //		siteNameList = conf.getSiteName();
 //		baseUrl = conf.getServerUrl();
-		siteNameList = SiteUtil.getSiteNamesArray();
+		
+//		siteNameList = SiteUtil.getSiteNamesArray();
 		
 		// Cookie情報ユーティリティ初期化
 //		cm = new CookieManager( "SerchApplet", 30, true);
@@ -550,14 +559,10 @@ public class SearchPage extends JFrame {
 		model.setColumnIdentifiers(col3);
 
 		// 列幅セット
-		queryDbTable.getColumn(queryDbTable.getColumnName(0))
-				.setPreferredWidth(70);
-		queryDbTable.getColumn(queryDbTable.getColumnName(1))
-				.setPreferredWidth(LEFT_PANEL_WIDTH - 70);
-		queryDbTable.getColumn(queryDbTable.getColumnName(2))
-				.setPreferredWidth(70);
-		queryDbTable.getColumn(queryDbTable.getColumnName(3))
-				.setPreferredWidth(50);
+		queryDbTable.getColumn(queryDbTable.getColumnName(0)).setPreferredWidth(70);
+		queryDbTable.getColumn(queryDbTable.getColumnName(1)).setPreferredWidth(LEFT_PANEL_WIDTH - 70);
+		queryDbTable.getColumn(queryDbTable.getColumnName(2)).setPreferredWidth(70);
+		queryDbTable.getColumn(queryDbTable.getColumnName(3)).setPreferredWidth(50);
 
 		ListSelectionModel lm3 = queryDbTable.getSelectionModel();
 		lm3.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -3402,7 +3407,7 @@ public class SearchPage extends JFrame {
 			dm1.setRowCount(0);
 			hitLabel.setText(" ");
 
-			if (searchName.equals("")) {
+			if (StringUtils.isBlank(searchName)) {
 				// DBタブ関連初期化
 				DefaultTableModel dataModel = (DefaultTableModel) querySorter.getTableModel();
 				dataModel.setRowCount(0);
