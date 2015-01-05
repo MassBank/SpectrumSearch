@@ -18,8 +18,7 @@ public class DbUtil {
 	private static final Logger LOGGER = Logger.getLogger(DbUtil.class);
 	
 	public static String concat(String data) {
-		String[] args = data.split("||");
-		return StringUtils.join(args);
+		return StringUtils.join(data.split("||"));
 	}
 	
 	public static String lpad(String str, int size, String padChar) {

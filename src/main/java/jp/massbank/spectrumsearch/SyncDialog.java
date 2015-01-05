@@ -14,8 +14,10 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JTextField;
+import javax.swing.Timer;
 
 import jp.massbank.spectrumsearch.entity.constant.SystemProperties;
+import jp.massbank.spectrumsearch.gui.MassBankDirSyncThread;
 import jp.massbank.spectrumsearch.logic.MassBankRecordLogic;
 
 import org.apache.log4j.Logger;
@@ -23,6 +25,7 @@ import org.apache.log4j.Logger;
 public class SyncDialog extends JDialog {
 
 	private static final long serialVersionUID = 3762607965692279780L;
+	public static final int ONE_SECOND = 1000;
 	
 	private static final Logger LOGGER = Logger.getLogger(SyncDialog.class);
 	private static final String TITLE = "Synchronize MassBank Records";
@@ -30,6 +33,8 @@ public class SyncDialog extends JDialog {
 	private JTextField txtDirPath;
 	private JFileChooser fileChooser;
 	private JProgressBar progressBar;
+	private MassBankDirSyncThread mbDirSyncThread;
+	private Timer timer;
 	
 	public SyncDialog(SearchPage parent){
 		super(parent, TITLE, true);
@@ -47,6 +52,7 @@ public class SyncDialog extends JDialog {
 		initDirTextField();
 		initDirChooser();
 		initProgressBar();
+		initTimer();
 		getContentPane().add(getPanel());
 		
 	    setDefaultCloseOperation(DISPOSE_ON_CLOSE);
@@ -68,11 +74,24 @@ public class SyncDialog extends JDialog {
 	}
 
 	private void initProgressBar() {
-		progressBar = new JProgressBar();
-		progressBar.setIndeterminate(true);
-		progressBar.setVisible(false);
+		progressBar = new JProgressBar(0, 100);
+//		progressBar.setVisible(false);
+		progressBar.setStringPainted(true);
 	}
 
+	private void initTimer() {
+		//Create a timer.
+        timer = new Timer(ONE_SECOND, new ActionListener() {
+        	
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				progressBar.setString(mbDirSyncThread.getCount() + " files finished. (" + progressBar.getMaximum() + " files)");
+				progressBar.setValue(mbDirSyncThread.getCount());
+			}
+			
+	    });
+	}
+	
 	private JPanel getPanel() {
 		JPanel panel = new JPanel();
 		GroupLayout layout = new GroupLayout(panel);
@@ -115,6 +134,8 @@ public class SyncDialog extends JDialog {
 		btn.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				mbDirSyncThread.stop();
+				timer.stop();
 				setVisible(false);
 				dispose();
 			}
@@ -123,28 +144,62 @@ public class SyncDialog extends JDialog {
 	}
 	
 	private JButton getBtnSync() {
-		JButton btn = new JButton("Start Sync"); 
+		final JButton btn = new JButton("Start Sync"); 
 		btn.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				 new Thread(new Runnable() {
+				btn.setEnabled(false);
+//				 new Thread(new Runnable() {
+//
+//                    @Override
+//                    public void run() {
+//						LOGGER.info("start sync files");
+//                        progressBar.setVisible(true);
+//						MassBankRecordLogic recordLogic = new MassBankRecordLogic();
+//						String dirPath = txtDirPath.getText().trim();
+//						if (! SystemProperties.getInstance().getDirPath().equals(dirPath)) {
+//							SystemProperties.updateParam(SystemProperties.Key.DIR_PATH, dirPath);
+//							SystemProperties.loadParams();
+//						}
+//						recordLogic.syncFilesRecordsByFolderPath(dirPath);
+//                        progressBar.setVisible(false);
+//						LOGGER.info("end sync files");
+//                    }
+//
+//                }).start();
+				
 
-                    @Override
-                    public void run() {
-						LOGGER.info("start sync files");
-                        progressBar.setVisible(true);
-						MassBankRecordLogic recordLogic = new MassBankRecordLogic();
+				new Thread(new Runnable() {
+
+					@Override
+					public void run() {
+						
 						String dirPath = txtDirPath.getText().trim();
-						if (! SystemProperties.getInstance().getDirPath().equals(dirPath)) {
+						if (!SystemProperties.getInstance().getDirPath().equals(dirPath)) {
 							SystemProperties.updateParam(SystemProperties.Key.DIR_PATH, dirPath);
 							SystemProperties.loadParams();
 						}
-						recordLogic.syncFilesRecordsByFolderPath(dirPath);
-                        progressBar.setVisible(false);
-						LOGGER.info("end sync files");
-                    }
 
-                }).start();
+						LOGGER.info("start count files");
+						MassBankRecordLogic mbRecordLogic = new MassBankRecordLogic();
+						int total = mbRecordLogic.getTotalFileCountInFolder(dirPath);
+						LOGGER.info("end count files");
+
+						progressBar.setMaximum(total);
+						progressBar.setString(total + " files to synchronous");
+						
+						timer.start();
+
+						LOGGER.info("start sync files");
+						mbDirSyncThread = new MassBankDirSyncThread(dirPath);
+						mbDirSyncThread.start();
+						// progressBar.setVisible(true);
+
+						
+						LOGGER.info("end sync files");
+					}
+
+				}).start();
 			}
 		});
 		return btn;

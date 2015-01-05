@@ -2894,7 +2894,7 @@ public class SearchPage extends JFrame {
 				        LOGGER.error(e.getMessage(), e);
 				        SearchPage.this.setCursor(Cursor.getDefaultCursor());
 				      }
-				      LOGGER.info("result... " + line);
+//				      LOGGER.info("result... " + line);
 					recData = new PackageRecData();
 					
 					// === 化合物名 ===

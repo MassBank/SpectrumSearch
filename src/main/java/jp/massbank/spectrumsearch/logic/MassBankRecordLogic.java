@@ -56,6 +56,24 @@ public class MassBankRecordLogic {
 		this.msTypeAccessor = new MsTypeAccessor();
 	}
 	
+	public void resetDatabase() {
+		DbUtil.createSchemaIfNotExist();
+		
+		try {
+			DbAccessor.createConnection();
+			this.recordAccessor.deleteAll();
+			this.instrumentAccessor.deleteAll();
+			this.massSpectrometryAccessor.deleteAll();
+			this.peakAccessor.deleteAll();
+			this.spectrumAccessor.deleteAll();
+			this.msTypeAccessor.deleteAll();
+			DbAccessor.execUpdate("DROP INDEX IDX_RECORD_PEAK");
+			DbAccessor.closeConnection();
+		} catch (SQLException e) {
+			LOGGER.error(e.getMessage(), e);
+		}
+	}
+	
 	public void syncFilesRecordsByFolderPath(String pathname) {
 		DbUtil.createSchemaIfNotExist();
 		
@@ -67,6 +85,7 @@ public class MassBankRecordLogic {
 			this.peakAccessor.deleteAll();
 			this.spectrumAccessor.deleteAll();
 			this.msTypeAccessor.deleteAll();
+			DbAccessor.execUpdate("DROP INDEX IDX_RECORD_PEAK");
 			DbAccessor.closeConnection();
 		} catch (SQLException e) {
 			LOGGER.error(e.getMessage(), e);
@@ -89,7 +108,7 @@ public class MassBankRecordLogic {
 		
 	}
 	
-	private int getTotalFileCountInFolder(String pathname) {
+	public int getTotalFileCountInFolder(String pathname) {
 		File f = new File(pathname);
 		return getFilesCount(f);
 	}
@@ -110,6 +129,131 @@ public class MassBankRecordLogic {
 		return count;
 	}
 	
+	public void mergeMassBankRecordIntoDb(File mbFile, List<Instrument> instruments, List<MsType> msTypes) {
+		// read the file content
+    	MassBankRecord massBankRecord = getFileRecordByFile(mbFile);
+
+    	if (massBankRecord.isAvailable()) {
+    		
+    		try {
+    			
+    			// INSTRUMENT
+    			Instrument oInstrument = null;
+    			for (Instrument instrument : instruments) {
+    				if (instrument.getType().equals(massBankRecord.getAcInstrument().getType())
+    						&& instrument.getName().equals(massBankRecord.getAcInstrument().getName())) {
+    					oInstrument = instrument;
+    				}
+    			}
+    			
+    			if (oInstrument == null) {
+    				Instrument instrument = new Instrument();
+    				instrument.setType(massBankRecord.getAcInstrument().getType());
+    				instrument.setName(massBankRecord.getAcInstrument().getName());
+    				this.instrumentAccessor.insert(instrument);
+    				
+    				oInstrument = this.instrumentAccessor.getInstrument(
+    						massBankRecord.getAcInstrument().getType(),
+    						massBankRecord.getAcInstrument().getName());
+    				
+    				instruments.add(oInstrument);
+    			}
+    			
+    			// MS_TYPE
+    			String strMsType = massBankRecord.getAcMassSpectrometryMap().get("MS_TYPE");
+    			
+    			MsType oMsType = null;
+    			for (MsType msType : msTypes) {
+    				if (msType.getName().equals(strMsType)) {
+    					oMsType = msType;
+    				}
+    			}
+    			
+    			if (oMsType == null) {
+    				MsType msType = new MsType();
+    				msType.setName(strMsType);
+    				this.msTypeAccessor.insert(msType);
+    				
+    				oMsType = this.msTypeAccessor.getMsTypeByName(strMsType);
+    				msTypes.add(oMsType);
+    			}
+    			
+    			DbAccessor.setAutoCommit(false);
+    			
+    			// RECORD
+    			Record record = new Record();
+    			record.setId(massBankRecord.getId());
+    			record.setTitle(massBankRecord.getTitle());
+    			record.setMsType(strMsType);
+    			record.setFormula(massBankRecord.getChFormula());
+    			record.setExactMass(massBankRecord.getChExtractMass());
+    			record.setInstrumentId(oInstrument.getId());
+    			this.recordAccessor.addBatchInsert(record);
+    			
+    			// MASS_SPECTROMETRY
+    			if (massBankRecord.getAcMassSpectrometryMap() != null) {
+    				List<MassSpectrometry> massSpectrometries = new ArrayList<MassSpectrometry>();
+    				for (Entry<String, String> entry : massBankRecord.getAcMassSpectrometryMap().entrySet()) {
+    					MassSpectrometry massSpectrometry = new MassSpectrometry();
+    					massSpectrometry.setType(entry.getKey());
+    					massSpectrometry.setValue(entry.getValue());
+    					massSpectrometry.setRecordId(massBankRecord.getId());
+    				}
+    				if (massSpectrometries.size() > 0) {
+    					massSpectrometryAccessor.addBatchInsert(massSpectrometries);
+    				}
+    			}
+    			
+    			// PEAK
+    			if (massBankRecord.getPkPeak().getPeakMap() != null) {
+    				List<Peak> peaks = new ArrayList<Peak>();
+    				for (Map<String, String> pValue : massBankRecord.getPkPeak().getPeakMap()) {
+    					Peak peak = new Peak();
+    					peak.setMz(Double.parseDouble(pValue.get("m/z")));
+    					peak.setIntensity(Double.parseDouble(pValue.get("int.")));
+    					peak.setRelativeIntensity(Integer.parseInt(pValue.get("rel.int.")));
+    					peak.setRecordId(massBankRecord.getId());
+    					peaks.add(peak);
+    				}
+    				if (peaks.size() > 0) {
+    					this.peakAccessor.addBatchInsert(peaks);
+    				}
+    			}
+    			
+    			// SPECTRUM
+    			String strPrecursorMz = massBankRecord.getMsFocusedIonMap().get("PRECURSOR_M/Z");
+    			String strIonMode = massBankRecord.getAcMassSpectrometryMap().get("ION_MODE");
+    			if (StringUtils.isNotBlank(strPrecursorMz) && StringUtils.isNotBlank(strIonMode)) {
+    				Spectrum spectrum = new Spectrum();
+    				spectrum.setTitle(massBankRecord.getTitle());
+    				try {
+    					spectrum.setPrecursorMz(Float.parseFloat(strPrecursorMz));
+    				} catch (NumberFormatException e) {
+    					LOGGER.error(e.getMessage(), e);
+    				}
+    				spectrum.setIonMode(IonModeType.parseInt(strIonMode));
+    				spectrum.setRecordId(massBankRecord.getId());
+    				this.spectrumAccessor.addBatchInsert(spectrum);
+    			} else {
+    				LOGGER.warn("No Spectrum Info.: " + massBankRecord.getId());
+    			}
+    			
+    			DbAccessor.executeBatch();
+    			// commit
+    			DbAccessor.commit();
+    			
+    		} catch (SQLException e) {
+    			LOGGER.error("error in file:" + mbFile.getPath());
+    			LOGGER.error(e.getMessage(), e);
+				try {
+					DbAccessor.rollback();
+				} catch (SQLException e1) {
+					LOGGER.error(e.getMessage(), e);
+				}
+    		}
+    	}
+	}
+	
 	private void syncFolderInfo(String pathname) {
 		long s = System.currentTimeMillis();
 
@@ -121,7 +265,6 @@ public class MassBankRecordLogic {
 		
 		File f = new File(pathname);
 		File[] listfiles = f.listFiles();
-//		for (int i = 0; i < 3; i++) {
 		for (int i = 0; i < listfiles.length; i++) {
 			File item = listfiles[i];
 			if (! item.isHidden()) {
@@ -281,6 +424,8 @@ public class MassBankRecordLogic {
 		        }
 			}
 		}
+		
+		DbAccessor.execUpdate("CREATE INDEX IDX_RECORD_PEAK ON PEAK (RECORD_ID)");
 		
 		LOGGER.info("time duration to read files : " + (System.currentTimeMillis() - s)/1000 + "s");
 	}

@@ -86,7 +86,22 @@ public class DbAccessor {
 //		return result;
 //	}
 	
-	public static List<Map<Integer, Object>> execQuery(String sql) {
+	public static void execUpdate(String sql) {
+		try {
+			createPreparedStatement(sql);
+			pstmt.executeUpdate();
+		} catch (SQLException e) {
+			LOGGER.error(e.getMessage(), e);
+		} finally {
+			try {
+				closePreparedStatement();
+			} catch (SQLException e) {
+				LOGGER.error(e.getMessage(), e);
+			}
+		}
+	}
+	
+	public static List<Map<Integer, Object>> execResultQuery(String sql) {
 		List<Map<Integer, Object>> result = new ArrayList<Map<Integer, Object>>();
 		try {
 			createPreparedStatement(sql);
@@ -196,6 +211,12 @@ public class DbAccessor {
 				LOGGER.error(e.getMessage(), e);
 			}
 			try {
+				conn.createStatement().execute("DROP DERBY AGGREGATE STRMAX RESTRICT");
+			} catch (SQLException e) {
+				LOGGER.error(e.getMessage(), e);
+			}
+			
+			try {
 				conn.createStatement().execute(
 						"CREATE FUNCTION  CONCAT(DATA VARCHAR(32000)) RETURNS VARCHAR(32000) " +
 						"EXTERNAL NAME 'jp.massbank.spectrumsearch.util.DbUtil.concat' " +
@@ -227,6 +248,15 @@ public class DbAccessor {
 						"CREATE FUNCTION  CASTINTEGER(DATA INT) RETURNS VARCHAR(32000) " +
 								"EXTERNAL NAME 'jp.massbank.spectrumsearch.util.DbUtil.castInteger' " +
 								"LANGUAGE JAVA PARAMETER STYLE JAVA"
+						);
+			} catch (SQLException e) {
+				LOGGER.error(e.getMessage(), e);
+			}
+			
+			try {
+				conn.createStatement().execute(
+						"CREATE DERBY AGGREGATE STRMAX FOR VARCHAR(32000) RETURNS VARCHAR(32000) " +
+								"EXTERNAL NAME 'jp.massbank.spectrumsearch.util.StrMax'"
 						);
 			} catch (SQLException e) {
 				LOGGER.error(e.getMessage(), e);

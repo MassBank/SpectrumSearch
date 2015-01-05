@@ -10,6 +10,7 @@ import java.util.Map.Entry;
 import jp.massbank.spectrumsearch.accessor.DbAccessor;
 import jp.massbank.spectrumsearch.entity.constant.Constant;
 import jp.massbank.spectrumsearch.entity.param.HitPeak;
+import jp.massbank.spectrumsearch.entity.param.QueryResultHitPeak;
 import jp.massbank.spectrumsearch.entity.param.ResScore;
 import jp.massbank.spectrumsearch.entity.param.SearchQueryParam;
 
@@ -60,9 +61,11 @@ public class SearchLogic {
 			long s5 = System.currentTimeMillis();
 			System.out.println("setScore : " + (s5-s4) + " ms");
 			result.addAll(outResult());
-			DbAccessor.closeConnection();
 			long s6 = System.currentTimeMillis();
-			System.out.println("close connection : " + (s6-s5) + " ms");
+			System.out.println("outResult : " + (s6-s5) + " ms");
+			DbAccessor.closeConnection();
+			long s7 = System.currentTimeMillis();
+			System.out.println("close connection : " + (s7-s6) + " ms");
 		} catch (SQLException e) {
 			LOGGER.error(e.getMessage(), e);
 		}
@@ -274,7 +277,9 @@ public class SearchLogic {
 		//---------------------------------------------------
 		double fMin;
 		double fMax;
-		String sqlw;
+		String sqlw = StringUtils.EMPTY;
+		List<String> sqls = new ArrayList<String>();
+		
 		for ( int i = 0; i < queryMz.size(); i++ ) {
 			String strMz = queryMz.get(i);
 			double fMz = Float.parseFloat( strMz );
@@ -296,28 +301,45 @@ public class SearchLogic {
 				sqlw = String.format("RELATIVE >= %d and (MZ between %.6f and %.6f) group by SPECTRUM_NO",
 						param.getCutoff(), fMin, fMax);
 			} else {
-				sql = "select max(concat(lpad(castinteger(RELATIVE_INTENSITY), 3, ' ') || ' ' || RECORD_ID || ' ' || castdouble(MZ))) from PEAK where ";
-				sqlw = String.format("RELATIVE_INTENSITY >= %d and (MZ between %.6f and %.6f) group by RECORD_ID",
-						param.getCutoff(), fMin, fMax);
+//				sql = String.format("select P1.RELATIVE_INTENSITY, P1.MZ, P1.RECORD_ID from PEAK P1 "
+//						+ "RIGHT OUTER JOIN "
+//						+ "(select max(P.RELATIVE_INTENSITY) MAX_RELATIVE_INTENSITY, P.RECORD_ID from PEAK P where P.RELATIVE_INTENSITY >= %d and (P.MZ between %.6f and %.6f) group by P.RECORD_ID) P2 "
+//						+ "on P1.RELATIVE_INTENSITY = P2.MAX_RELATIVE_INTENSITY and P1.RECORD_ID = P2.RECORD_ID", param.getCutoff(), fMin, fMax);
+//				sql = "select strmax(castinteger(RELATIVE_INTENSITY) || ' ' || castdouble(MZ)), RECORD_ID from PEAK where ";
+//				sqlw = String.format("RELATIVE_INTENSITY >= %d and (MZ between %.6f and %.6f) group by RECORD_ID", param.getCutoff(), fMin, fMax);
+				sql = "select max(concat(castinteger(RELATIVE_INTENSITY) || ' ' || castdouble(MZ))), RECORD_ID, " + strMz + ", " + fVal + " from PEAK where ";
+				sqlw = String.format("RELATIVE_INTENSITY >= %d and (MZ between %.6f and %.6f) group by RECORD_ID", param.getCutoff(), fMin, fMax);
 			}
 			sql += sqlw;
+			sqls.add(sql);
+		}
+		
+		int limit = 100;
+		for (int i = 0; i < sqls.size(); i = i + limit) {
+			int max = Math.min(sqls.size(), i + limit);
+			String subSql = StringUtils.join(sqls.subList(i, max), " UNION ALL ");
+			List<Map<Integer, Object>> result = dbExecuteSql(subSql);
 			
-			List<Map<Integer, Object>> result = dbExecuteSql( sql );
-			result.size();
+			List<QueryResultHitPeak> qrHitPeaks = new ArrayList<QueryResultHitPeak>();
+			for (Map<Integer, Object> rowResult : result) {
+				QueryResultHitPeak qrHitPeak = new QueryResultHitPeak();
+				String[] vacVal = String.valueOf(rowResult.get(1)).trim().split(" ");
+				qrHitPeak.setRecordId(String.valueOf(rowResult.get(2)).trim());
+				qrHitPeak.setHitRelInt(Float.parseFloat( vacVal[0] ));
+				qrHitPeak.setHitMz(vacVal[1]);
+				qrHitPeak.setMz(String.valueOf(rowResult.get(3)));
+				qrHitPeak.setValue(Float.parseFloat(String.valueOf(rowResult.get(4))));
+				qrHitPeaks.add(qrHitPeak);
+			}
 
 			int prevAryNum = 0;
-			for (Map<Integer, Object> rowResult : result) {
-//		 	for ( long l = 0; l < lNumRows; l++ ) {
-//				MYSQL_ROW fields = mysql_fetch_row( resMySql );
-
-				String[] vacVal = String.valueOf(rowResult.get(1)).trim().split(" ");
-//				String[] vacVal = fields[0].split(" ");
-				String strId = vacVal[1];
+			for (QueryResultHitPeak grHitPeak : qrHitPeaks) {
+				String recordId = grHitPeak.getRecordId();
 
 				if ( isFilter ) {
 					boolean isFound = false;
 					for ( int j = prevAryNum; j < vecTargetId.size(); j++ ) {
-						if ( strId.equals(vecTargetId.get(j)) ) {
+						if ( recordId.equals(vecTargetId.get(j)) ) {
 							isFound = true;
 							prevAryNum = j + 1;
 							break;
@@ -328,8 +350,8 @@ public class SearchLogic {
 					}
 				}
 
-				double fHitVal = Float.parseFloat( vacVal[0] );
-				String strHitMz = vacVal[2];
+				double fHitVal = grHitPeak.getHitRelInt();
+				String strHitMz = grHitPeak.getHitMzString();
 				double fHitMz = Float.parseFloat( strHitMz );
 
 				if ( param.getWeight() == Constant.PARAM_WEIGHT_LINEAR ) {
@@ -345,27 +367,109 @@ public class SearchLogic {
 
 				// クエリとヒットしたピークのm/z, rel.int.を格納 
 				HitPeak pHitPeak = new HitPeak();
-				pHitPeak.setqMz(strMz);
-				pHitPeak.setqVal(fVal);
+				pHitPeak.setqMz(grHitPeak.getMzString());
+				pHitPeak.setqVal(grHitPeak.getValue());
 				pHitPeak.setHitMz(strHitMz);
 				pHitPeak.setHitVal(fHitVal);
 				
-				if (!mapHitPeak.containsKey(strId)) {
-					mapHitPeak.put(strId, new ArrayList<HitPeak>());
+				if (!mapHitPeak.containsKey(recordId)) {
+					mapHitPeak.put(recordId, new ArrayList<HitPeak>());
 				}
-				mapHitPeak.get(strId).add(pHitPeak); 
+				mapHitPeak.get(recordId).add(pHitPeak); 
 
-				String key = String.format("%s %s", strId, strHitMz);
+				String key = String.format("%s %s", recordId, strHitMz);
 				if (mapMzCnt.containsKey(key)) {
-					mapMzCnt.put(key, mapMzCnt.get(key)+1);
+					mapMzCnt.put(key, mapMzCnt.get(key) + 1);
 				} else { 
 					mapMzCnt.put(key, 1);
 				}
 				
 			}
-//			// 結果セット解放
-//			mysql_free_result( resMySql );
 		}
+		
+		/*int index = 0;
+		StringBuilder sb = new StringBuilder();
+		for (String oSql : sqls) {
+			
+			if (StringUtils.isNotBlank(sb.toString())) {
+				sb.append(" UNION ALL ");
+			}
+			sb.append(oSql);
+			
+			if (index > 0 && (index % 100 == 0 || (index + 1) == sqls.size())) {
+				List<Map<Integer, Object>> result = dbExecuteSql(sb.toString());
+				
+				List<QueryResultHitPeak> qrHitPeaks = new ArrayList<QueryResultHitPeak>();
+				for (Map<Integer, Object> rowResult : result) {
+					QueryResultHitPeak qrHitPeak = new QueryResultHitPeak();
+					String[] vacVal = String.valueOf(rowResult.get(1)).trim().split(" ");
+					qrHitPeak.setRecordId(String.valueOf(rowResult.get(2)).trim());
+					qrHitPeak.setHitRelInt(Float.parseFloat( vacVal[0] ));
+					qrHitPeak.setHitMz(vacVal[1]);
+					qrHitPeak.setMz(String.valueOf(rowResult.get(3)));
+					qrHitPeak.setValue(Float.parseFloat(String.valueOf(rowResult.get(4))));
+					qrHitPeaks.add(qrHitPeak);
+				}
+	
+				int prevAryNum = 0;
+				for (QueryResultHitPeak grHitPeak : qrHitPeaks) {
+					String recordId = grHitPeak.getRecordId();
+	
+					if ( isFilter ) {
+						boolean isFound = false;
+						for ( int j = prevAryNum; j < vecTargetId.size(); j++ ) {
+							if ( recordId.equals(vecTargetId.get(j)) ) {
+								isFound = true;
+								prevAryNum = j + 1;
+								break;
+							}
+						}
+						if ( !isFound ) {
+							continue;
+						}
+					}
+	
+					double fHitVal = grHitPeak.getHitRelInt();
+					String strHitMz = grHitPeak.getHitMzString();
+					double fHitMz = Float.parseFloat( strHitMz );
+	
+					if ( param.getWeight() == Constant.PARAM_WEIGHT_LINEAR ) {
+						fHitVal *= fHitVal / 10;
+					} else if ( param.getWeight() == Constant.PARAM_WEIGHT_SQUARE ) {
+						fHitVal *= fHitMz * fHitMz / 100;
+					}
+					if ( param.getNorm() == Constant.PARAM_NORM_LOG ) {
+						fHitVal = Math.log(fHitVal);
+					} else if ( param.getNorm() == Constant.PARAM_NORM_SQRT ) {
+						fHitVal = Math.sqrt(fHitVal);
+					}
+	
+					// クエリとヒットしたピークのm/z, rel.int.を格納 
+					HitPeak pHitPeak = new HitPeak();
+					pHitPeak.setqMz(grHitPeak.getMzString());
+					pHitPeak.setqVal(grHitPeak.getValue());
+					pHitPeak.setHitMz(strHitMz);
+					pHitPeak.setHitVal(fHitVal);
+					
+					if (!mapHitPeak.containsKey(recordId)) {
+						mapHitPeak.put(recordId, new ArrayList<HitPeak>());
+					}
+					mapHitPeak.get(recordId).add(pHitPeak); 
+	
+					String key = String.format("%s %s", recordId, strHitMz);
+					if (mapMzCnt.containsKey(key)) {
+						mapMzCnt.put(key, mapMzCnt.get(key) + 1);
+					} else { 
+						mapMzCnt.put(key, 1);
+					}
+					
+				}
+	//			// 結果セット解放
+	//			mysql_free_result( resMySql );
+				sb = new StringBuilder();
+			}
+			index++;
+		}*/
 		return true;
 	}
 	
@@ -516,7 +620,7 @@ public class SearchLogic {
 	}
 
 	private List<Map<Integer,Object>> dbExecuteSql(String sql) {
-		return DbAccessor.execQuery(sql);
+		return DbAccessor.execResultQuery(sql);
 	}
 
 }
