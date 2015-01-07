@@ -229,26 +229,41 @@ public class SearchLogic {
 //			// 結果セット解放
 //			mysql_free_result( resMySql );
 
-			if ( param.getIon() == 0 ) {
-				sql = "select R.RECORD_ID from RECORD R, SPECTRUM S where R.RECORD_ID = S.RECORD_ID and R.INSTRUMENT_ID in(" + instNo + ")";
+			if (param.getIon() == 0) {
+				sql = "select R.RECORD_ID from RECORD R, SPECTRUM S where R.RECORD_ID = S.RECORD_ID and R.INSTRUMENT_ID in (" + instNo + ")";
 			} else {
 				sql = "select R.RECORD_ID from RECORD R, SPECTRUM S where R.RECORD_ID = S.RECORD_ID and S.ION_MODE = ";
 				sql += param.getIon();
-				sql += " and R.INSTRUMENT_ID in(";
+				sql += " and R.INSTRUMENT_ID in (";
 				sql += instNo;
 				sql += ")";
 			}
 			// precursor m/z絞り込み条件セット
-			if ( isPre ) {
+			if (isPre) {
 				sql += sqlw1;
 			}
-			if ( isMsType ) {
+			if (isMsType) {
 				sql += sqlw2;
 			}
 
-			sql += " order by RECORD_ID";
+			sql += " order by R.RECORD_ID";
 			
-			List<Map<Integer, Object>> result2 = dbExecuteSql( sql );
+//			List<Map<Integer, Object>> result2 = new ArrayList<Map<Integer,Object>>();
+//			boolean loop = true;
+//			int startIndex = 0;
+//			int limit = 1000;
+//			while (loop) {
+//				List<Map<Integer, Object>> oResult = dbExecuteSql(sql + " OFFSET " + startIndex + " ROWS FETCH NEXT " + limit + " ROWS ONLY");
+//				result2.addAll(oResult);
+//				if (oResult.size() == limit) {
+//					startIndex += limit;
+//				} else {
+//					// oResult.size() < limit
+//					loop = false;
+//				}
+//			}
+			
+			List<Map<Integer, Object>> result2 = dbExecuteSql(sql);
 			lNumRows = result2.size();
 
 			//** 検索対象のIDがないので終了
@@ -280,13 +295,13 @@ public class SearchLogic {
 		String sqlw = StringUtils.EMPTY;
 		List<String> sqls = new ArrayList<String>();
 		
-		for ( int i = 0; i < queryMz.size(); i++ ) {
+		for (int i = 0; i < queryMz.size(); i++) {
 			String strMz = queryMz.get(i);
-			double fMz = Float.parseFloat( strMz );
+			double fMz = Float.parseFloat(strMz);
 			double fVal = queryVal.get(i);
 
 			float fTolerance = param.getTolerance();
-			if ( param.getTolUnit().equals("unit") ) {
+			if (param.getTolUnit().equals("unit")) {
 				fMin = fMz - fTolerance;
 				fMax = fMz + fTolerance;
 			} else {
@@ -296,7 +311,7 @@ public class SearchLogic {
 			fMin -= 0.00001;
 			fMax += 0.00001;
 
-			if ( isInteg ) {
+			if (isInteg) {
 				sql = "select SPECTRUM_NO, max(RELATIVE), MZ from PARENT_PEAK where ";
 				sqlw = String.format("RELATIVE >= %d and (MZ between %.6f and %.6f) group by SPECTRUM_NO",
 						param.getCutoff(), fMin, fMax);
@@ -307,14 +322,22 @@ public class SearchLogic {
 //						+ "on P1.RELATIVE_INTENSITY = P2.MAX_RELATIVE_INTENSITY and P1.RECORD_ID = P2.RECORD_ID", param.getCutoff(), fMin, fMax);
 //				sql = "select strmax(castinteger(RELATIVE_INTENSITY) || ' ' || castdouble(MZ)), RECORD_ID from PEAK where ";
 //				sqlw = String.format("RELATIVE_INTENSITY >= %d and (MZ between %.6f and %.6f) group by RECORD_ID", param.getCutoff(), fMin, fMax);
+				
+//				sql = "select max(concat(castinteger(RELATIVE_INTENSITY) || ' ' || castdouble(MZ))), RECORD_ID, " + strMz + ", " + fVal + " from PEAK where ";
+//				sqlw = String.format("RELATIVE_INTENSITY >= %d and (MZ between %.6f and %.6f) group by RECORD_ID", param.getCutoff(), fMin, fMax);
+				
 				sql = "select max(concat(castinteger(RELATIVE_INTENSITY) || ' ' || castdouble(MZ))), RECORD_ID, " + strMz + ", " + fVal + " from PEAK where ";
 				sqlw = String.format("RELATIVE_INTENSITY >= %d and (MZ between %.6f and %.6f) group by RECORD_ID", param.getCutoff(), fMin, fMax);
+				
+//				sql = "select max(concat(castinteger(RELATIVE_INTENSITY) || ' ' || castdouble(MZ) || ' ' || RECORD_ID || ' ' || '" + String.valueOf(strMz) + "' || ' ' || '" + String.valueOf(fVal) + "')) from PEAK where ";
+//				sqlw = String.format("RELATIVE_INTENSITY >= %d and (MZ between %.6f and %.6f) group by RECORD_ID", param.getCutoff(), fMin, fMax);
+				
 			}
 			sql += sqlw;
 			sqls.add(sql);
 		}
 		
-		int limit = 100;
+		int limit = 1000;
 		for (int i = 0; i < sqls.size(); i = i + limit) {
 			int max = Math.min(sqls.size(), i + limit);
 			String subSql = StringUtils.join(sqls.subList(i, max), " UNION ALL ");
@@ -324,8 +347,15 @@ public class SearchLogic {
 			for (Map<Integer, Object> rowResult : result) {
 				QueryResultHitPeak qrHitPeak = new QueryResultHitPeak();
 				String[] vacVal = String.valueOf(rowResult.get(1)).trim().split(" ");
+				
+//				qrHitPeak.setRecordId(vacVal[2]);
+//				qrHitPeak.setHitRelInt(Float.parseFloat( vacVal[0] ));
+//				qrHitPeak.setHitMz(vacVal[1]);
+//				qrHitPeak.setMz(vacVal[3]);
+//				qrHitPeak.setValue(Float.parseFloat(vacVal[4]));
+				
 				qrHitPeak.setRecordId(String.valueOf(rowResult.get(2)).trim());
-				qrHitPeak.setHitRelInt(Float.parseFloat( vacVal[0] ));
+				qrHitPeak.setHitRelInt(Float.parseFloat(vacVal[0]));
 				qrHitPeak.setHitMz(vacVal[1]);
 				qrHitPeak.setMz(String.valueOf(rowResult.get(3)));
 				qrHitPeak.setValue(Float.parseFloat(String.valueOf(rowResult.get(4))));
@@ -380,7 +410,7 @@ public class SearchLogic {
 				String key = String.format("%s %s", recordId, strHitMz);
 				if (mapMzCnt.containsKey(key)) {
 					mapMzCnt.put(key, mapMzCnt.get(key) + 1);
-				} else { 
+				} else {
 					mapMzCnt.put(key, 1);
 				}
 				

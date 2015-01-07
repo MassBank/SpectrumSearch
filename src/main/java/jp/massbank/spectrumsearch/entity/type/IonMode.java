@@ -1,18 +1,20 @@
 package jp.massbank.spectrumsearch.entity.type;
 
 
-public enum IonModeType {
+public enum IonMode {
 	
-	POSITIVE	(1, "POS"),
-	NEGATIVE	(-1, "NEG"),
-	BOTH		(0, "BOTH");
+	POSITIVE	(1, "POS", "Positive"),
+	NEGATIVE	(-1, "NEG", "Negative"),
+	BOTH		(0, "BOTH", "Both");
 	
-	private String key;
 	private int value;
+	private String key;
+	private String label;
 	
-	private IonModeType(int val, String key) {
+	private IonMode(int val, String key, String label) {
 		this.value = val;
 		this.key = key;
+		this.label = label;
 	}
 	
 	public int getValue() {
@@ -23,11 +25,15 @@ public enum IonModeType {
 		return this.key;
 	}
 	
+	public String getLabel() {
+		return this.label;
+	}
+	
 	public static int parseInt(String val) {
 		try {
 			return Integer.parseInt(val);
 		} catch (NumberFormatException e) {
-			for (IonModeType type : IonModeType.values()) {
+			for (IonMode type : IonMode.values()) {
 				if (type.name().equalsIgnoreCase(val)) {
 					return type.getValue();
 				}

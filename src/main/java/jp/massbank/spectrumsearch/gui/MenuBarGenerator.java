@@ -18,7 +18,7 @@
  */
 
 
-package jp.massbank.spectrumsearch;
+package jp.massbank.spectrumsearch.gui;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -28,12 +28,15 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 
+import jp.massbank.spectrumsearch.QueryFileLoader;
+import jp.massbank.spectrumsearch.SearchPage;
+
 import org.apache.log4j.Logger;
 
-class MenuBarGenerator {
+public class MenuBarGenerator {
   private static final Logger LOGGER = Logger.getLogger(MenuBarGenerator.class);
 
-  static JMenuBar generateMenuBar(final SearchPage targetFrame) {
+  public static JMenuBar generateMenuBar(final SearchPage targetFrame) {
 
     JMenuBar menuBar;
     JMenu menu;

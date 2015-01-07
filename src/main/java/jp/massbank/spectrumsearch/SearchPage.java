@@ -58,6 +58,7 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -95,7 +96,9 @@ import jp.massbank.spectrumsearch.entity.db.Record;
 import jp.massbank.spectrumsearch.entity.gui.GuiDbTableRow;
 import jp.massbank.spectrumsearch.entity.gui.GuiResultTableRow;
 import jp.massbank.spectrumsearch.entity.param.SearchQueryParam;
-import jp.massbank.spectrumsearch.entity.type.IonModeType;
+import jp.massbank.spectrumsearch.entity.type.IonMode;
+import jp.massbank.spectrumsearch.entity.type.ToleranceUnit;
+import jp.massbank.spectrumsearch.gui.MenuBarGenerator;
 import jp.massbank.spectrumsearch.logic.CompoundLogic;
 import jp.massbank.spectrumsearch.logic.RecordLogic;
 import jp.massbank.spectrumsearch.logic.SpectrumLogic;
@@ -785,111 +788,126 @@ public class SearchPage extends JFrame {
 		// クエリ側スペクトルのピークがない場合
 		if (ps.length == 0 || (ps.length == 1 && ps[0].split("\t")[0].equals("0") && ps[0].split("\t")[1].equals("0"))) {
 			queryPlot.setNoPeak(true);
-			hitLabel.setText(" 0 Hit.    ("
-					+ ((PRECURSOR < 1) ? "" : "Precursor : " + PRECURSOR + ", ")
-					+ "Tolerance : "
-					+ TOLERANCE
-					+ " "
-					+ ((tolUnit1.isSelected()) ? tolUnit1.getText() : tolUnit2.getText()) + ", Cutoff threshold : "
-					+ CUTOFF_THRESHOLD + ")");
+			StringBuilder sb = new StringBuilder();
+			sb.append(" 0 Hit.    (");
+			sb.append((PRECURSOR < 1) ? "" : "Precursor : " + PRECURSOR + ", ");
+			sb.append("Tolerance : ");
+			sb.append(" ");
+			sb.append((tolUnit1.isSelected()) ? tolUnit1.getText() : tolUnit2.getText());
+			sb.append(", Cutoff threshold : " + CUTOFF_THRESHOLD + ")");
+			hitLabel.setText(sb.toString());
+			
+//			hitLabel.setText(" 0 Hit.    ("
+//					+ ((PRECURSOR < 1) ? "" : "Precursor : " + PRECURSOR + ", ")
+//					+ "Tolerance : "
+//					+ TOLERANCE
+//					+ " "
+//					+ ((tolUnit1.isSelected()) ? tolUnit1.getText() : tolUnit2.getText()) + ", Cutoff threshold : "
+//					+ CUTOFF_THRESHOLD + ")");
+			
 			// マウスカーソルをデフォルトカーソルに
 			this.setCursor(Cursor.getDefaultCursor());
 			return;
 		}
 
 		// POSTデータを作成
-		final SearchQueryParam param = new SearchQueryParam();
-//		StringBuffer post = new StringBuffer();
+		final SearchQueryParam param = new SearchQueryParam(); 	// StringBuffer post = new StringBuffer();
 		if (isRecInteg) {
-			param.setInteg(true);
-//			post.append( "INTEG=true&" );
+			param.setInteg(true); 								//	post.append( "INTEG=true&" );
 		} else if (isRecActu) {
-			param.setInteg(false);
-//			post.append( "INTEG=false&" );
+			param.setInteg(false); 								//	post.append( "INTEG=false&" );
 		}
 		if (PRECURSOR > 0) {
-			param.setPrecursor(PRECURSOR);
-//			post.append( "PRE=" + PRECURSOR + "&");
+			param.setPrecursor(PRECURSOR); 						//	post.append( "PRE=" + PRECURSOR + "&");
 		}
-		param.setCutoff(CUTOFF_THRESHOLD);
-//		post.append( "CUTOFF=" + CUTOFF_THRESHOLD + "&" );
-		param.setTolerance(TOLERANCE);
-//		post.append( "TOLERANCE=" + TOLERANCE + "&" );
+		param.setCutoff(CUTOFF_THRESHOLD); 						//	post.append( "CUTOFF=" + CUTOFF_THRESHOLD + "&" );
+		param.setTolerance(TOLERANCE); 							//	post.append( "TOLERANCE=" + TOLERANCE + "&" );
 		if (tolUnit2.isSelected()) {
-			param.setTolUnit("ppm");
-//			post.append( "TOLUNIT=ppm&" );
+			param.setTolUnit(ToleranceUnit.PPM.getLabel()); 	//	post.append( "TOLUNIT=ppm&" );
 		} else {
-			param.setTolUnit("unit");
-//			post.append( "TOLUNIT=unit&" );
+			param.setTolUnit(ToleranceUnit.UNIT.getLabel()); 	//	post.append( "TOLUNIT=unit&" );
 		}
-//		post.append( "INST=" );
-		StringBuffer instTmp = new StringBuffer();
-		boolean isInstAll = true;
-		for (Iterator i=isInstCheck.keySet().iterator(); i.hasNext(); ) {
-			String key = (String)i.next();
-			
-			if ( (isInstCheck.get(key)) ) {
-				if (instTmp.length() > 0) {
-					instTmp.append( "," );
+		StringBuffer sbInstance = new StringBuffer();			//	post.append( "INST=" );
+		boolean isAllInstanceSelected = true;
+		for (Entry<String, Boolean> entry : isInstCheck.entrySet()) {
+			if (entry.getValue()) {
+				if (sbInstance.length() > 0) {
+					sbInstance.append(",");
 				}
-				instTmp.append( key );
+				sbInstance.append(entry.getKey());
 			} else {
-				isInstAll = false;
+				isAllInstanceSelected = false;
 			}
 		}
-		if (isInstAll) {
-			if (instTmp.length() > 0) {
-				instTmp.append( "," );
-			}
-			instTmp.append( "ALL" );
-		}
-		param.setInstType(instTmp.toString());
-//		post.append( instTmp.toString() + "&" );
 		
-//		post.append( "MS=" );
-		StringBuffer msTmp = new StringBuffer();
-		boolean isMsAll = true;
-		for (Iterator i=isMsCheck.keySet().iterator(); i.hasNext(); ) {
-			String key = (String)i.next();
-			
-			if ( (isMsCheck.get(key)) ) {
-				if (msTmp.length() > 0) {
-					msTmp.append( "," );
+//		for (Iterator i=isInstCheck.keySet().iterator(); i.hasNext();) {
+//			String key = (String)i.next();
+//			
+//			if ( (isInstCheck.get(key)) ) {
+//				if (sbInstance.length() > 0) {
+//					sbInstance.append( "," );
+//				}
+//				sbInstance.append( key );
+//			} else {
+//				isInstAll = false;
+//			}
+//		}
+		
+		if (isAllInstanceSelected) {
+			if (sbInstance.length() > 0) {
+				sbInstance.append(",");
+			}
+			sbInstance.append("ALL");
+		}
+		param.setInstType(sbInstance.toString()); 				// post.append( instTmp.toString() + "&" );
+		
+		StringBuffer sbMs = new StringBuffer();					// post.append( "MS=" );
+		boolean isAllMsSelected = true;
+		for (Entry<String, Boolean> entry : isMsCheck.entrySet()) {
+			if (entry.getValue()) {
+				if (sbMs.length() > 0) {
+					sbMs.append(",");
 				}
-				msTmp.append( key );
+				sbMs.append(entry.getKey());
 			} else {
-				isMsAll = false;
+				isAllMsSelected = false;
 			}
 		}
-		if (isMsAll) {
-			if (msTmp.length() > 0) {
-				msTmp.append( "," );
+		
+//		for (Iterator i=isMsCheck.keySet().iterator(); i.hasNext(); ) {
+//			String key = (String)i.next();
+//			
+//			if ( (isMsCheck.get(key)) ) {
+//				if (msTmp.length() > 0) {
+//					msTmp.append( "," );
+//				}
+//				msTmp.append( key );
+//			} else {
+//				isMsAll = false;
+//			}
+//		}
+		
+		if (isAllMsSelected) {
+			if (sbMs.length() > 0) {
+				sbMs.append( "," );
 			}
-			msTmp.append( "ALL" );
+			sbMs.append( "ALL" );
 		}
-		param.setMsType(msTmp.toString());
-//		post.append( msTmp.toString() + "&" );
+		param.setMsType(sbMs.toString()); 							// post.append( msTmp.toString() + "&" );
 		
-		
-//		if (isIonRadio.get("Posi")) {
-		if (isIonRadio.get(IonModeType.POSITIVE.getKey())) {
-			param.setIon(1);
-//			post.append( "ION=1&" );
-//		} else if (isIonRadio.get("Nega")) {
-		} else if (isIonRadio.get(IonModeType.NEGATIVE.getKey())) {
-			param.setIon(-1);
-//			post.append( "ION=-1&" );
+		if (isIonRadio.get(IonMode.POSITIVE.getKey())) {		// if (isIonRadio.get("Posi")) {
+			param.setIon(1); 										// post.append( "ION=1&" );
+		} else if (isIonRadio.get(IonMode.NEGATIVE.getKey())) {	// } else if (isIonRadio.get("Nega")) {
+			param.setIon(-1); 										// post.append( "ION=-1&" );
 		} else {
-			param.setIon(0);
-//			post.append( "ION=0&");
+			param.setIon(0); 										// post.append( "ION=0&");
 		}
 		
-//		post.append( "VAL=" );
-		StringBuffer psTmp = new StringBuffer();
+		StringBuffer sbPeakValue = new StringBuffer();				// post.append( "VAL=" );
 		for (int i = 0; i < ps.length; i++) {
-			psTmp.append( ps[i].replace("\t", ",") + "@" );
+			sbPeakValue.append(ps[i].replace("\t", ",") + "@");
 		}
-		param.setPeak(psTmp.toString());
+		param.setPeak(sbPeakValue.toString());
 
 		// 画面操作を無効する
 		setOperationEnbled(false);
@@ -971,26 +989,43 @@ public class SearchPage extends JFrame {
 				resultTabPane.setSelectedIndex(0);
 				setAllPlotAreaRange(queryPlot);
 				SearchPage.this.setCursor(Cursor.getDefaultCursor());
-				hitLabel.setText(" "
-						+ total
-						+ " Hit.    ("
-						+ ((PRECURSOR < 1) ? "" : "Precursor : " + PRECURSOR + ", ")
-						+ "Tolerance : "
-						+ TOLERANCE
-						+ " "
-						+ ((tolUnit1.isSelected()) ? tolUnit1.getText()
-								: tolUnit2.getText()) + ", Cutoff threshold : "
-						+ CUTOFF_THRESHOLD + ")");
-				hitLabel.setToolTipText(" "
-						+ total
-						+ " Hit.    ("
-						+ ((PRECURSOR < 1) ? "" : "Precursor : " + PRECURSOR + ", ")
-						+ "Tolerance : "
-						+ TOLERANCE
-						+ " "
-						+ ((tolUnit1.isSelected()) ? tolUnit1.getText()
-								: tolUnit2.getText()) + ", Cutoff threshold : "
-						+ CUTOFF_THRESHOLD + ")");
+				
+				StringBuilder sbHitLabel = new StringBuilder();
+				sbHitLabel.append(" ");
+				sbHitLabel.append(total);
+				sbHitLabel.append(" Hit.    (");
+				sbHitLabel.append((PRECURSOR < 1) ? "" : "Precursor : " + PRECURSOR + ", ");
+				sbHitLabel.append("Tolerance : ");
+				sbHitLabel.append(TOLERANCE);
+				sbHitLabel.append(" ");
+				sbHitLabel.append((tolUnit1.isSelected()) ? tolUnit1.getText() : tolUnit2.getText());
+				sbHitLabel.append(", Cutoff threshold : ");
+				sbHitLabel.append(CUTOFF_THRESHOLD);
+				sbHitLabel.append(")");
+				hitLabel.setText(sbHitLabel.toString());
+				hitLabel.setToolTipText(sbHitLabel.toString());
+				
+//				hitLabel.setText(" "
+//						+ total
+//						+ " Hit.    ("
+//						+ ((PRECURSOR < 1) ? "" : "Precursor : " + PRECURSOR + ", ")
+//						+ "Tolerance : "
+//						+ TOLERANCE
+//						+ " "
+//						+ ((tolUnit1.isSelected()) ? tolUnit1.getText()
+//								: tolUnit2.getText()) + ", Cutoff threshold : "
+//						+ CUTOFF_THRESHOLD + ")");
+				
+//				hitLabel.setToolTipText(" "
+//						+ total
+//						+ " Hit.    ("
+//						+ ((PRECURSOR < 1) ? "" : "Precursor : " + PRECURSOR + ", ")
+//						+ "Tolerance : "
+//						+ TOLERANCE
+//						+ " "
+//						+ ((tolUnit1.isSelected()) ? tolUnit1.getText()
+//								: tolUnit2.getText()) + ", Cutoff threshold : "
+//						+ CUTOFF_THRESHOLD + ")");
 			}
 		};
 		worker.start();
@@ -1282,13 +1317,16 @@ public class SearchPage extends JFrame {
 		
 		boolean checked = false;
 	    LOGGER.info("instInfo.getTypeGroup().size() -> " + instGroup.size());
-		for (Iterator i=instGroup.keySet().iterator(); i.hasNext(); ) {
-			String key = (String)i.next();
+	    for (Entry<String, List<String>> entry : instGroup.entrySet()) {
+//		for (Iterator i=instGroup.keySet().iterator(); i.hasNext(); ) {
+//			String key = (String)i.next();
 			
-			List<String> list = instGroup.get(key);
-		    LOGGER.info("instGroup.get(  "+key+"  ).size() -> " + list.size());
-			for ( int j = 0; j < list.size(); j++ ) {
-				String val = list.get(j);
+//			List<String> list = instGroup.get(key);
+//	    	LOGGER.info("instGroup.get(  "+key+"  ).size() -> " + list.size());
+			List<String> list = entry.getValue();
+			for (String val : list) {
+//			for ( int j = 0; j < list.size(); j++ ) {
+//				String val = list.get(j);
 			
 				JCheckBox chkBox;
 				
@@ -1301,7 +1339,7 @@ public class SearchPage extends JFrame {
 						chkBox = new JCheckBox(val, false);
 					}
 				} else {
-					if ( isDefaultInst(val) ) {	// デフォルト装置種別の場合 
+					if (isDefaultInst(val)) {	// デフォルト装置種別の場合 
 						chkBox = new JCheckBox(val, true);
 						checked = true;
 						valueSetList.add(val);
@@ -1362,8 +1400,9 @@ public class SearchPage extends JFrame {
 		List<String> list = Arrays.asList(instInfo.getMsAll());
 		
 //		LOGGER.info("instInfo.getMsAll().length -> " + list.size());
-		for ( int j=0; j<list.size(); j++ ) {
-			String val = list.get(j);
+		for (String val : list) {
+//		for ( int j=0; j<list.size(); j++ ) {
+//			String val = list.get(j);
 		
 			JCheckBox chkBox;
 			
@@ -1415,9 +1454,9 @@ public class SearchPage extends JFrame {
 	 * イオン種別情報初期化
 	 */
 	private void initIonInfo() {
-		final String keyPosi = IonModeType.POSITIVE.getKey();
-		final String keyNega = IonModeType.NEGATIVE.getKey();
-		final String keyBoth = IonModeType.BOTH.getKey();
+		final String keyPosi = IonMode.POSITIVE.getKey();
+		final String keyNega = IonMode.NEGATIVE.getKey();
+		final String keyBoth = IonMode.BOTH.getKey();
 //		final String keyPosi = "Posi";
 //		final String keyNega = "Nega";
 //		final String keyBoth = "Both";
@@ -1432,9 +1471,9 @@ public class SearchPage extends JFrame {
 		}
 //        ArrayList<String> valueList = cm.getCookie(COOKIE_ION);
 		
-		JRadioButton ionPosi = new JRadioButton("Positive");
-		JRadioButton ionNega = new JRadioButton("Negative");
-		JRadioButton ionBoth = new JRadioButton("Both");
+		JRadioButton ionPosi = new JRadioButton(IonMode.POSITIVE.getLabel());
+		JRadioButton ionNega = new JRadioButton(IonMode.NEGATIVE.getLabel());
+		JRadioButton ionBoth = new JRadioButton(IonMode.BOTH.getLabel());
 		
 		// Cookieが存在する場合
 		if (valueList.size() != 0) {
@@ -2810,10 +2849,10 @@ public class SearchPage extends JFrame {
 			PackageRecData recData = null;
 
 //			if (isIonRadio.get("Posi")) {
-			if (isIonRadio.get(IonModeType.POSITIVE.getKey())) {
+			if (isIonRadio.get(IonMode.POSITIVE.getKey())) {
 				ion = 1;
 //			} else if (isIonRadio.get("Nega")) {
-			} else if (isIonRadio.get(IonModeType.NEGATIVE.getKey())) {
+			} else if (isIonRadio.get(IonMode.NEGATIVE.getKey())) {
 				ion = -1;
 			} else {
 				ion = 0;
@@ -3238,7 +3277,7 @@ public class SearchPage extends JFrame {
         LOGGER.error(e.getMessage(), e);
         SearchPage.this.setCursor(Cursor.getDefaultCursor());
       }
-		       LOGGER.info(line);
+//		       LOGGER.info(line);
 			// === 化合物名 ===
 			findStr = "name=";
 			recData.setName(line, findStr);

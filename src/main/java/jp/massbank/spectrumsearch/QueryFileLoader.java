@@ -47,7 +47,7 @@ public class QueryFileLoader implements ActionListener {
   private SearchPage targetFrame;
   private JFileChooser fc;
 
-  QueryFileLoader(SearchPage targetFrame) {
+  public QueryFileLoader(SearchPage targetFrame) {
     this.targetFrame = targetFrame;
     fc = new JFileChooser();
   }

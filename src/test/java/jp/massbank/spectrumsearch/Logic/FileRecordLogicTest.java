@@ -19,34 +19,38 @@ import org.junit.Test;
 
 public class FileRecordLogicTest {
 	
-//	@Test
-//	public void testSync() {
-//		MassBankRecordLogic logic = new MassBankRecordLogic();
-//		logic.syncFilesRecordsByFolderPath(SystemProperties.getInstance().getDirPath());
-//	}
+	@Test
+	public void testSync() {
+		MassBankRecordLogic logic = new MassBankRecordLogic();
+		logic.syncFilesRecordsByFolderPath(SystemProperties.getInstance().getDirPath());
+	}
 	
 //	@Test
 	public void dbExecuteSql() throws SQLException {
 		DbAccessor.createConnection();
 		List<String> sqls = new ArrayList<String>();
-		sqls.add("select max(concat(castinteger(RELATIVE_INTENSITY) || ' ' || RECORD_ID || ' ' || castdouble(MZ) || ' 83.799988 84.400008')) from PEAK where RELATIVE_INTENSITY >= 5 and (MZ between 83.799988 and 84.400008) group by RECORD_ID");
-		sqls.add("select max(concat(castinteger(RELATIVE_INTENSITY) || ' ' || RECORD_ID || ' ' || castdouble(MZ))) from PEAK where RELATIVE_INTENSITY >= 5 and (MZ between 104.799988 and 105.400008) group by RECORD_ID");
-		sqls.add("select max(concat(castinteger(RELATIVE_INTENSITY) || ' ' || RECORD_ID || ' ' || castdouble(MZ))) from PEAK where RELATIVE_INTENSITY >= 5 and (MZ between 106.799988 and 107.400008) group by RECORD_ID");
+		sqls.add("select max(concat(castinteger(RELATIVE_INTENSITY) || ' ' || castdouble(MZ))), RECORD_ID, 84.1, 47.57414337506346 from PEAK where RELATIVE_INTENSITY >= 5 and (MZ between 83.799988 and 84.400008) group by RECORD_ID");
+		sqls.add("select max(concat(castinteger(RELATIVE_INTENSITY) || ' ' || castdouble(MZ))), RECORD_ID, 105.1, 25.744136822888727 from PEAK where RELATIVE_INTENSITY >= 5 and (MZ between 104.799988 and 105.400008) group by RECORD_ID");
+		sqls.add("select max(concat(castinteger(RELATIVE_INTENSITY) || ' ' || castdouble(MZ))), RECORD_ID, 107.1, 26.234034771445366 from PEAK where RELATIVE_INTENSITY >= 5 and (MZ between 106.799988 and 107.400008) group by RECORD_ID");
+		sqls.add("select max(concat(castinteger(RELATIVE_INTENSITY) || ' ' || castdouble(MZ))), RECORD_ID, 114.1, 116.91770667603842 from PEAK where RELATIVE_INTENSITY >= 5 and (MZ between 113.799988 and 114.400008) group by RECORD_ID");
+		sqls.add("select max(concat(castinteger(RELATIVE_INTENSITY) || ' ' || castdouble(MZ))), RECORD_ID, 115.1, 30.452597186643825 from PEAK where RELATIVE_INTENSITY >= 5 and (MZ between 114.799988 and 115.400008) group by RECORD_ID");
 		
-		sqls.add("select max(concat(castinteger(RELATIVE_INTENSITY) || ' ' || RECORD_ID || ' ' || castdouble(MZ))) from PEAK where RELATIVE_INTENSITY >= 5 and (MZ between 83.799988 and 84.400008) group by RECORD_ID "
-				+ "UNION "
-				+ "select max(concat(castinteger(RELATIVE_INTENSITY) || ' ' || RECORD_ID || ' ' || castdouble(MZ))) from PEAK where RELATIVE_INTENSITY >= 5 and (MZ between 106.799988 and 107.400008) group by RECORD_ID "
-				+ "UNION "
-				+ "select max(concat(castinteger(RELATIVE_INTENSITY) || ' ' || RECORD_ID || ' ' || castdouble(MZ))) from PEAK where RELATIVE_INTENSITY >= 5 and (MZ between 104.799988 and 105.400008) group by RECORD_ID");
-		sqls.add("select RECORD_ID, 'sample' from PEAK where RELATIVE_INTENSITY >= 5");
+		sqls.add("select max(concat(castinteger(RELATIVE_INTENSITY) || ' ' || castdouble(MZ))), RECORD_ID, 84.1, 47.57414337506346 from PEAK where RELATIVE_INTENSITY >= 5 and (MZ between 83.799988 and 84.400008) group by RECORD_ID "
+				+ "UNION ALL select max(concat(castinteger(RELATIVE_INTENSITY) || ' ' || castdouble(MZ))), RECORD_ID, 105.1, 25.744136822888727 from PEAK where RELATIVE_INTENSITY >= 5 and (MZ between 104.799988 and 105.400008) group by RECORD_ID "
+				+ "UNION ALL select max(concat(castinteger(RELATIVE_INTENSITY) || ' ' || castdouble(MZ))), RECORD_ID, 107.1, 26.234034771445366 from PEAK where RELATIVE_INTENSITY >= 5 and (MZ between 106.799988 and 107.400008) group by RECORD_ID "
+				+ "UNION ALL select max(concat(castinteger(RELATIVE_INTENSITY) || ' ' || castdouble(MZ))), RECORD_ID, 114.1, 116.91770667603842 from PEAK where RELATIVE_INTENSITY >= 5 and (MZ between 113.799988 and 114.400008) group by RECORD_ID "
+				+ "UNION ALL select max(concat(castinteger(RELATIVE_INTENSITY) || ' ' || castdouble(MZ))), RECORD_ID, 115.1, 30.452597186643825 from PEAK where RELATIVE_INTENSITY >= 5 and (MZ between 114.799988 and 115.400008) group by RECORD_ID");
+		
 		for (String sql : sqls) {
 			long s1 = System.currentTimeMillis();
 			List<Map<Integer, Object>> result = DbAccessor.execResultQuery(sql);
 			System.out.println("--------------------------------------------------" + (System.currentTimeMillis() - s1) + "ms");
 			for (Map<Integer, Object> item : result) {
 				for (Entry<Integer, Object> entry : item.entrySet()) {
-					System.out.println(entry.getValue());
+					System.out.print(entry.getValue());
+					System.out.print(" ");
 				}
+				System.out.println(" ");
 			}
 		}
 		DbAccessor.closeConnection();
@@ -90,12 +94,13 @@ public class FileRecordLogicTest {
 		}
 	}
 	
-	@Test
+//	@Test
 	public void testQuery() throws SQLException {
 		
 //		runSelectSQL("select P1.RELATIVE_INTENSITY, P1.MZ, P1.RECORD_ID from PEAK P1 join (select max(P.RELATIVE_INTENSITY) MAX_RELATIVE_INTENSITY, P.RECORD_ID from PEAK P where P.RELATIVE_INTENSITY >= 5 and (P.MZ between 84.099963 and 84.100039) group by P.RECORD_ID) P2 on P1.RELATIVE_INTENSITY = P2.MAX_RELATIVE_INTENSITY and P1.RECORD_ID = P2.RECORD_ID");
 		
-		runSelectSQL("select max(concat(castinteger(RELATIVE_INTENSITY) || ' ' || castdouble(MZ))), RECORD_ID, 84.1, 47.57414337506346 from PEAK where RELATIVE_INTENSITY >= 5 and (MZ between 84.099963 and 84.100039) group by RECORD_ID UNION ALL select max(concat(castinteger(RELATIVE_INTENSITY) || ' ' || castdouble(MZ))), RECORD_ID, 105.1, 25.744136822888727 from PEAK where RELATIVE_INTENSITY >= 5 and (MZ between 105.099957 and 105.100046) group by RECORD_ID");
+		runSelectSQL("select * from INSTRUMENT");
+//		runSelectSQL("select max(concat(castinteger(RELATIVE_INTENSITY) || ' ' || castdouble(MZ))), RECORD_ID, 84.1, 47.57414337506346 from PEAK where RELATIVE_INTENSITY >= 5 and (MZ between 84.099963 and 84.100039) group by RECORD_ID UNION ALL select max(concat(castinteger(RELATIVE_INTENSITY) || ' ' || castdouble(MZ))), RECORD_ID, 105.1, 25.744136822888727 from PEAK where RELATIVE_INTENSITY >= 5 and (MZ between 105.099957 and 105.100046) group by RECORD_ID");
 //		runSelectSQL("select max(RELATIVE_INTENSITY) MAX_RELATIVE_INTENSITY, RECORD_ID from PEAK group by RECORD_ID");
 //		runSelectSQL("select max(castinteger(RELATIVE_INTENSITY)) MAX_RELATIVE_INTENSITY, RECORD_ID from PEAK group by RECORD_ID");
 //		runSelectSQL("select max(concat(castinteger(RELATIVE_INTENSITY) || ' ' || castdouble(MZ))) MAX_RELATIVE_INTENSITY, RECORD_ID from PEAK group by RECORD_ID");
@@ -133,7 +138,7 @@ public class FileRecordLogicTest {
 		long s = System.currentTimeMillis();
 		List<Map<Integer, Object>> result = DbAccessor.execResultQuery(sql);
 		System.out.println("end..." + (System.currentTimeMillis() - s) + "ms");
-		for (int i = 0; i < 100; i++) {
+		for (int i = 0; i < result.size(); i++) {
 			Map<Integer, Object> item = result.get(i);
 			for (Entry<Integer, Object> entry : item.entrySet()) {
 				System.out.print(String.valueOf(entry.getValue()) + ", ");

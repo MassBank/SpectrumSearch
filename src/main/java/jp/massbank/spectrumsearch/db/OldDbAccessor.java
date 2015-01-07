@@ -51,7 +51,6 @@ public class OldDbAccessor {
         Instrument ins = new Instrument();
         ins.setId(rs.getInt(1));
         ins.setType(rs.getString(2));
-        ins.setName(rs.getString(3));
         result.add(ins);
       }
     }

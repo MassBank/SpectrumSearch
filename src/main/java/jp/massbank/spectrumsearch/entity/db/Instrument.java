@@ -6,12 +6,12 @@ public class Instrument {
 	public static final class Columns {
 		public static final String INSTRUMENT_ID = "INSTRUMENT_ID";
 		public static final String INSTRUMENT_TYPE = "INSTRUMENT_TYPE";
-		public static final String INSTRUMENT_NAME = "INSTRUMENT_NAME";
+//		public static final String INSTRUMENT_NAME = "INSTRUMENT_NAME";
 	}
 	
 	private int id;
 	private String type;
-	private String name;
+//	private String name;
   
   	public int getId() {
 		return id;
@@ -29,17 +29,18 @@ public class Instrument {
 		this.type = type;
 	}
 	
-	public String getName() {
-		return name;
-	}
-	
-	public void setName(String name) {
-		this.name = name;
-	}
+//	public String getName() {
+//		return name;
+//	}
+//	
+//	public void setName(String name) {
+//		this.name = name;
+//	}
 
 	@Override
 	public String toString() {
-		return "Instrument [no=" + id + ", type=" + type + ", name=" + name + "]";
+		return "Instrument [no=" + id + ", type=" + type + "]";
+//		return "Instrument [no=" + id + ", type=" + type + ", name=" + name + "]";
 	}
   
 }

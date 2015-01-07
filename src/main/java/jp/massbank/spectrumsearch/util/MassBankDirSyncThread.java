@@ -1,18 +1,16 @@
-package jp.massbank.spectrumsearch.gui;
+package jp.massbank.spectrumsearch.util;
 
 import java.io.File;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.JProgressBar;
-
-import org.apache.log4j.Logger;
-
 import jp.massbank.spectrumsearch.accessor.DbAccessor;
 import jp.massbank.spectrumsearch.entity.db.Instrument;
 import jp.massbank.spectrumsearch.entity.db.MsType;
 import jp.massbank.spectrumsearch.logic.MassBankRecordLogic;
+
+import org.apache.log4j.Logger;
 
 public class MassBankDirSyncThread implements Runnable {
 

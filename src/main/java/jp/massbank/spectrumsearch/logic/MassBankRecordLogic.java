@@ -29,7 +29,7 @@ import jp.massbank.spectrumsearch.entity.db.Peak;
 import jp.massbank.spectrumsearch.entity.db.Record;
 import jp.massbank.spectrumsearch.entity.db.Spectrum;
 import jp.massbank.spectrumsearch.entity.file.MassBankRecord;
-import jp.massbank.spectrumsearch.entity.type.IonModeType;
+import jp.massbank.spectrumsearch.entity.type.IonMode;
 import jp.massbank.spectrumsearch.entity.type.MassBankRecordLine;
 import jp.massbank.spectrumsearch.util.DbUtil;
 import jp.massbank.spectrumsearch.util.MassBankRecordReader;
@@ -140,8 +140,7 @@ public class MassBankRecordLogic {
     			// INSTRUMENT
     			Instrument oInstrument = null;
     			for (Instrument instrument : instruments) {
-    				if (instrument.getType().equals(massBankRecord.getAcInstrument().getType())
-    						&& instrument.getName().equals(massBankRecord.getAcInstrument().getName())) {
+    				if (instrument.getType().equals(massBankRecord.getAcInstrument().getType())) {
     					oInstrument = instrument;
     				}
     			}
@@ -149,12 +148,9 @@ public class MassBankRecordLogic {
     			if (oInstrument == null) {
     				Instrument instrument = new Instrument();
     				instrument.setType(massBankRecord.getAcInstrument().getType());
-    				instrument.setName(massBankRecord.getAcInstrument().getName());
     				this.instrumentAccessor.insert(instrument);
     				
-    				oInstrument = this.instrumentAccessor.getInstrument(
-    						massBankRecord.getAcInstrument().getType(),
-    						massBankRecord.getAcInstrument().getName());
+    				oInstrument = this.instrumentAccessor.getInstrument(massBankRecord.getAcInstrument().getType());
     				
     				instruments.add(oInstrument);
     			}
@@ -231,7 +227,7 @@ public class MassBankRecordLogic {
     				} catch (NumberFormatException e) {
     					LOGGER.error(e.getMessage(), e);
     				}
-    				spectrum.setIonMode(IonModeType.parseInt(strIonMode));
+    				spectrum.setIonMode(IonMode.parseInt(strIonMode));
     				spectrum.setRecordId(massBankRecord.getId());
     				this.spectrumAccessor.addBatchInsert(spectrum);
     			} else {
@@ -301,8 +297,7 @@ public class MassBankRecordLogic {
 			                			// INSTRUMENT
 			                			Instrument oInstrument = null;
 			                			for (Instrument instrument : instruments) {
-			                				if (instrument.getType().equals(massBankRecord.getAcInstrument().getType())
-			                						&& instrument.getName().equals(massBankRecord.getAcInstrument().getName())) {
+			                				if (instrument.getType().equals(massBankRecord.getAcInstrument().getType())) {
 			                					oInstrument = instrument;
 			                				}
 			                			}
@@ -310,12 +305,9 @@ public class MassBankRecordLogic {
 			                			if (oInstrument == null) {
 			                				Instrument instrument = new Instrument();
 			                				instrument.setType(massBankRecord.getAcInstrument().getType());
-			                				instrument.setName(massBankRecord.getAcInstrument().getName());
 			                				this.instrumentAccessor.insert(instrument);
 			                				
-			                				oInstrument = this.instrumentAccessor.getInstrument(
-			                						massBankRecord.getAcInstrument().getType(),
-			                						massBankRecord.getAcInstrument().getName());
+			                				oInstrument = this.instrumentAccessor.getInstrument(massBankRecord.getAcInstrument().getType());
 			                				
 			                				instruments.add(oInstrument);
 			                			}
@@ -392,7 +384,7 @@ public class MassBankRecordLogic {
 			                				} catch (NumberFormatException e) {
 			                					LOGGER.error(e.getMessage(), e);
 			                				}
-			                				spectrum.setIonMode(IonModeType.parseInt(strIonMode));
+			                				spectrum.setIonMode(IonMode.parseInt(strIonMode));
 			                				spectrum.setRecordId(massBankRecord.getId());
 			                				this.spectrumAccessor.addBatchInsert(spectrum);
 			                			} else {
