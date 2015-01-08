@@ -1,5 +1,10 @@
 package jp.massbank.spectrumsearch.util;
 
+import java.awt.Desktop;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+
 import javax.swing.table.TableModel;
 
 import org.apache.log4j.Logger;
@@ -24,6 +29,15 @@ public class CommonUtil {
 			LOGGER.error(e.getMessage(), e);
 		}
 		return null;
+	}
+	
+	public static void openBrowser(String reqUrl) {
+		LOGGER.info("open browser with " + reqUrl);
+		try {
+			Desktop.getDesktop().browse(new URI(reqUrl));
+		} catch (IOException | URISyntaxException ex) {
+			LOGGER.error(ex.getMessage(), ex);
+		}
 	}
 	
 	public static int getRowByValue(TableModel model, Object value) {

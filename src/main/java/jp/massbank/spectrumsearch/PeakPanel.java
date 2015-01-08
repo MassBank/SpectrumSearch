@@ -60,7 +60,9 @@ import javax.swing.JToggleButton;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 
+import jp.massbank.spectrumsearch.entity.constant.Constant;
 import jp.massbank.spectrumsearch.model.PeakData;
+import jp.massbank.spectrumsearch.util.CommonUtil;
 import massbank.MassBankCommon;
 
 import org.apache.log4j.Logger;
@@ -1262,35 +1264,38 @@ public class PeakPanel extends JPanel {
 				String com = e.getActionCommand();
 				
 				if (com.equals("search")) {
-					// URLパラメータ生成
-					StringBuffer urlParam = new StringBuffer();
-
-					String typeName = MassBankCommon.CGI_TBL[MassBankCommon.CGI_TBL_NUM_TYPE][MassBankCommon.CGI_TBL_TYPE_PEAK];
-
-					urlParam.append("?type=" + typeName);							// type：peak
-					urlParam.append("&num=" + peaks1.getSelectPeakNum());			// num ：
-					urlParam.append("&tol=0");										// tol ：0
-					urlParam.append("&int=5");										// int ：5
+					// TODO
+					CommonUtil.openBrowser(Constant.ExternalUrl.SHOW_SEARCH_PAGE);
 					
-					for (int i = 0; i < peaks1.getSelectPeakNum(); i++) {
-						if (i != 0) {
-							urlParam.append("&op" + i + "=and");					// op ：and
-						} else {
-							urlParam.append("&op" + i + "=or");						// op ：or
-						}
-						urlParam.append("&mz" + i + "=" + selectPeakList.get(i));	// mz ：
-					}
-					urlParam.append("&sortKey=name&sortAction=1&pageNo=1&exec=&inst=all");
-					
-					// JSP呼び出し
-					String reqUrl = SearchPage.baseUrl + "jsp/Result.jsp"
-							+ urlParam.toString();
-			        LOGGER.info("open browser with" + reqUrl);
-			        try {
-			          Desktop.getDesktop().browse(new URI(reqUrl));
-			        } catch (IOException | URISyntaxException ex) {
-			            LOGGER.error(ex.getMessage(),ex);
-			        }
+//					// URLパラメータ生成
+//					StringBuffer urlParam = new StringBuffer();
+//
+//					String typeName = MassBankCommon.CGI_TBL[MassBankCommon.CGI_TBL_NUM_TYPE][MassBankCommon.CGI_TBL_TYPE_PEAK];
+//
+//					urlParam.append("?type=" + typeName);							// type：peak
+//					urlParam.append("&num=" + peaks1.getSelectPeakNum());			// num ：
+//					urlParam.append("&tol=0");										// tol ：0
+//					urlParam.append("&int=5");										// int ：5
+//					
+//					for (int i = 0; i < peaks1.getSelectPeakNum(); i++) {
+//						if (i != 0) {
+//							urlParam.append("&op" + i + "=and");					// op ：and
+//						} else {
+//							urlParam.append("&op" + i + "=or");						// op ：or
+//						}
+//						urlParam.append("&mz" + i + "=" + selectPeakList.get(i));	// mz ：
+//					}
+//					urlParam.append("&sortKey=name&sortAction=1&pageNo=1&exec=&inst=all");
+//					
+//					// JSP呼び出し
+//					String reqUrl = SearchPage.baseUrl + "jsp/Result.jsp"
+//							+ urlParam.toString();
+//			        LOGGER.info("open browser with" + reqUrl);
+//			        try {
+//			          Desktop.getDesktop().browse(new URI(reqUrl));
+//			        } catch (IOException | URISyntaxException ex) {
+//			            LOGGER.error(ex.getMessage(),ex);
+//			        }
 				}
 				else if (com.equals("reset")) {
 					if (peaks1 != null) {

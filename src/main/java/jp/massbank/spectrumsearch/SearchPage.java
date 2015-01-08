@@ -91,6 +91,7 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 
 import jp.massbank.spectrumsearch.accessor.DbAccessor;
+import jp.massbank.spectrumsearch.entity.constant.Constant;
 import jp.massbank.spectrumsearch.entity.constant.SystemProperties;
 import jp.massbank.spectrumsearch.entity.db.Record;
 import jp.massbank.spectrumsearch.entity.gui.GuiDbTableRow;
@@ -107,6 +108,7 @@ import jp.massbank.spectrumsearch.model.PackageRecData;
 import jp.massbank.spectrumsearch.model.PackageSpecData;
 import jp.massbank.spectrumsearch.model.PeakData;
 import jp.massbank.spectrumsearch.model.UserFileData;
+import jp.massbank.spectrumsearch.util.CommonUtil;
 import jp.massbank.spectrumsearch.util.SiteUtil;
 import massbank.GetInstInfo;
 import massbank.MassBankCommon;
@@ -144,7 +146,7 @@ public class SearchPage extends JFrame {
 	}
   
   // TODO this will be removed. 
-	static String baseUrl = "http://www.massbank.jp/";
+//	static String baseUrl = "http://www.massbank.jp/";
 
 	private GetInstInfo instInfo = null;
 	
@@ -1124,31 +1126,35 @@ public class SearchPage extends JFrame {
 	 * @param selectIndex 選択行インデックス
 	 */
 	private void showRecordPage(JTable eventTbl) {
-		int selRows[] = eventTbl.getSelectedRows();
-		int idCol = eventTbl.getColumnModel().getColumnIndex(COL_LABEL_ID);
-		int siteCol = eventTbl.getColumnModel().getColumnIndex(COL_LABEL_CONTRIBUTOR);
+		// TODO
+		// Record Table double click -> open browser, Result Record Table double click -> open browser, Result Record Table -> right click -> show record
+		CommonUtil.openBrowser(Constant.ExternalUrl.SHOW_RECORD_PAGE);
 		
-		// 選択された行の値(id)を取得
-		String id = (String)eventTbl.getValueAt(selRows[0], idCol);
-		String siteName = (String)eventTbl.getValueAt(selRows[0], siteCol);
-		String site = "0";
-//		for (int i=0; i<siteNameList.length; i++) {
-//			if (siteName.equals(siteNameList[i])) {
-//				site = Integer.toString(i);
-//				break;
-//			}
-//		}
-		
-		// CGI呼び出し
-		String typeName = MassBankCommon.CGI_TBL[MassBankCommon.CGI_TBL_NUM_TYPE][MassBankCommon.CGI_TBL_TYPE_DISP];
-		String reqUrl = baseUrl + "jsp/" + MassBankCommon.DISPATCHER_NAME
-				+ "?type=" + typeName + "&id=" + id + "&site=" + site;
-        LOGGER.info("open browser with " + reqUrl);
-        try {
-          Desktop.getDesktop().browse(new URI(reqUrl));
-        } catch (IOException | URISyntaxException ex) {
-            LOGGER.error(ex.getMessage(),ex);
-        }
+//		int selRows[] = eventTbl.getSelectedRows();
+//		int idCol = eventTbl.getColumnModel().getColumnIndex(COL_LABEL_ID);
+//		int siteCol = eventTbl.getColumnModel().getColumnIndex(COL_LABEL_CONTRIBUTOR);
+//		
+//		// 選択された行の値(id)を取得
+//		String id = (String)eventTbl.getValueAt(selRows[0], idCol);
+//		String siteName = (String)eventTbl.getValueAt(selRows[0], siteCol);
+//		String site = "0";
+////		for (int i=0; i<siteNameList.length; i++) {
+////			if (siteName.equals(siteNameList[i])) {
+////				site = Integer.toString(i);
+////				break;
+////			}
+////		}
+//		
+//		// CGI呼び出し
+//		String typeName = MassBankCommon.CGI_TBL[MassBankCommon.CGI_TBL_NUM_TYPE][MassBankCommon.CGI_TBL_TYPE_DISP];
+//		String reqUrl = baseUrl + "jsp/" + MassBankCommon.DISPATCHER_NAME
+//				+ "?type=" + typeName + "&id=" + id + "&site=" + site;
+//        LOGGER.info("open browser with " + reqUrl);
+//        try {
+//          Desktop.getDesktop().browse(new URI(reqUrl));
+//        } catch (IOException | URISyntaxException ex) {
+//            LOGGER.error(ex.getMessage(),ex);
+//        }
 	}
 	
 	/**
@@ -3009,8 +3015,7 @@ public class SearchPage extends JFrame {
 						(String)resultTable.getValueAt(resultTable.getSelectionModel().getLeadSelectionIndex(),
 						idCol),
 						PackageSpecData.SORT_KEY_SCORE);
-			}
-			else if (isDispRelated) {
+			} else if (isDispRelated) {
 				id = (String)resultTable.getValueAt(selRows[0], idCol);
 				name = (String)resultTable.getValueAt(selRows[0], nameCol);
 				relation = "true";
@@ -3021,9 +3026,12 @@ public class SearchPage extends JFrame {
 //						break;
 //					}
 //				}
-				String reqUrl = baseUrl + "jsp/"
-						+ MassBankCommon.DISPATCHER_NAME + "?type="
-						+ typeName + "&id=" + id + "&site=" + site + "&relation=" + relation + "&ion=" + ion;
+				
+				// TODO
+				String reqUrl = Constant.ExternalUrl.SHOW_DISPATCH_PAGE;
+//				String reqUrl = baseUrl + "jsp/"
+//						+ MassBankCommon.DISPATCHER_NAME + "?type="
+//						+ typeName + "&id=" + id + "&site=" + site + "&relation=" + relation + "&ion=" + ion;
 				LOGGER.info(reqUrl);
 				String precursor = "";
 				PeakData peak = null;
@@ -3565,61 +3573,64 @@ public class SearchPage extends JFrame {
 		 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 		 */
 		public void actionPerformed(ActionEvent e) {
-
-			// 選択された行のインデックスを取得
-			int selRows[] = eventTbl.getSelectedRows();
-
-			// CGI呼び出し
-			try {
-				String reqUrl = baseUrl + "jsp/Display.jsp";
-				String param = "";
-
-				int idCol = eventTbl.getColumnModel().getColumnIndex(SearchPage.COL_LABEL_ID);
-				int nameCol = eventTbl.getColumnModel().getColumnIndex(SearchPage.COL_LABEL_NAME);
-				int ionCol = eventTbl.getColumnModel().getColumnIndex(SearchPage.COL_LABEL_ION);
-				int siteCol = eventTbl.getColumnModel().getColumnIndex(SearchPage.COL_LABEL_CONTRIBUTOR);
-				for (int i = 0; i < selRows.length; i++) {
-					int row = selRows[i];
-					String name = (String)eventTbl.getValueAt(row, nameCol);
-					String id = (String)eventTbl.getValueAt(row, idCol);
-					String formula = "";
-					String mass = "";
-					String ion = (String)eventTbl.getValueAt(row, ionCol);
-					name = URLEncoder.encode(name);
-					String siteName = (String)eventTbl.getValueAt(row, siteCol);
-					String site = "0";
-//					for (int j = 0; j < siteNameList.length; j++) {
-//						if (siteName.equals(siteNameList[j])) {
-//							site = Integer.toString(j);
-//							break;
-//						}
-//					}
-					param += "id=" + name + "\t" + id + "\t" + formula + "\t" + mass + "\t"	+ ion + "\t" + site + "&";
-				}
-				param = param.substring(0, param.length() - 1);
-				LOGGER.info("url to take filename" + reqUrl + "<->" + param);
-				URL url = new URL(reqUrl);
-				URLConnection con = url.openConnection();
-				con.setDoOutput(true);
-				PrintStream out = new PrintStream(con.getOutputStream());
-				out.print(param);
-				out.close();
-				String line;
-				String filename = "";
-				BufferedReader in = new BufferedReader(new InputStreamReader(
-						con.getInputStream()));
-				while ((line = in.readLine()) != null) {
-					filename += line;
-				}
-				in.close();
-
-				reqUrl += "?type=Multiple Display&" + "name=" + filename;
-		        LOGGER.info("open browser with" + reqUrl);
-		        Desktop.getDesktop().browse(new URI(reqUrl));
-		            
-			} catch (IOException | URISyntaxException ex) {
-		        LOGGER.error(ex.getMessage(),ex);
-			}
+			// TODO
+			// result record table -> select double rows -> right click -> multiple display
+			CommonUtil.openBrowser(Constant.ExternalUrl.SHOW_MULTIPLE_RECORD_PAGE);
+			
+//			// 選択された行のインデックスを取得
+//			int selRows[] = eventTbl.getSelectedRows();
+//
+//			// CGI呼び出し
+//			try {
+//				String reqUrl = baseUrl + "jsp/Display.jsp";
+//				String param = "";
+//
+//				int idCol = eventTbl.getColumnModel().getColumnIndex(SearchPage.COL_LABEL_ID);
+//				int nameCol = eventTbl.getColumnModel().getColumnIndex(SearchPage.COL_LABEL_NAME);
+//				int ionCol = eventTbl.getColumnModel().getColumnIndex(SearchPage.COL_LABEL_ION);
+//				int siteCol = eventTbl.getColumnModel().getColumnIndex(SearchPage.COL_LABEL_CONTRIBUTOR);
+//				for (int i = 0; i < selRows.length; i++) {
+//					int row = selRows[i];
+//					String name = (String)eventTbl.getValueAt(row, nameCol);
+//					String id = (String)eventTbl.getValueAt(row, idCol);
+//					String formula = "";
+//					String mass = "";
+//					String ion = (String)eventTbl.getValueAt(row, ionCol);
+//					name = URLEncoder.encode(name);
+//					String siteName = (String)eventTbl.getValueAt(row, siteCol);
+//					String site = "0";
+////					for (int j = 0; j < siteNameList.length; j++) {
+////						if (siteName.equals(siteNameList[j])) {
+////							site = Integer.toString(j);
+////							break;
+////						}
+////					}
+//					param += "id=" + name + "\t" + id + "\t" + formula + "\t" + mass + "\t"	+ ion + "\t" + site + "&";
+//				}
+//				param = param.substring(0, param.length() - 1);
+//				LOGGER.info("url to take filename" + reqUrl + "<->" + param);
+//				URL url = new URL(reqUrl);
+//				URLConnection con = url.openConnection();
+//				con.setDoOutput(true);
+//				PrintStream out = new PrintStream(con.getOutputStream());
+//				out.print(param);
+//				out.close();
+//				String line;
+//				String filename = "";
+//				BufferedReader in = new BufferedReader(new InputStreamReader(
+//						con.getInputStream()));
+//				while ((line = in.readLine()) != null) {
+//					filename += line;
+//				}
+//				in.close();
+//
+//				reqUrl += "?type=Multiple Display&" + "name=" + filename;
+//		        LOGGER.info("open browser with" + reqUrl);
+//		        Desktop.getDesktop().browse(new URI(reqUrl));
+//		            
+//			} catch (IOException | URISyntaxException ex) {
+//		        LOGGER.error(ex.getMessage(),ex);
+//			}
 		}
 	}
 }

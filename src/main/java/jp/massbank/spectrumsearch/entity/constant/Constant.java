@@ -13,6 +13,16 @@ public final class Constant {
 		public static final String DOLLAR = "$";
 	}
 	
+	// massbank site external urls
+	public static final class ExternalUrl {
+		public static final String SHOW_RECORD_PAGE = ""; 
+		public static final String SHOW_MULTIPLE_RECORD_PAGE = ""; 
+		public static final String SHOW_PACKAGE_VIEW_RECORD_PAGE = ""; 
+		public static final String SHOW_PACKAGE_VIEW_SEARCH_PAGE = ""; 
+		public static final String SHOW_SEARCH_PAGE = ""; 
+		public static final String SHOW_DISPATCH_PAGE = ""; 
+	}
+	
 	// param defaults
 	public static final boolean PARAM_WEIGHT_LINEAR = true;
 	public static final boolean PARAM_WEIGHT_SQUARE = false;

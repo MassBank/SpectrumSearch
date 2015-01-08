@@ -74,9 +74,11 @@ import javax.swing.plaf.FontUIResource;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
+import jp.massbank.spectrumsearch.entity.constant.Constant;
 import jp.massbank.spectrumsearch.entity.constant.SystemProperties;
 import jp.massbank.spectrumsearch.model.PackageRecData;
 import jp.massbank.spectrumsearch.model.PackageSpecData;
+import jp.massbank.spectrumsearch.util.CommonUtil;
 import jp.massbank.spectrumsearch.util.SiteUtil;
 import massbank.MassBankCommon;
 
@@ -790,18 +792,22 @@ public class PackageViewPanel extends JPanel {
 	 * @param selectIndex 選択行インデックス
 	 */
 	private void showRecordPage(int selectIndex) {
-		String id = specData.getRecInfo(selectIndex).getId();
-		String site = specData.getRecInfo(selectIndex).getSite();
-
-		String typeName = MassBankCommon.CGI_TBL[MassBankCommon.CGI_TBL_NUM_TYPE][MassBankCommon.CGI_TBL_TYPE_DISP];
-		String reqUrl = SearchPage.baseUrl + "jsp/" + MassBankCommon.DISPATCHER_NAME
-				+ "?type=" + typeName + "&id=" + id + "&site=" + site;
-		LOGGER.info("open browser with" + reqUrl);
-		try {
-		  Desktop.getDesktop().browse(new URI(reqUrl));
-		} catch (IOException | URISyntaxException ex) {
-			LOGGER.error(ex.getMessage(),ex);
-		}
+		// TODO
+		// Package view table -> right click -> show record
+		CommonUtil.openBrowser(Constant.ExternalUrl.SHOW_PACKAGE_VIEW_RECORD_PAGE);
+				
+//		String id = specData.getRecInfo(selectIndex).getId();
+//		String site = specData.getRecInfo(selectIndex).getSite();
+//
+//		String typeName = MassBankCommon.CGI_TBL[MassBankCommon.CGI_TBL_NUM_TYPE][MassBankCommon.CGI_TBL_TYPE_DISP];
+//		String reqUrl = SearchPage.baseUrl + "jsp/" + MassBankCommon.DISPATCHER_NAME
+//				+ "?type=" + typeName + "&id=" + id + "&site=" + site;
+//		LOGGER.info("open browser with" + reqUrl);
+//		try {
+//		  Desktop.getDesktop().browse(new URI(reqUrl));
+//		} catch (IOException | URISyntaxException ex) {
+//			LOGGER.error(ex.getMessage(),ex);
+//		}
 	}
 	
 	/**
@@ -2278,37 +2284,40 @@ public class PackageViewPanel extends JPanel {
 				String com = e.getActionCommand();
 				
 				if (com.equals("search")) {
-					// URLパラメータ生成
-					StringBuffer urlParam = new StringBuffer();
+					// TODO
+					CommonUtil.openBrowser(Constant.ExternalUrl.SHOW_PACKAGE_VIEW_SEARCH_PAGE);
 					
-					String typeName = MassBankCommon.CGI_TBL[MassBankCommon.CGI_TBL_NUM_TYPE][MassBankCommon.CGI_TBL_TYPE_PEAK];
-					
-					urlParam.append("?type=" + typeName);							// type：peak
-					urlParam.append("&num=" + specData.getSelectedPeakNum());		// num ：
-					urlParam.append("&tol=0");										// tol ：0
-					urlParam.append("&int=5");										// int ：5
-					
-					int index = 0;
-					Iterator<Double> ite = specData.getSelectedPeakList().iterator();
-					while (ite.hasNext()) {
-						if (index != 0) {
-							urlParam.append("&op"+ index +"=and");					// op  ：and
-						} else {
-							urlParam.append("&op"+ index +"=or");					// op  ：or
-						}
-						urlParam.append("&mz"+ index +"=" + String.valueOf(ite.next()));	// mz  ：
-						index++;
-					}
-					urlParam.append("&sortKey=name&sortAction=1&pageNo=1&exec=&inst=all");
-					
-					// JSP呼び出し
-					String reqUrl = SearchPage.baseUrl + "jsp/Result.jsp" + urlParam.toString();
-			        LOGGER.info("open browser with" + reqUrl);
-			        try {
-			          Desktop.getDesktop().browse(new URI(reqUrl));
-			        } catch (IOException | URISyntaxException ex) {
-			          LOGGER.error(ex.getMessage(),ex);
-			        }
+//					// URLパラメータ生成
+//					StringBuffer urlParam = new StringBuffer();
+//					
+//					String typeName = MassBankCommon.CGI_TBL[MassBankCommon.CGI_TBL_NUM_TYPE][MassBankCommon.CGI_TBL_TYPE_PEAK];
+//					
+//					urlParam.append("?type=" + typeName);							// type：peak
+//					urlParam.append("&num=" + specData.getSelectedPeakNum());		// num ：
+//					urlParam.append("&tol=0");										// tol ：0
+//					urlParam.append("&int=5");										// int ：5
+//					
+//					int index = 0;
+//					Iterator<Double> ite = specData.getSelectedPeakList().iterator();
+//					while (ite.hasNext()) {
+//						if (index != 0) {
+//							urlParam.append("&op"+ index +"=and");					// op  ：and
+//						} else {
+//							urlParam.append("&op"+ index +"=or");					// op  ：or
+//						}
+//						urlParam.append("&mz"+ index +"=" + String.valueOf(ite.next()));	// mz  ：
+//						index++;
+//					}
+//					urlParam.append("&sortKey=name&sortAction=1&pageNo=1&exec=&inst=all");
+//					
+//					// JSP呼び出し
+//					String reqUrl = SearchPage.baseUrl + "jsp/Result.jsp" + urlParam.toString();
+//			        LOGGER.info("open browser with" + reqUrl);
+//			        try {
+//			          Desktop.getDesktop().browse(new URI(reqUrl));
+//			        } catch (IOException | URISyntaxException ex) {
+//			          LOGGER.error(ex.getMessage(),ex);
+//			        }
 				}
 				else if (com.equals("reset")) {
 					specData.clearSelectedPeakList();

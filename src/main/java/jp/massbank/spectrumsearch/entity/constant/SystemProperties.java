@@ -35,7 +35,7 @@ public class SystemProperties {
 		public static final String SYS_PARAM_DEFAULT_MS_LIST = "search.param.default.ms.list"; 
 		public static final String SYS_PARAM_DEFAULT_ION_LIST = "search.param.default.ion.list"; 
 	}
-	
+
 	private SystemProperties() {
 	}
 
