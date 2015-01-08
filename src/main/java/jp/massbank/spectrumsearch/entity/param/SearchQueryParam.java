@@ -3,6 +3,7 @@ package jp.massbank.spectrumsearch.entity.param;
 import org.apache.commons.lang3.StringUtils;
 
 import jp.massbank.spectrumsearch.entity.constant.Constant;
+import jp.massbank.spectrumsearch.entity.constant.SystemProperties;
 
 public class SearchQueryParam {
 
@@ -11,8 +12,8 @@ public class SearchQueryParam {
 	private int floor 		= 0;
 	private int celing 		= 1000;
 	private int threshold 	= 3;
-	private int cutoff 		= 20;	// from system.properties
-	private float tolerance	= 0.3F; // from system.properties
+	private int cutoff 		= SystemProperties.getInstance().getDefaultCutoffThreshold();	// from system.properties
+	private float tolerance	= SystemProperties.getInstance().getDefaultTolerance(); // from system.properties
 	private String colType 	= "COSINE";
 	private boolean weight 	= Constant.PARAM_WEIGHT_SQUARE;
 	private boolean norm 	= Constant.PARAM_NORM_SQRT;

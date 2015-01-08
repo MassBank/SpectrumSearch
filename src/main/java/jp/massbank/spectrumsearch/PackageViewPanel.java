@@ -74,6 +74,7 @@ import javax.swing.plaf.FontUIResource;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
+import jp.massbank.spectrumsearch.entity.constant.SystemProperties;
 import jp.massbank.spectrumsearch.model.PackageRecData;
 import jp.massbank.spectrumsearch.model.PackageSpecData;
 import jp.massbank.spectrumsearch.util.SiteUtil;
@@ -176,7 +177,7 @@ public class PackageViewPanel extends JPanel {
 	
 	public static final String TABLE_RECORD_LIST = "RecordList";
 	
-	private float tolVal = 0.3f;			// Tolerance入力値
+	private float tolVal = SystemProperties.getInstance().getDefaultTolerance();			// Tolerance入力値
 	private boolean tolUnit = true;		// Tolerance単位選択値（true：unit、false：ppm）
 	private int pressRowIndex = -1;		// プレス時の行インデックス
 	private int releaseRowIndex = -1;		// リリース時の行インデックス
@@ -280,6 +281,10 @@ public class PackageViewPanel extends JPanel {
 	 * @param selectionId 選択レコードID
 	 */
 	public void setTblSelection(boolean selectionQuery, String selectionId) {
+		if (recTable.getSelectedRow() < 0) {
+			return;
+		}
+		
 		int idCol = recTable.getColumnModel().getColumnIndex(SearchPage.COL_LABEL_ID);
 		int typeCol = recTable.getColumnModel().getColumnIndex(SearchPage.COL_LABEL_TYPE);
 		// 既に選択されていれば処理しない
