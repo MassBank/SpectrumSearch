@@ -3,13 +3,13 @@ package jp.massbank.spectrumsearch.util;
 import java.util.ArrayList;
 import java.util.List;
 
-import jp.massbank.spectrumsearch.entity.xml.Site;
+import jp.massbank.spectrumsearch.entity.xml.ResearchGroup;
 
 import org.apache.commons.lang3.StringUtils;
 
 public class SiteUtil {
 	
-	public static final List<Site> SITES;
+	public static final List<ResearchGroup> SITES;
 	
 	static {
 		SITES = FileUtil.getServers();
@@ -17,7 +17,7 @@ public class SiteUtil {
 	
 	public static String[] getSiteNamesArray() {
 		List<String> siteNames = new ArrayList<String>();
-		for (Site site : SITES) {
+		for (ResearchGroup site : SITES) {
 			siteNames.add(site.getName());
 		}
 		return siteNames.toArray(new String[siteNames.size()]);
@@ -39,7 +39,7 @@ public class SiteUtil {
 //	}
 	
 	public static String getSiteNameByRecordIdPrefix(String prefix) {
-		Site site = getSiteByRecordIdPrefix(prefix);
+		ResearchGroup site = getSiteByRecordIdPrefix(prefix);
 		if (site != null) {
 			return site.getName();
 		}
@@ -54,8 +54,8 @@ public class SiteUtil {
 //		return StringUtils.EMPTY;
 //	}
 	
-	public static Site getSiteByRecordId(String recordId) {
-		for (Site site : SITES) {
+	public static ResearchGroup getSiteByRecordId(String recordId) {
+		for (ResearchGroup site : SITES) {
 			for (String prefix : site.getPrefixes()) {
 				if (recordId.startsWith(prefix)) {
 					return site;
@@ -65,8 +65,8 @@ public class SiteUtil {
 		return null;
 	}
 	
-	private static Site getSiteByRecordIdPrefix(String prefix) {
-		for (Site site : SITES) {
+	private static ResearchGroup getSiteByRecordIdPrefix(String prefix) {
+		for (ResearchGroup site : SITES) {
 			for (String oPrefix : site.getPrefixes()) {
 				if (oPrefix.equals(prefix)) {
 					return site;

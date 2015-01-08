@@ -16,7 +16,8 @@ public class MassBankDirSyncThread implements Runnable {
 
 	private static final Logger LOGGER = Logger.getLogger(MassBankDirSyncThread.class);
 	
-	private boolean stop = false;
+	private boolean stop;
+	private boolean finished;
 	private String path;
 	private List<Instrument> instruments;
 	private List<MsType> msTypes;
@@ -33,8 +34,7 @@ public class MassBankDirSyncThread implements Runnable {
 	
 	@Override
 	public void run() {
-		MassBankRecordLogic mbRecordLogic = new MassBankRecordLogic();
-		mbRecordLogic.resetDatabase();
+		mbRecordLogic.upgradeAndResetDatabase();
 		
 		try {
 			// open connection
@@ -59,36 +59,36 @@ public class MassBankDirSyncThread implements Runnable {
 	
 	public void stop() {
         this.stop = true;
-        try {
-			// close connection
-			DbAccessor.closeConnection();
-		} catch (SQLException e) {
-			LOGGER.error(e.getMessage(), e);
-		}
     }
 	
 	public int getCount() {
 		return this.count;
 	}
 	
+	public boolean isFinished() {
+		return this.finished;
+	}
+	
 	private void syncDir(String pathname) {
 		File f = new File(pathname);
 		File[] listfiles = f.listFiles();
 		for (int i = 0; i < listfiles.length; i++) {
-			File item = listfiles[i];
-			if (! item.isHidden()) {
-				if (item.isDirectory()) {
-					File[] internalFiles = item.listFiles();
-					for (int j = 0; j < internalFiles.length; j++) {
-						if (!stop) {
-							File item2 = internalFiles[j];
-							if (! item2.isHidden()) {
-								if (item2.isDirectory()) {
-									String name = item2.getAbsolutePath();
-									syncDir(name);
-								} else {
-									mbRecordLogic.mergeMassBankRecordIntoDb(item2, instruments, msTypes);
-									count++;
+			if (!stop) {
+				File item = listfiles[i];
+				if (! item.isHidden()) {
+					if (item.isDirectory()) {
+						File[] internalFiles = item.listFiles();
+						for (int j = 0; j < internalFiles.length; j++) {
+							if (!stop) {
+								File item2 = internalFiles[j];
+								if (! item2.isHidden()) {
+									if (item2.isDirectory()) {
+										String name = item2.getAbsolutePath();
+										syncDir(name);
+									} else {
+										mbRecordLogic.mergeMassBankRecordIntoDb(item2, instruments, msTypes);
+										count++;
+									}
 								}
 							}
 						}
@@ -96,6 +96,7 @@ public class MassBankDirSyncThread implements Runnable {
 				}
 			}
 		}
+		finished = true;
 	}
 
 }

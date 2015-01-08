@@ -9,7 +9,7 @@ import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
 import jp.massbank.spectrumsearch.entity.constant.Constant;
-import jp.massbank.spectrumsearch.entity.xml.Site;
+import jp.massbank.spectrumsearch.entity.xml.ResearchGroup;
 import jp.massbank.spectrumsearch.handler.MassbankConfigHandler;
 
 import org.apache.log4j.Logger;
@@ -21,8 +21,8 @@ public class FileUtil {
 	
 	// TODO system.properties read and write
 	
-	public static List<Site> getServers() {
-		List<Site> result = new ArrayList<Site>();
+	public static List<ResearchGroup> getServers() {
+		List<ResearchGroup> result = new ArrayList<ResearchGroup>();
 		try {
 			SAXParserFactory parserFactor = SAXParserFactory.newInstance();
 			SAXParser parser = parserFactor.newSAXParser();

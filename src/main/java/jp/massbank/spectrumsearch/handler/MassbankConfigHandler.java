@@ -3,7 +3,7 @@ package jp.massbank.spectrumsearch.handler;
 import java.util.ArrayList;
 import java.util.List;
 
-import jp.massbank.spectrumsearch.entity.xml.Site;
+import jp.massbank.spectrumsearch.entity.xml.ResearchGroup;
 
 import org.apache.commons.lang3.StringUtils;
 import org.xml.sax.Attributes;
@@ -12,8 +12,8 @@ import org.xml.sax.helpers.DefaultHandler;
 
 public class MassbankConfigHandler extends DefaultHandler {
 
-	private List<Site> servers = new ArrayList<Site>();
-	private Site server;
+	private List<ResearchGroup> servers = new ArrayList<ResearchGroup>();
+	private ResearchGroup server;
 	private String content;
 
 	@Override
@@ -22,9 +22,8 @@ public class MassbankConfigHandler extends DefaultHandler {
 
 		switch (qName) {
 		// Create a new Employee object when the start tag is found
-		case "MyServer":
-		case "Related":
-			server = new Site();
+		case "ResearchGroup":
+			server = new ResearchGroup();
 			break;
 		}
 	}
@@ -33,8 +32,7 @@ public class MassbankConfigHandler extends DefaultHandler {
 	public void endElement(String uri, String localName, String qName)
 			throws SAXException {
 		switch (qName) {
-		case "MyServer":
-		case "Related":
+		case "ResearchGroup":
 			servers.add(server);
 			break;
 		case "LongName":
@@ -56,7 +54,7 @@ public class MassbankConfigHandler extends DefaultHandler {
 		content = String.copyValueOf(ch, start, length).trim();
 	}
 
-	public List<Site> getServers() {
+	public List<ResearchGroup> getServers() {
 		return servers;
 	}
 

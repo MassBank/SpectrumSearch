@@ -65,6 +65,7 @@ public class SyncDialog extends JDialog {
 	
 	private void initDirTextField() {
 		txtDirPath = new JTextField((new File(SystemProperties.getInstance().getDirPath())).getAbsolutePath());
+		txtDirPath.setColumns(30);
 	}
 	
 	private void initDirChooser() {
@@ -77,24 +78,7 @@ public class SyncDialog extends JDialog {
 	private void initProgressBar() {
 		progressBar = new JProgressBar(0, 100);
 		progressBar.setStringPainted(true);
-		progressBar.setIndeterminate(true);
-		progressBar.setString("counting files to synchronous...");
-		
-		new Thread(new Runnable() {
-
-			@Override
-			public void run() {
-				LOGGER.info("start count files");
-				MassBankRecordLogic mbRecordLogic = new MassBankRecordLogic();
-				int total = mbRecordLogic.getTotalFileCountInFolder(getSyncDirPath());
-				LOGGER.info("end count files");
-				
-				progressBar.setIndeterminate(false);
-				progressBar.setMaximum(total);
-				progressBar.setString(total + " files to synchronous");
-			}
-
-		}).start();
+		runSyncDirFileCount();
 	}
 
 	private void initTimer() {
@@ -102,8 +86,13 @@ public class SyncDialog extends JDialog {
         	
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				progressBar.setString(mbDirSyncThread.getCount() + "/" + progressBar.getMaximum() + " files finished. (" + (mbDirSyncThread.getCount() * 100/progressBar.getMaximum()) + "%)");
-				progressBar.setValue(mbDirSyncThread.getCount());
+				if (mbDirSyncThread.isFinished()) {
+					progressBar.setString("file synchronization completed.");
+					progressBar.setValue(progressBar.getMaximum());
+				} else {
+					progressBar.setString(mbDirSyncThread.getCount() + "/" + progressBar.getMaximum() + " files finished. (" + (mbDirSyncThread.getCount() * 100/progressBar.getMaximum()) + "%)");
+					progressBar.setValue(mbDirSyncThread.getCount());
+				}
 			}
 			
 	    });
@@ -120,38 +109,50 @@ public class SyncDialog extends JDialog {
 		JButton btnSync = getBtnSync();
 		JButton btnDirChooser = getBtnDirChooser();
 		JLabel label = new JLabel("Please select a massbank record directory to synchronize.");
+		JLabel lblPath = new JLabel("Path:");
+		JLabel lblBlank = new JLabel("");
 		
 		layout.setHorizontalGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
 			.addComponent(label, 0, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
 			.addGroup(layout.createSequentialGroup()
+				.addComponent(lblPath, 0, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
 				.addComponent(txtDirPath, 0, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
 				.addComponent(btnDirChooser, 0, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
 			.addComponent(progressBar)
 			.addGroup(layout.createSequentialGroup()
+				.addComponent(lblBlank, 0, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
 				.addComponent(btnSync, 0, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-				.addComponent(btnCancel, 0, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+				.addComponent(btnCancel, 0, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+				.addComponent(lblBlank, 0, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+				)
 		);
 		
 		layout.setVerticalGroup(layout.createSequentialGroup()
 			.addComponent(label)
 			.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+				.addComponent(lblPath)
 				.addComponent(txtDirPath)
 				.addComponent(btnDirChooser))
 			.addComponent(progressBar)
 			.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+				.addComponent(lblBlank)
 				.addComponent(btnSync)
-				.addComponent(btnCancel))
+				.addComponent(btnCancel)
+				.addComponent(lblBlank)
+				)
 		);
 		
 		return panel;
 	}
 	
 	private JButton getBtnCancel() {
-		JButton btn = new JButton("Cancel"); 
+		JButton btn = new JButton("Close"); 
 		btn.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				mbDirSyncThread.stop();
+				if (mbDirSyncThread != null) {
+					mbDirSyncThread.stop();
+				}
 				timer.stop();
 				setVisible(false);
 				dispose();
@@ -196,10 +197,32 @@ public class SyncDialog extends JDialog {
 		        if (returnValue == JFileChooser.APPROVE_OPTION) {
 		          File selectedFile = fileChooser.getSelectedFile();
 		          txtDirPath.setText(selectedFile.getAbsolutePath());
+		          runSyncDirFileCount();
 		        }
 			}
 		});
 		return btn;
+	}
+	
+	private void runSyncDirFileCount() {
+		progressBar.setIndeterminate(true);
+		progressBar.setString("counting files to synchronous...");
+		
+		new Thread(new Runnable() {
+			
+			@Override
+			public void run() {
+				LOGGER.info("start count files");
+				MassBankRecordLogic mbRecordLogic = new MassBankRecordLogic();
+				int total = mbRecordLogic.getTotalFileCountInFolder(getSyncDirPath());
+				LOGGER.info("end count files");
+				
+				progressBar.setIndeterminate(false);
+				progressBar.setMaximum(total);
+				progressBar.setString(total + " files to synchronous");
+			}
+			
+		}).start();
 	}
 	
 	private String getSyncDirPath() {

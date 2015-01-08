@@ -1,6 +1,6 @@
 package jp.massbank.spectrumsearch.entity.xml;
 
-public class Site {
+public class ResearchGroup {
 	
 	private String name;
 	private String longName;
