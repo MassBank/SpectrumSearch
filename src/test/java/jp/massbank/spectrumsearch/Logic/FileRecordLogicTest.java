@@ -19,9 +19,10 @@ import org.junit.Test;
 
 public class FileRecordLogicTest {
 	
-	@Test
+//	@Test
 	public void testSync() {
 		MassBankRecordLogic logic = new MassBankRecordLogic();
+		logic.upgradeAndResetDatabase();
 		logic.syncFilesRecordsByFolderPath(SystemProperties.getInstance().getDirPath());
 	}
 	
@@ -94,12 +95,15 @@ public class FileRecordLogicTest {
 		}
 	}
 	
-//	@Test
+	@Test
 	public void testQuery() throws SQLException {
 		
 //		runSelectSQL("select P1.RELATIVE_INTENSITY, P1.MZ, P1.RECORD_ID from PEAK P1 join (select max(P.RELATIVE_INTENSITY) MAX_RELATIVE_INTENSITY, P.RECORD_ID from PEAK P where P.RELATIVE_INTENSITY >= 5 and (P.MZ between 84.099963 and 84.100039) group by P.RECORD_ID) P2 on P1.RELATIVE_INTENSITY = P2.MAX_RELATIVE_INTENSITY and P1.RECORD_ID = P2.RECORD_ID");
 		
-		runSelectSQL("select * from INSTRUMENT");
+		// http://www.vogella.com/tutorials/JavaRegularExpressions/article.html
+		String sql = String.format("SELECT * FROM %s WHERE REGEXP_LIKE (%s, '%s')", Record.TABLE, Record.Columns.RECORD_TITLE, "^.*MS3.*$");
+		runSelectSQL(sql);
+		
 //		runSelectSQL("select max(concat(castinteger(RELATIVE_INTENSITY) || ' ' || castdouble(MZ))), RECORD_ID, 84.1, 47.57414337506346 from PEAK where RELATIVE_INTENSITY >= 5 and (MZ between 84.099963 and 84.100039) group by RECORD_ID UNION ALL select max(concat(castinteger(RELATIVE_INTENSITY) || ' ' || castdouble(MZ))), RECORD_ID, 105.1, 25.744136822888727 from PEAK where RELATIVE_INTENSITY >= 5 and (MZ between 105.099957 and 105.100046) group by RECORD_ID");
 //		runSelectSQL("select max(RELATIVE_INTENSITY) MAX_RELATIVE_INTENSITY, RECORD_ID from PEAK group by RECORD_ID");
 //		runSelectSQL("select max(castinteger(RELATIVE_INTENSITY)) MAX_RELATIVE_INTENSITY, RECORD_ID from PEAK group by RECORD_ID");
