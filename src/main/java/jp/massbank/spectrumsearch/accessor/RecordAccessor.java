@@ -31,11 +31,17 @@ public class RecordAccessor extends AbstractDbAccessor<Record> {
 		return listGeneric(sql);
 	}
 	
-	public List<Record> getRecordsByName(String searchName) {
-		String sql = String.format("SELECT * FROM %s WHERE UPPER(%s) LIKE '%s'", 
-				Record.TABLE, Record.Columns.RECORD_TITLE, searchName.toUpperCase());
+	public List<Record> getRecordsByName(String pattern) {
+		String sql = String.format("SELECT * FROM %s WHERE REGEXP_LIKE (%s, '%s')", 
+				Record.TABLE, Record.Columns.RECORD_TITLE, pattern);
 		return listGeneric(sql);
 	}
+	
+//	public List<Record> getRecordsByName(String searchName) {
+//		String sql = String.format("SELECT * FROM %s WHERE UPPER(%s) LIKE '%s'", 
+//				Record.TABLE, Record.Columns.RECORD_TITLE, searchName.toUpperCase());
+//		return listGeneric(sql);
+//	}
 
 	public void addBatchInsert(Record record) {
 		String insertQuery = "INSERT INTO " + Record.TABLE + " " +

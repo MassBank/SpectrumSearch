@@ -16,16 +16,26 @@ public class RecordLogic {
 		this.recordAccessor = new RecordAccessor();
 	}
 	
-	public List<Record> getRecordListByKeyword(String keyword) {
+	public List<Record> getRecordListByKeyword(String pattern) {
 		List<Record> result = new ArrayList<Record>();
-		if (StringUtils.isNotBlank(keyword)) {
-			keyword = keyword.replace("*", "%");
-			keyword = keyword.replace("?", "_");
-			result = this.recordAccessor.getRecordsByName(keyword);
+		if (StringUtils.isNotBlank(pattern)) {
+			result = this.recordAccessor.getRecordsByName(pattern);
 		} else {
 			result = this.recordAccessor.getAllRecords();
 		}
 		return result;
 	}
+	
+//	public List<Record> getRecordListByKeyword(String keyword) {
+//		List<Record> result = new ArrayList<Record>();
+//		if (StringUtils.isNotBlank(keyword)) {
+//			keyword = keyword.replace("*", "%");
+//			keyword = keyword.replace("?", "_");
+//			result = this.recordAccessor.getRecordsByName(keyword);
+//		} else {
+//			result = this.recordAccessor.getAllRecords();
+//		}
+//		return result;
+//	}
 
 }

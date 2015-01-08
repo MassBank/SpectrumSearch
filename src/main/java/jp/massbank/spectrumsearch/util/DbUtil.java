@@ -29,6 +29,10 @@ public class DbUtil {
 		return String.valueOf(val);
 	}
 	
+	public static boolean regexplike(String val, String pattern) {
+		return val.matches(pattern);
+	}
+	
 	public static String castInteger(Integer val) {
 		return String.valueOf(val);
 	}

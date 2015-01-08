@@ -206,6 +206,11 @@ public class DbAccessor {
 				LOGGER.error(e.getMessage(), e);
 			}
 			try {
+				conn.createStatement().execute("DROP FUNCTION  REGEXP_LIKE");
+			} catch (SQLException e) {
+				LOGGER.error(e.getMessage(), e);
+			}
+			try {
 				conn.createStatement().execute("DROP FUNCTION  CASTINTEGER");
 			} catch (SQLException e) {
 				LOGGER.error(e.getMessage(), e);
@@ -243,6 +248,16 @@ public class DbAccessor {
 			} catch (SQLException e) {
 				LOGGER.error(e.getMessage(), e);
 			}
+			try {
+				conn.createStatement().execute(
+						"CREATE FUNCTION  REGEXP_LIKE(DATA VARCHAR(32000), PATTERN VARCHAR(32000)) RETURNS BOOLEAN " +
+								"EXTERNAL NAME 'jp.massbank.spectrumsearch.util.DbUtil.regexplike' " +
+								"LANGUAGE JAVA PARAMETER STYLE JAVA"
+						);
+			} catch (SQLException e) {
+				LOGGER.error(e.getMessage(), e);
+			}
+			
 			try {
 				conn.createStatement().execute(
 						"CREATE FUNCTION  CASTINTEGER(DATA INT) RETURNS VARCHAR(32000) " +
