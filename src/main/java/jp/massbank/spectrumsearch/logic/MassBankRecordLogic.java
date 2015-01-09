@@ -59,9 +59,9 @@ public class MassBankRecordLogic {
 	public void upgradeAndResetDatabase() {
 		try {
 			DbAccessor.createConnection();
+			dropTableIndexes();
 			syncDatabaseSchema();
 			clearTableData();
-			dropTableIndexes();
 			createTableIndexes();
 			DbAccessor.closeConnection();
 		} catch (SQLException e) {

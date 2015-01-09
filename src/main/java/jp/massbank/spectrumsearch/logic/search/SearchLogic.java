@@ -52,7 +52,7 @@ public class SearchLogic {
 			setQueryPeak(param);
 			long s3 = System.currentTimeMillis();
 			System.out.println("setQueryPeak : " + (s3-s2) + " ms");
-			if ( !searchPeak(param) ) {
+			if (!searchPeak(param)) {
 				return result;
 			}
 			long s4 = System.currentTimeMillis();
@@ -337,12 +337,14 @@ public class SearchLogic {
 			sqls.add(sql);
 		}
 		
-		int limit = 1000;
+		long s = System.currentTimeMillis();
+		int limit = 1;
 		for (int i = 0; i < sqls.size(); i = i + limit) {
 			int max = Math.min(sqls.size(), i + limit);
 			String subSql = StringUtils.join(sqls.subList(i, max), " UNION ALL ");
 			List<Map<Integer, Object>> result = dbExecuteSql(subSql);
 			
+			System.out.println("counting peak; dbExecuteSql :" + (System.currentTimeMillis() - s) + "ms");
 			List<QueryResultHitPeak> qrHitPeaks = new ArrayList<QueryResultHitPeak>();
 			for (Map<Integer, Object> rowResult : result) {
 				QueryResultHitPeak qrHitPeak = new QueryResultHitPeak();
@@ -359,8 +361,11 @@ public class SearchLogic {
 				qrHitPeak.setHitMz(vacVal[1]);
 				qrHitPeak.setMz(String.valueOf(rowResult.get(3)));
 				qrHitPeak.setValue(Float.parseFloat(String.valueOf(rowResult.get(4))));
+				
 				qrHitPeaks.add(qrHitPeak);
 			}
+			
+			System.out.println("counting peak; read max :" + (System.currentTimeMillis() - s) + "ms");
 
 			int prevAryNum = 0;
 			for (QueryResultHitPeak grHitPeak : qrHitPeaks) {
@@ -416,6 +421,7 @@ public class SearchLogic {
 				
 			}
 		}
+		System.out.println("counting peak:" + (System.currentTimeMillis() - s) + "ms");
 		
 		/*int index = 0;
 		StringBuilder sb = new StringBuilder();
