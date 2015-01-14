@@ -283,22 +283,25 @@ public class MassBankRecordLogic {
 			File item = listfiles[i];
 			if (! item.isHidden()) {
 		        if (item.isDirectory()) {
-		            File[] internalFiles = item.listFiles();
-		            for (int j = 0; j < 1; j++) {
+		        	String name = item.getAbsolutePath();
+		        	syncFolderInfo(name);
+//		            File[] internalFiles = item.listFiles();
+////		            for (int j = 0; j < 1; j++) {
 //	            	for (int j = 0; j < internalFiles.length; j++) {
-		            	File item2 = internalFiles[j];
-		            	if (! item2.isHidden()) {
-			                if (item2.isDirectory()) {
-			                    String name = item2.getAbsolutePath();
-			                    syncFolderInfo(name);
-			                } else {
-			                	// read the file content
-			                	mergeMassBankRecordIntoDb(item2, instruments, msTypes);
-			                }
-		            	}
-		            }
+//		            	File item2 = internalFiles[j];
+//		            	if (! item2.isHidden()) {
+//			                if (item2.isDirectory()) {
+//			                    String name = item2.getAbsolutePath();
+//			                    syncFolderInfo(name);
+//			                } else {
+//			                	// read the file content
+//			                	mergeMassBankRecordIntoDb(item2, instruments, msTypes);
+//			                }
+//		            	}
+//		            }
 		        } else {
-		        	LOGGER.info(item);
+		        	// read the file content
+                	mergeMassBankRecordIntoDb(item, instruments, msTypes);
 		        }
 			}
 		}

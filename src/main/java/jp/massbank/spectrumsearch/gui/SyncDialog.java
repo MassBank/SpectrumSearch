@@ -86,7 +86,7 @@ public class SyncDialog extends JDialog {
         	
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if (mbDirSyncThread.isFinished()) {
+				if ((mbDirSyncThread.getCount() == progressBar.getMaximum()) || mbDirSyncThread.isStopped()) {
 					progressBar.setString("file synchronization completed.");
 					progressBar.setValue(progressBar.getMaximum());
 				} else {

@@ -20,7 +20,7 @@ public class MassBankDirSyncThread implements Runnable {
 	private static final Logger LOGGER = Logger.getLogger(MassBankDirSyncThread.class);
 	
 	private boolean stop;
-	private boolean finished;
+//	private boolean finished;
 	private String path;
 	private List<Instrument> instruments;
 	private List<MsType> msTypes;
@@ -64,14 +64,18 @@ public class MassBankDirSyncThread implements Runnable {
 	public void stop() {
         this.stop = true;
     }
+
+	public boolean isStopped() {
+		return this.stop;
+	}
 	
 	public int getCount() {
 		return this.count;
 	}
 	
-	public boolean isFinished() {
-		return this.finished;
-	}
+//	public boolean isFinished() {
+//		return this.finished;
+//	}
 	
 	private void syncDir(String pathname) {
 		File f = new File(pathname);
@@ -106,8 +110,8 @@ public class MassBankDirSyncThread implements Runnable {
 					}
 				}
 			}
+//			finished = true;
 		}
-		finished = true;
 	}
 
 }
