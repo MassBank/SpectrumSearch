@@ -15,12 +15,14 @@ public class CompoundLogic {
 	}
 	
 	public List<String> getInfo(String recordId, String name, int site) {
-		List<String> result = new ArrayList<String>();
-		
+		// getCompoundInfo.cgi
 		Record record = recordAccessor.getRecordById(recordId);
-		result.add(String.format("---FORMULA:%s\n", record.getFormula()));
-		result.add(String.format("---EXACT_MASS:%s\n", Double.valueOf(record.getExactMass())));
-		
+
+		List<String> result = new ArrayList<String>();
+//		result.add(String.format("---FORMULA:%s\n", record.getFormula()));
+//		result.add(String.format("---EXACT_MASS:%s\n", Double.valueOf(record.getExactMass())));
+		result.add(String.format("FORMULA:%s\n", record.getFormula()));
+		result.add(String.format("EXACT_MASS:%s\n", Double.valueOf(record.getExactMass())));
 		return result;
 	}
 
