@@ -16,13 +16,14 @@ public class SystemProperties {
 	private static final Logger LOGGER = Logger.getLogger(SystemProperties.class);
 	
 	private static SystemProperties INSTANCE = new SystemProperties();
-	private static final String STS_PROPS_FILE_PATH;
+	private static final String SYS_PROPS_FILE_PATH;
 	
 	private static Properties props;
 	
 	static {
-		URL classPath = SystemProperties.class.getClassLoader().getResource(Constant.SYS_PROPERTIES_FILE_NAME);
-		STS_PROPS_FILE_PATH = classPath.getPath();
+		URL classPath = SystemProperties.class.getClassLoader().getResource("config/" + Constant.SYS_PROPERTIES_FILE_NAME);
+		SYS_PROPS_FILE_PATH = classPath.getPath();
+		LOGGER.info("system.properties file path : " + SYS_PROPS_FILE_PATH);
 	}
 	
 	public static final class Key {
@@ -49,7 +50,7 @@ public class SystemProperties {
 	public static void loadParams() {
 		props = new Properties();
 		try {
-			props.load(new FileInputStream(STS_PROPS_FILE_PATH));
+			props.load(new FileInputStream(SYS_PROPS_FILE_PATH));
 		} catch (IOException e) {
 			LOGGER.error(e.getMessage(), e);
 		}
@@ -59,7 +60,7 @@ public class SystemProperties {
 	public static void updateParam(String key, String value) {
 		try {
 			props.setProperty(key, value);
-			OutputStream output = new FileOutputStream(STS_PROPS_FILE_PATH);
+			OutputStream output = new FileOutputStream(SYS_PROPS_FILE_PATH);
 			props.store(output, null);
 			output.close();
 		} catch (IOException e) {
@@ -97,7 +98,11 @@ public class SystemProperties {
 	}
 	
 	public String getDatabasePath() {
-		return getDirPath() + "/" + props.getProperty(Key.DATABASE_NAME);
+		return getDirPath() + "/" + getDatabaseName();
+	}
+	
+	public String getDatabaseName() {
+		return props.getProperty(Key.DATABASE_NAME);
 	}
 	
 	public int getDefaultCutoffThreshold() {

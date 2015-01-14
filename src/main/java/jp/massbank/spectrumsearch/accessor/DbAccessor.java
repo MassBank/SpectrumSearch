@@ -91,12 +91,27 @@ public class DbAccessor {
 			createPreparedStatement(sql);
 			pstmt.executeUpdate();
 		} catch (SQLException e) {
-			LOGGER.error(e.getMessage(), e);
+			errorLog(sql, e);
 		} finally {
 			try {
 				closePreparedStatement();
 			} catch (SQLException e) {
 				LOGGER.error(e.getMessage(), e);
+			}
+		}
+	}
+
+	public static void execute(String sql) {
+		try {
+			createPreparedStatement(sql);
+			pstmt.execute();
+		} catch (SQLException e) {
+			errorLog(sql, e);
+		} finally {
+			try {
+				closePreparedStatement();
+			} catch (SQLException e) {
+				LOGGER.error(sql, e);
 			}
 		}
 	}
@@ -117,7 +132,7 @@ public class DbAccessor {
 			}
 			rs.close();
 		} catch (SQLException e) {
-			LOGGER.error(e.getMessage(), e);
+			errorLog(sql, e);
 		} finally {
 			try {
 				closePreparedStatement();
@@ -177,7 +192,17 @@ public class DbAccessor {
 	
 	protected static void createPreparedStatement(String sql) throws SQLException {
 		if (conn != null || !conn.isClosed()) {
-			pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+//			pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+			
+//			long key = -1L;
+//			PreparedStatement statement = connection.prepareStatement();
+//			statement.executeUpdate(YOUR_SQL_HERE, PreparedStatement.RETURN_GENERATED_KEYS);
+//			ResultSet rs = statement.getGeneratedKeys();
+//			if (rs != null && rs.next()) {
+//			    key = rs.getLong(1);
+//			}
+			
+			pstmt = conn.prepareStatement(sql);
 		}
 	}
 	
@@ -186,96 +211,53 @@ public class DbAccessor {
 			pstmt.close();
 		}
 	}
+	
+	protected static void errorLog(String sql, SQLException e) {
+		if ("X0Y32".equals(e.getSQLState())) { // table already exist
+			LOGGER.error("Table/View already exist: SQL ===> " + sql);
+			LOGGER.error(e.getMessage());
+		} else if ("42X05".equals(e.getSQLState())) { // table does not exist
+			LOGGER.error("Table/View does not exist: SQL ===> " + sql);
+			LOGGER.error(e.getMessage());
+		} else if ("42Y55".equals(e.getSQLState())) { // function doesn't exist.
+			LOGGER.error("SQL ===> " + sql);
+			LOGGER.error(e.getMessage());
+		} else if ("42X65".equals(e.getSQLState())) { // index doesn't exist.
+			LOGGER.error("SQL ===> " + sql);
+			LOGGER.error(e.getMessage());
+		} else {
+			LOGGER.error("SQL ===> " + sql);
+			LOGGER.error(e.getMessage(), e);
+		}
+	}
 
 	private static void executeCustomFunctions() {
 		if (!isExeCustomFunctions) {
 			LOGGER.info("start exec custom functions");
-			try {
-				conn.createStatement().execute("DROP FUNCTION  CONCAT");
-			} catch (SQLException e) {
-				LOGGER.error(e.getMessage(), e);
-			}
-			try {
-				conn.createStatement().execute("DROP FUNCTION  LPAD");
-			} catch (SQLException e) {
-				LOGGER.error(e.getMessage(), e);
-			}
-			try {
-				conn.createStatement().execute("DROP FUNCTION  CASTDOUBLE");
-			} catch (SQLException e) {
-				LOGGER.error(e.getMessage(), e);
-			}
-			try {
-				conn.createStatement().execute("DROP FUNCTION  REGEXP_LIKE");
-			} catch (SQLException e) {
-				LOGGER.error(e.getMessage(), e);
-			}
-			try {
-				conn.createStatement().execute("DROP FUNCTION  CASTINTEGER");
-			} catch (SQLException e) {
-				LOGGER.error(e.getMessage(), e);
-			}
-			try {
-				conn.createStatement().execute("DROP DERBY AGGREGATE STRMAX RESTRICT");
-			} catch (SQLException e) {
-				LOGGER.error(e.getMessage(), e);
-			}
+			execute("DROP FUNCTION CONCAT");
+			execute("DROP FUNCTION LPAD");
+			execute("DROP FUNCTION CASTDOUBLE");
+			execute("DROP FUNCTION REGEXP_LIKE");
+			execute("DROP FUNCTION CASTINTEGER");
+			execute("DROP DERBY AGGREGATE STRMAX RESTRICT");
 			
-			try {
-				conn.createStatement().execute(
-						"CREATE FUNCTION  CONCAT(DATA VARCHAR(32000)) RETURNS VARCHAR(32000) " +
-						"EXTERNAL NAME 'jp.massbank.spectrumsearch.util.DbUtil.concat' " +
-						"LANGUAGE JAVA PARAMETER STYLE JAVA"
-						);
-			} catch (SQLException e) {
-				LOGGER.error(e.getMessage(), e);
-			}
-			try {
-				conn.createStatement().execute(
-						"CREATE FUNCTION  LPAD(DATA VARCHAR(32000), LENGTH INTEGER, PADCHAR CHAR(1)) RETURNS VARCHAR(32000) " +
-								"EXTERNAL NAME 'jp.massbank.spectrumsearch.util.DbUtil.lpad' " +
-								"LANGUAGE JAVA PARAMETER STYLE JAVA"
-						);
-			} catch (SQLException e) {
-				LOGGER.error(e.getMessage(), e);
-			}
-			try {
-				conn.createStatement().execute(
-						"CREATE FUNCTION  CASTDOUBLE(DATA DOUBLE) RETURNS VARCHAR(32000) " +
-								"EXTERNAL NAME 'jp.massbank.spectrumsearch.util.DbUtil.castDouble' " +
-								"LANGUAGE JAVA PARAMETER STYLE JAVA"
-						);
-			} catch (SQLException e) {
-				LOGGER.error(e.getMessage(), e);
-			}
-			try {
-				conn.createStatement().execute(
-						"CREATE FUNCTION  REGEXP_LIKE(DATA VARCHAR(32000), PATTERN VARCHAR(32000)) RETURNS BOOLEAN " +
-								"EXTERNAL NAME 'jp.massbank.spectrumsearch.util.DbUtil.regexplike' " +
-								"LANGUAGE JAVA PARAMETER STYLE JAVA"
-						);
-			} catch (SQLException e) {
-				LOGGER.error(e.getMessage(), e);
-			}
-			
-			try {
-				conn.createStatement().execute(
-						"CREATE FUNCTION  CASTINTEGER(DATA INT) RETURNS VARCHAR(32000) " +
-								"EXTERNAL NAME 'jp.massbank.spectrumsearch.util.DbUtil.castInteger' " +
-								"LANGUAGE JAVA PARAMETER STYLE JAVA"
-						);
-			} catch (SQLException e) {
-				LOGGER.error(e.getMessage(), e);
-			}
-			
-			try {
-				conn.createStatement().execute(
-						"CREATE DERBY AGGREGATE STRMAX FOR VARCHAR(32000) RETURNS VARCHAR(32000) " +
-								"EXTERNAL NAME 'jp.massbank.spectrumsearch.util.StrMax'"
-						);
-			} catch (SQLException e) {
-				LOGGER.error(e.getMessage(), e);
-			}
+			execute("CREATE FUNCTION  CONCAT(DATA VARCHAR(32000)) RETURNS VARCHAR(32000) " +
+					"EXTERNAL NAME 'jp.massbank.spectrumsearch.util.DbUtil.concat' " +
+					"LANGUAGE JAVA PARAMETER STYLE JAVA");
+			execute("CREATE FUNCTION  LPAD(DATA VARCHAR(32000), LENGTH INTEGER, PADCHAR CHAR(1)) RETURNS VARCHAR(32000) " +
+					"EXTERNAL NAME 'jp.massbank.spectrumsearch.util.DbUtil.lpad' " +
+					"LANGUAGE JAVA PARAMETER STYLE JAVA");
+			execute("CREATE FUNCTION  CASTDOUBLE(DATA DOUBLE) RETURNS VARCHAR(32000) " +
+					"EXTERNAL NAME 'jp.massbank.spectrumsearch.util.DbUtil.castDouble' " +
+					"LANGUAGE JAVA PARAMETER STYLE JAVA");
+			execute("CREATE FUNCTION  REGEXP_LIKE(DATA VARCHAR(32000), PATTERN VARCHAR(32000)) RETURNS BOOLEAN " +
+					"EXTERNAL NAME 'jp.massbank.spectrumsearch.util.DbUtil.regexplike' " +
+					"LANGUAGE JAVA PARAMETER STYLE JAVA");
+			execute("CREATE FUNCTION  CASTINTEGER(DATA INT) RETURNS VARCHAR(32000) " +
+					"EXTERNAL NAME 'jp.massbank.spectrumsearch.util.DbUtil.castInteger' " +
+					"LANGUAGE JAVA PARAMETER STYLE JAVA");
+			execute("CREATE DERBY AGGREGATE STRMAX FOR VARCHAR(32000) RETURNS VARCHAR(32000) " +
+					"EXTERNAL NAME 'jp.massbank.spectrumsearch.util.StrMax'");
 			isExeCustomFunctions = true;
 			LOGGER.info("end exec custom functions");
 		}

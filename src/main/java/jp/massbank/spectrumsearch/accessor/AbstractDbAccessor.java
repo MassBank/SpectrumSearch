@@ -41,7 +41,7 @@ public abstract class AbstractDbAccessor<T> extends DbAccessor {
 //			createConnection();
 			createStatment();
 			result = listResult(sql);
-        } catch (Exception e) {
+        } catch (SQLException e) {
         	errorLog(sql, e);
         } finally {
         	try {
@@ -60,7 +60,7 @@ public abstract class AbstractDbAccessor<T> extends DbAccessor {
 //			createConnection();
 			createStatment();
 			result = listResultString(sql);
-		} catch (Exception e) {
+		} catch (SQLException e) {
 			errorLog(sql, e);
 		} finally {
 			try {
@@ -78,7 +78,7 @@ public abstract class AbstractDbAccessor<T> extends DbAccessor {
 //			createConnection();
 			createStatment();
 			return stmt.execute(sql);
-        } catch (Exception e) {
+        } catch (SQLException e) {
         	errorLog(sql, e);
         } finally {
         	try {
@@ -118,7 +118,7 @@ public abstract class AbstractDbAccessor<T> extends DbAccessor {
 	            }
 	        }
 			
-		} catch (Exception e) {
+		} catch (SQLException e) {
 			errorLog(sql, e);
 		} finally {
 			try {
@@ -137,7 +137,7 @@ public abstract class AbstractDbAccessor<T> extends DbAccessor {
 //			createConnection();
 			createStatment();
 			return stmt.execute(sql);
-        } catch (Exception e) {
+        } catch (SQLException e) {
         	errorLog(sql, e);
         } finally {
         	try {
@@ -231,11 +231,6 @@ public abstract class AbstractDbAccessor<T> extends DbAccessor {
 			}
 		}
 		return result;
-	}
-	
-	private void errorLog(String sql, Exception e) {
-		LOGGER.error("error sql:" + sql);
-		LOGGER.error(e.getMessage(), e);
 	}
 	
 }

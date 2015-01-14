@@ -32,9 +32,16 @@ public class SpectrumAccessor extends AbstractDbAccessor<Spectrum> {
 	}
 	
 	public List<String> getSpectrumRecordIdListByInstanceId(int instanceId, int ionMode) {
-		// TODO
-		String sql = "SELECT S.RECORD_ID FROM " + Spectrum.TABLE +" S LEFT JOIN " + Record.TABLE +" R ON S.RECORD_ID=R.RECORD_ID WHERE R.INSTRUMENT_ID=" + instanceId + " ORDER BY 1";
-		return listString(sql);
+		StringBuilder sb = new StringBuilder();
+		sb.append("SELECT S.RECORD_ID FROM " + Spectrum.TABLE +" S LEFT JOIN " + Record.TABLE +" R ON S.RECORD_ID=R.RECORD_ID ");
+		sb.append("WHERE ");
+		if (ionMode > 0) {
+			sb.append("S." + Spectrum.Columns.ION_MODE + " > 0 AND ");
+		} else if (ionMode < 0) {
+			sb.append("S." + Spectrum.Columns.ION_MODE + " < 0 AND ");
+		}
+		sb.append("R.INSTRUMENT_ID=" + instanceId + " ORDER BY 1");
+		return listString(sb.toString());
 	}
 	
 	public void addBatchInsert(Spectrum spectrum) {

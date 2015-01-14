@@ -109,6 +109,7 @@ import jp.massbank.spectrumsearch.model.PackageSpecData;
 import jp.massbank.spectrumsearch.model.PeakData;
 import jp.massbank.spectrumsearch.model.UserFileData;
 import jp.massbank.spectrumsearch.util.CommonUtil;
+import jp.massbank.spectrumsearch.util.MassBankDirSyncThread;
 import jp.massbank.spectrumsearch.util.SiteUtil;
 import massbank.GetInstInfo;
 import massbank.MassBankCommon;
@@ -771,6 +772,8 @@ public class SearchPage extends JFrame {
 	 * @param queryKey クエリーレコードキー
 	 */
 	private void searchDb(String[] ps, String precursor, String queryName, String queryKey) {
+		initSearchParameterSetting();
+		
 		queryPlot.clear();
 		compPlot.clear();
 		resultPlot.clear();
@@ -1563,8 +1566,11 @@ public class SearchPage extends JFrame {
 		
 		/**
 		 * コンストラクタ
+		 * @throws SQLException 
 		 */
 		public ParameterSetWindow() {
+			
+			initSearchParameterSetting();
 			
 			// ウィンドウサイズ固定
 			setResizable(false);
@@ -2847,7 +2853,7 @@ public class SearchPage extends JFrame {
 			String typeName = MassBankCommon.CGI_TBL[MassBankCommon.CGI_TBL_NUM_TYPE][MassBankCommon.CGI_TBL_TYPE_GSDATA];
 			String id;
 			String name;
-			String relation;
+			boolean relation;
 			int ion;
 			String score;
 			String siteName;
@@ -2891,7 +2897,7 @@ public class SearchPage extends JFrame {
 					
 					id = (String)resultTable.getValueAt(selRows[i], idCol);
 					name = (String)resultTable.getValueAt(selRows[i], nameCol);
-					relation = "false";
+					relation = false;
 					score = String.valueOf(resultTable.getValueAt(selRows[i], scoreCol));
 					siteName = (String)resultTable.getValueAt(selRows[i], siteNameCol);
 //					for (int j=0; j<siteNameList.length; j++) {
@@ -2932,7 +2938,7 @@ public class SearchPage extends JFrame {
 				      try {
 				    	  DbAccessor.createConnection();
 				    	  SpectrumLogic spectrumLogic = new SpectrumLogic();
-				    	  line = spectrumLogic.getChildInfo(id, ion);
+				    	  line = spectrumLogic.getSpectrumData(id, ion, relation);
 				    	  DbAccessor.closeConnection();
 //				        line = OldDbAccessor.getSpectrumData(id);
 				      } catch (SQLException e) {
@@ -3018,7 +3024,7 @@ public class SearchPage extends JFrame {
 			} else if (isDispRelated) {
 				id = (String)resultTable.getValueAt(selRows[0], idCol);
 				name = (String)resultTable.getValueAt(selRows[0], nameCol);
-				relation = "true";
+				relation = true;
 				siteName = (String)resultTable.getValueAt(selRows[0], siteNameCol);
 //				for (int i = 0; i < siteNameList.length; i++) {
 //					if (siteName.equals(siteNameList[i])) {
@@ -3631,6 +3637,25 @@ public class SearchPage extends JFrame {
 //			} catch (IOException | URISyntaxException ex) {
 //		        LOGGER.error(ex.getMessage(),ex);
 //			}
+		}
+	}
+	
+	private void initSearchParameterSetting() {
+		try {
+			if (MassBankDirSyncThread.hasSyncDataToReInitialize) {
+				// 装置種別情報初期化
+				instInfo = new GetInstInfo();
+				initInstInfo();
+				
+				// MS種別情報初期化
+				initMsInfo();
+				
+				// イオン種別情報初期化
+				initIonInfo();
+				MassBankDirSyncThread.hasSyncDataToReInitialize = false;
+			}
+		} catch (SQLException e1) {
+			LOGGER.error(e1.getMessage(), e1);
 		}
 	}
 }

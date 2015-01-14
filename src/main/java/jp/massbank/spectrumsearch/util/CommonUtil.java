@@ -4,8 +4,13 @@ import java.awt.Desktop;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.table.TableModel;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
 
@@ -29,6 +34,18 @@ public class CommonUtil {
 			LOGGER.error(e.getMessage(), e);
 		}
 		return null;
+	}
+	
+	public static List<String> getGroupsByRegEx(String line, String strPattern) {
+		List<String> result = new ArrayList<String>();
+		Pattern pattern = Pattern.compile(strPattern);
+		Matcher matcher = pattern.matcher(line);
+		while (matcher.find()) {
+			for (int i = 0; i < matcher.groupCount(); i++) {
+				result.add(matcher.group(i));
+			}
+		}
+		return result;
 	}
 	
 	public static void openBrowser(String reqUrl) {

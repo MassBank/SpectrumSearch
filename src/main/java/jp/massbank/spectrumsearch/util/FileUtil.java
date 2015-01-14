@@ -27,7 +27,7 @@ public class FileUtil {
 			SAXParserFactory parserFactor = SAXParserFactory.newInstance();
 			SAXParser parser = parserFactor.newSAXParser();
 			MassbankConfigHandler handler = new MassbankConfigHandler();
-			parser.parse(ClassLoader.getSystemResourceAsStream(Constant.SERVERS_CONFIG_FILE_NAME), handler);
+			parser.parse(ClassLoader.getSystemResourceAsStream("config/" + Constant.SERVERS_CONFIG_FILE_NAME), handler);
 			
 			return handler.getServers();
 		} catch (ParserConfigurationException | SAXException | IOException e) {

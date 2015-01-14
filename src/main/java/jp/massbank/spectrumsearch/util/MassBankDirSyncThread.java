@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import jp.massbank.spectrumsearch.accessor.DbAccessor;
+import jp.massbank.spectrumsearch.entity.constant.SystemProperties;
 import jp.massbank.spectrumsearch.entity.db.Instrument;
 import jp.massbank.spectrumsearch.entity.db.MsType;
 import jp.massbank.spectrumsearch.logic.MassBankRecordLogic;
@@ -14,6 +15,8 @@ import org.apache.log4j.Logger;
 
 public class MassBankDirSyncThread implements Runnable {
 
+	public static boolean hasSyncDataToReInitialize = false;
+	
 	private static final Logger LOGGER = Logger.getLogger(MassBankDirSyncThread.class);
 	
 	private boolean stop;
@@ -40,6 +43,7 @@ public class MassBankDirSyncThread implements Runnable {
 			// open connection
 			DbAccessor.createConnection();
 			syncDir(this.path);
+			hasSyncDataToReInitialize = true;
 		} catch (SQLException e) {
 			LOGGER.error(e.getMessage(), e);
 		} finally {
@@ -71,26 +75,33 @@ public class MassBankDirSyncThread implements Runnable {
 	
 	private void syncDir(String pathname) {
 		File f = new File(pathname);
-		File[] listfiles = f.listFiles();
-		for (int i = 0; i < listfiles.length; i++) {
-			if (!stop) {
-				File item = listfiles[i];
-				if (! item.isHidden()) {
-					if (item.isDirectory()) {
-						File[] internalFiles = item.listFiles();
-						for (int j = 0; j < internalFiles.length; j++) {
-							if (!stop) {
-								File item2 = internalFiles[j];
-								if (! item2.isHidden()) {
-									if (item2.isDirectory()) {
-										String name = item2.getAbsolutePath();
-										syncDir(name);
-									} else {
-										mbRecordLogic.mergeMassBankRecordIntoDb(item2, instruments, msTypes);
-										count++;
-									}
-								}
-							}
+		if (! f.getName().equals(SystemProperties.getInstance().getDatabaseName())) {
+			File[] listfiles = f.listFiles();
+			for (int i = 0; i < listfiles.length; i++) {
+				if (!stop) {
+					File item = listfiles[i];
+					if (! item.isHidden()) {
+						if (item.isDirectory()) {
+							String name = item.getAbsolutePath();
+							syncDir(name);
+//							File[] internalFiles = item.listFiles();
+//							for (int j = 0; j < internalFiles.length; j++) {
+//								if (!stop) {
+//									File item2 = internalFiles[j];
+//									if (! item2.isHidden()) {
+//										if (item2.isDirectory()) {
+//											String name = item2.getAbsolutePath();
+//											syncDir(name);
+//										} else {
+//											mbRecordLogic.mergeMassBankRecordIntoDb(item2, instruments, msTypes);
+//											count++;
+//										}
+//									}
+//								}
+//							}
+						} else {
+							mbRecordLogic.mergeMassBankRecordIntoDb(item, instruments, msTypes);
+							count++;
 						}
 					}
 				}

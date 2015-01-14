@@ -22,6 +22,7 @@ import jp.massbank.spectrumsearch.accessor.PeakAccessor;
 import jp.massbank.spectrumsearch.accessor.RecordAccessor;
 import jp.massbank.spectrumsearch.accessor.SpectrumAccessor;
 import jp.massbank.spectrumsearch.entity.constant.Constant;
+import jp.massbank.spectrumsearch.entity.constant.SystemProperties;
 import jp.massbank.spectrumsearch.entity.db.Instrument;
 import jp.massbank.spectrumsearch.entity.db.MassSpectrometry;
 import jp.massbank.spectrumsearch.entity.db.MsType;
@@ -31,7 +32,6 @@ import jp.massbank.spectrumsearch.entity.db.Spectrum;
 import jp.massbank.spectrumsearch.entity.file.MassBankRecord;
 import jp.massbank.spectrumsearch.entity.type.IonMode;
 import jp.massbank.spectrumsearch.entity.type.MassBankRecordLine;
-import jp.massbank.spectrumsearch.util.DbUtil;
 import jp.massbank.spectrumsearch.util.MassBankRecordReader;
 
 import org.apache.commons.lang3.StringUtils;
@@ -99,11 +99,15 @@ public class MassBankRecordLogic {
 	}
 	
 	public void dropTableIndexes() {
-		DbAccessor.execUpdate("DROP INDEX IDX_RECORD_PEAK");
+		DbAccessor.execUpdate("DROP INDEX IDX_PEAK_RECORD");
+		DbAccessor.execUpdate("DROP INDEX IDX_PEAK_MZ");
+		DbAccessor.execUpdate("DROP INDEX IDX_SPECTRUM_RECORD");
 	}
 	
 	public void createTableIndexes() {
-		DbAccessor.execUpdate("CREATE INDEX IDX_RECORD_PEAK ON PEAK (RECORD_ID)");
+		DbAccessor.execUpdate("CREATE INDEX IDX_PEAK_RECORD ON PEAK (RECORD_ID)");
+		DbAccessor.execUpdate("CREATE INDEX IDX_PEAK_MZ ON PEAK (MZ)");
+		DbAccessor.execUpdate("CREATE INDEX IDX_SPECTRUM_RECORD ON SPECTRUM (RECORD_ID)");
 	}
 	
 	public void syncFilesRecordsByFolderPath(String pathname) {
@@ -130,14 +134,16 @@ public class MassBankRecordLogic {
 	}
 	
 	public static int getFilesCount(File file) {
-		File[] files = file.listFiles();
 		int count = 0;
-		for (File f : files) {
-			if (! f.isHidden()) {
-				if (f.isDirectory()) {
-					count += getFilesCount(f);
-				} else {
-					count++;
+		if (! file.getName().equals(SystemProperties.getInstance().getDatabaseName())) {
+			File[] files = file.listFiles();
+			for (File f : files) {
+				if (! f.isHidden()) {
+					if (f.isDirectory()) {
+						count += getFilesCount(f);
+					} else {
+						count++;
+					}
 				}
 			}
 		}
