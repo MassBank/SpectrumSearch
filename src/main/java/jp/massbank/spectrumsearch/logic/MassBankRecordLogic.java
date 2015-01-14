@@ -101,12 +101,14 @@ public class MassBankRecordLogic {
 	public void dropTableIndexes() {
 		DbAccessor.execUpdate("DROP INDEX IDX_PEAK_RECORD");
 		DbAccessor.execUpdate("DROP INDEX IDX_PEAK_MZ");
+		DbAccessor.execUpdate("DROP INDEX IDX_PEAK_RELATIVE_INTENSITY");
 		DbAccessor.execUpdate("DROP INDEX IDX_SPECTRUM_RECORD");
 	}
 	
 	public void createTableIndexes() {
 		DbAccessor.execUpdate("CREATE INDEX IDX_PEAK_RECORD ON PEAK (RECORD_ID)");
 		DbAccessor.execUpdate("CREATE INDEX IDX_PEAK_MZ ON PEAK (MZ)");
+		DbAccessor.execUpdate("CREATE INDEX IDX_PEAK_RELATIVE_INTENSITY ON PEAK (RELATIVE_INTENSITY)");
 		DbAccessor.execUpdate("CREATE INDEX IDX_SPECTRUM_RECORD ON SPECTRUM (RECORD_ID)");
 	}
 	
@@ -301,7 +303,9 @@ public class MassBankRecordLogic {
 //		            }
 		        } else {
 		        	// read the file content
+		        	long s1 = System.currentTimeMillis();
                 	mergeMassBankRecordIntoDb(item, instruments, msTypes);
+                	LOGGER.info("merge massbank record : " + item.getName() + "(" + (System.currentTimeMillis() - s1) + ")");
 		        }
 			}
 		}
