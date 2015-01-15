@@ -25,14 +25,15 @@ import java.awt.*;
 /**
  * 処理中メッセージ表示ダイアログ
  */
-public class ProgressDialog extends JDialog {
+@Deprecated
+public class ProgressDialog2 extends JDialog {
 
-	public ProgressDialog(Frame parent){
+	public ProgressDialog2(Frame parent){
 		super(parent, false);
 		setDialog("");
 	}
 
-	public ProgressDialog(Frame parent, String msg){
+	public ProgressDialog2(Frame parent, String msg){
 		super(parent, false);
 		setDialog(msg);
 	}
