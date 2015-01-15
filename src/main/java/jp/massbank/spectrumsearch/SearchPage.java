@@ -24,7 +24,6 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Cursor;
-import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.GridBagConstraints;
@@ -41,11 +40,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.PrintStream;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
@@ -100,6 +95,7 @@ import jp.massbank.spectrumsearch.entity.param.SearchQueryParam;
 import jp.massbank.spectrumsearch.entity.type.IonMode;
 import jp.massbank.spectrumsearch.entity.type.ToleranceUnit;
 import jp.massbank.spectrumsearch.gui.MenuBarGenerator;
+import jp.massbank.spectrumsearch.gui.ProgressDialog;
 import jp.massbank.spectrumsearch.logic.CompoundLogic;
 import jp.massbank.spectrumsearch.logic.RecordLogic;
 import jp.massbank.spectrumsearch.logic.SpectrumLogic;
@@ -329,7 +325,8 @@ public class SearchPage extends JFrame {
 		createWindow();
 
 		// 検索中ダイアログ
-		this.dlg = new ProgressDialog(getFrame());
+		this.dlg = new ProgressDialog(this);
+//		this.dlg = new ProgressDialog(getFrame());
 
 		// ユーザーファイル読込み
 //		if (getParameter("file") != null) {
@@ -918,7 +915,7 @@ public class SearchPage extends JFrame {
 		setOperationEnbled(false);
 
 		// 検索中ダイアログ表示する
-		dlg.setVisible(true);
+		dlg.showDialog();
 
 //		this.param = post.toString();
 		this.ps = ps;
@@ -940,7 +937,7 @@ public class SearchPage extends JFrame {
 				setOperationEnbled(true);
 
 				// 検索中ダイアログを非表示にする
-				dlg.setVisible(false);
+				dlg.hideDialog();
 
 				int total = 0;
 				if (result != null && result.size() > 0) {
