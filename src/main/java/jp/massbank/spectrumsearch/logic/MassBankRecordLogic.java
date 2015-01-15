@@ -154,8 +154,10 @@ public class MassBankRecordLogic {
 	
 	public void mergeMassBankRecordIntoDb(File mbFile, List<Instrument> instruments, List<MsType> msTypes) {
 		// read the file content
+		long s = System.currentTimeMillis();
     	MassBankRecord massBankRecord = getFileRecordByFile(mbFile);
-
+    	LOGGER.info("read file (" + mbFile.getName() + ") - " + (System.currentTimeMillis() - s) + "ms");
+    	
     	if (massBankRecord.isAvailable()) {
     		
     		try {
@@ -167,14 +169,13 @@ public class MassBankRecordLogic {
     					oInstrument = instrument;
     				}
     			}
-    			
+    			// merge INSTRUMENT if not exist
     			if (oInstrument == null) {
     				Instrument instrument = new Instrument();
     				instrument.setType(massBankRecord.getAcInstrument().getType());
     				this.instrumentAccessor.insert(instrument);
     				
     				oInstrument = this.instrumentAccessor.getInstrument(massBankRecord.getAcInstrument().getType());
-    				
     				instruments.add(oInstrument);
     			}
     			
@@ -187,7 +188,7 @@ public class MassBankRecordLogic {
     					oMsType = msType;
     				}
     			}
-    			
+    			// merge MS_TYPE if not exist
     			if (oMsType == null) {
     				MsType msType = new MsType();
     				msType.setName(strMsType);
@@ -219,7 +220,8 @@ public class MassBankRecordLogic {
     					massSpectrometry.setRecordId(massBankRecord.getId());
     				}
     				if (massSpectrometries.size() > 0) {
-    					massSpectrometryAccessor.addBatchInsert(massSpectrometries);
+//    					massSpectrometryAccessor.addBatchInsert(massSpectrometries);
+    					massSpectrometryAccessor.executeBatchInsert(massSpectrometries);
     				}
     			}
     			
@@ -235,7 +237,8 @@ public class MassBankRecordLogic {
     					peaks.add(peak);
     				}
     				if (peaks.size() > 0) {
-    					this.peakAccessor.addBatchInsert(peaks);
+    					this.peakAccessor.executeBatchInsert(peaks);
+//    					this.peakAccessor.addBatchInsert(peaks);
     				}
     			}
     			
@@ -257,10 +260,13 @@ public class MassBankRecordLogic {
     				LOGGER.warn("No Spectrum Info.: " + massBankRecord.getId());
     			}
     			
-    			DbAccessor.executeBatch();
+    			LOGGER.info("before executeBatch (" + mbFile.getName() + ") - " + (System.currentTimeMillis() - s) + "ms");
+    			DbAccessor.executeBatchAndCloseStatment();
+    			LOGGER.info("after executeBatch (" + mbFile.getName() + ") - " + (System.currentTimeMillis() - s) + "ms");
     			// commit
     			DbAccessor.commit();
-    			
+    			DbAccessor.setAutoCommit(true);
+    			LOGGER.info("after commit (" + mbFile.getName() + ") - " + (System.currentTimeMillis() - s) + "ms");
     		} catch (SQLException e) {
     			LOGGER.error("error in file:" + mbFile.getPath());
     			LOGGER.error(e.getMessage(), e);
@@ -499,7 +505,7 @@ public class MassBankRecordLogic {
 		}
 	}
 	
-	private MassBankRecord getFileRecordByFile(File file) {
+	public MassBankRecord getFileRecordByFile(File file) {
 		long s = System.currentTimeMillis();
 		long lineCount = 0;
 		

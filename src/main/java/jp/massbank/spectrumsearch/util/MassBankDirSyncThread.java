@@ -41,7 +41,9 @@ public class MassBankDirSyncThread implements Runnable {
 		try {
 			// open connection
 			DbAccessor.createConnection();
+			long s = System.currentTimeMillis();
 			syncDir(this.path);
+			LOGGER.info(">>>> sync completed : " + (System.currentTimeMillis() - s) + "ms");
 			hasSyncDataToReInitialize = true;
 		} catch (SQLException e) {
 			LOGGER.error(e.getMessage(), e);
@@ -84,10 +86,15 @@ public class MassBankDirSyncThread implements Runnable {
 							String name = item.getAbsolutePath();
 							syncDir(name);
 						} else {
+							long s = System.currentTimeMillis();
+							LOGGER.info(">>> start merge file content (" + item.getName() + ")");
 							mbRecordLogic.mergeMassBankRecordIntoDb(item, instruments, msTypes);
+							LOGGER.info(">>> end merge file content (" + item.getName() + ") " + (System.currentTimeMillis() - s) + "ms");
 							count++;
 						}
 					}
+				} else {
+					break;
 				}
 			}
 		}

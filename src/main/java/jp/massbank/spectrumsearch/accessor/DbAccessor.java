@@ -171,27 +171,37 @@ public class DbAccessor {
 //	}
 	
 	public static int[] executeBatch() throws SQLException {
-		if (stmt != null) {
-			return stmt.executeBatch();
+		int[] result = new int[0];
+		if (stmt != null && !stmt.isClosed()) {
+			result = stmt.executeBatch();
 		}
-		return new int[0];
+		return result;
+	}
+	
+	public static int[] executeBatchAndCloseStatment() throws SQLException {
+		int[] result = new int[0];
+		if (stmt != null && !stmt.isClosed()) {
+			result = stmt.executeBatch();
+			stmt.close();
+		}
+		return result;
 	}
 	
 	protected void createStatment() throws SQLException {
 		if ((stmt == null || stmt.isClosed()) && 
-				(conn != null || !conn.isClosed())) {
+				(conn != null && !conn.isClosed())) {
 			stmt = conn.createStatement();
 		}
 	}
 	
 	protected void closeStatment() throws SQLException {
-		if (stmt != null) {
+		if (stmt != null && !stmt.isClosed()) {
             stmt.close();
         }
 	}
 	
 	protected static void createPreparedStatement(String sql) throws SQLException {
-		if (conn != null || !conn.isClosed()) {
+		if (conn != null && !conn.isClosed()) {
 //			pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 			
 //			long key = -1L;
@@ -207,7 +217,14 @@ public class DbAccessor {
 	}
 	
 	protected static void closePreparedStatement() throws SQLException {
-		if (pstmt != null) {
+		if (pstmt != null && !pstmt.isClosed()) {
+			pstmt.close();
+		}
+	}
+	
+	protected static void executeAndClosePreparedStatement() throws SQLException {
+		if (pstmt != null && !pstmt.isClosed()) {
+			pstmt.execute();
 			pstmt.close();
 		}
 	}

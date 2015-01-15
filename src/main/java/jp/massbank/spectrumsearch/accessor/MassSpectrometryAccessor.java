@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 import jp.massbank.spectrumsearch.entity.db.MassSpectrometry;
+import jp.massbank.spectrumsearch.entity.db.Peak;
 import jp.massbank.spectrumsearch.util.QueryBuilder;
 
 public class MassSpectrometryAccessor extends AbstractDbAccessor<MassSpectrometry> {
@@ -58,6 +59,28 @@ public class MassSpectrometryAccessor extends AbstractDbAccessor<MassSpectrometr
 		String sql = sb.toString().trim();
 		String insertQuery = sql.substring(0, sql.length() - 1);
 		addBatch(insertQuery);
+	}
+	
+	public void executeBatchInsert(List<MassSpectrometry> massSpectrometries) throws SQLException {
+		StringBuilder sb = new StringBuilder();
+		sb.append("INSERT INTO " + MassSpectrometry.TABLE + " ");
+		sb.append("(");
+		sb.append(MassSpectrometry.Columns.MASS_SPECTROMETRY_TYPE + ",");
+		sb.append(MassSpectrometry.Columns.MASS_SPECTROMETRY_VALUE + ",");
+		sb.append(MassSpectrometry.Columns.RECORD_ID);
+		sb.append(") values (?, ?, ?)");
+		for(int i = 1; i < massSpectrometries.size(); i++) {
+			sb.append(",(?, ?, ?)");
+		}
+		
+		createPreparedStatement(sb.toString());
+		int i = 1;
+		for(MassSpectrometry massSpectrometry : massSpectrometries) {
+			pstmt.setString(i++, massSpectrometry.getType());
+			pstmt.setString(i++, massSpectrometry.getValue());
+			pstmt.setString(i++, massSpectrometry.getRecordId());
+		}
+		executeAndClosePreparedStatement();
 	}
 	
 	@Override

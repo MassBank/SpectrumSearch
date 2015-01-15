@@ -1,5 +1,6 @@
 package jp.massbank.spectrumsearch.Logic;
 
+import java.io.File;
 import java.sql.SQLException;
 import java.text.Collator;
 import java.util.ArrayList;
@@ -12,6 +13,7 @@ import jp.massbank.spectrumsearch.accessor.DbAccessor;
 import jp.massbank.spectrumsearch.accessor.RecordAccessor;
 import jp.massbank.spectrumsearch.entity.constant.SystemProperties;
 import jp.massbank.spectrumsearch.entity.db.Record;
+import jp.massbank.spectrumsearch.entity.file.MassBankRecord;
 import jp.massbank.spectrumsearch.logic.MassBankRecordLogic;
 
 import org.apache.commons.lang3.StringUtils;
@@ -19,11 +21,26 @@ import org.junit.Test;
 
 public class FileRecordLogicTest {
 	
-	@Test
+//	@Test
 	public void testSync() {
 		MassBankRecordLogic logic = new MassBankRecordLogic();
 		logic.upgradeAndResetDatabase();
 		logic.syncFilesRecordsByFolderPath(SystemProperties.getInstance().getDirPath());
+	}
+	
+	@Test
+	public void testReadFile() {
+		readFile("C:\\Apps\\Documents\\Projects\\proj-massbank\\massbankrecord\\Boise_State_Univ\\BSU00001.txt");
+		readFile("C:\\Apps\\Documents\\Projects\\proj-massbank\\massbankrecord\\Chubu_Univ\\UT002533.txt");
+		readFile("C:\\Apps\\Documents\\Projects\\proj-massbank\\massbankrecord\\Chubu_Univ\\UT000001.txt");
+	}
+
+	public void readFile(String path) {
+		MassBankRecordLogic logic = new MassBankRecordLogic();
+		File mbFile = new File(path);
+		long s = System.currentTimeMillis();
+		MassBankRecord massBankRecord = logic.getFileRecordByFile(mbFile);
+		System.out.println("read file (" + path + ") " + (System.currentTimeMillis() - s) + "ms");
 	}
 	
 //	@Test

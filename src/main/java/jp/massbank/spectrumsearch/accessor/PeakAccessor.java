@@ -62,6 +62,30 @@ public class PeakAccessor extends AbstractDbAccessor<Peak> {
 		addBatch(insertQuery);
 	}
 	
+	public void executeBatchInsert(List<Peak> peaks) throws SQLException {
+		StringBuilder sb = new StringBuilder();
+		sb.append("INSERT INTO " + Peak.TABLE + " ");
+		sb.append("(");
+		sb.append(Peak.Columns.MZ + ",");
+		sb.append(Peak.Columns.INTENSITY + ",");
+		sb.append(Peak.Columns.RELATIVE_INTENSITY + ",");
+		sb.append(Peak.Columns.RECORD_ID);
+		sb.append(") values (?, ?, ?, ?)");
+		for(int i = 1; i < peaks.size(); i++) {
+			sb.append(",(?, ?, ?, ?)");
+		}
+		
+		createPreparedStatement(sb.toString());
+		int i = 1;
+		for(Peak peak : peaks) {
+			pstmt.setDouble(i++, peak.getMz());
+			pstmt.setDouble(i++, peak.getIntensity());
+			pstmt.setInt(i++, peak.getRelativeIntensity());
+			pstmt.setString(i++, peak.getRecordId());
+		}
+		executeAndClosePreparedStatement();
+	}
+	
 	@Override
 	public void insert(Peak peak) {
 		String insertQuery = "INSERT INTO " + Peak.TABLE + " " +

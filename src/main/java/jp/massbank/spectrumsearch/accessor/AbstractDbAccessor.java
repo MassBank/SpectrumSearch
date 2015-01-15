@@ -75,7 +75,6 @@ public abstract class AbstractDbAccessor<T> extends DbAccessor {
 	
 	protected boolean insert(String sql) {
 		try {
-//			createConnection();
 			createStatment();
 			return stmt.execute(sql);
         } catch (SQLException e) {
@@ -83,7 +82,6 @@ public abstract class AbstractDbAccessor<T> extends DbAccessor {
         } finally {
         	try {
         		closeStatment();
-//	        	closeConnection();
         	} catch (SQLException e) {
         		errorLog(sql, e);
         	}
