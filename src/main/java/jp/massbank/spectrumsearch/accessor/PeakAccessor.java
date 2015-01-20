@@ -71,20 +71,46 @@ public class PeakAccessor extends AbstractDbAccessor<Peak> {
 		sb.append(Peak.Columns.RELATIVE_INTENSITY + ",");
 		sb.append(Peak.Columns.RECORD_ID);
 		sb.append(") values (?, ?, ?, ?)");
-		for(int i = 1; i < peaks.size(); i++) {
-			sb.append(",(?, ?, ?, ?)");
-		}
 		
 		createPreparedStatement(sb.toString());
-		int i = 1;
+		int i = 0;
 		for(Peak peak : peaks) {
-			pstmt.setDouble(i++, peak.getMz());
-			pstmt.setDouble(i++, peak.getIntensity());
-			pstmt.setInt(i++, peak.getRelativeIntensity());
-			pstmt.setString(i++, peak.getRecordId());
+			pstmt.setDouble(1, peak.getMz());
+			pstmt.setDouble(2, peak.getIntensity());
+			pstmt.setInt(3, peak.getRelativeIntensity());
+			pstmt.setString(4, peak.getRecordId());
+			pstmt.addBatch();
+			if ((i + 1) % 100 == 0) {
+				pstmt.executeBatch();
+		    }
+			i++;
 		}
-		executeAndClosePreparedStatement();
+		executeBatchAndClosePreparedStatement();
 	}
+	
+//	public void executeBatchInsert(List<Peak> peaks) throws SQLException {
+//		StringBuilder sb = new StringBuilder();
+//		sb.append("INSERT INTO " + Peak.TABLE + " ");
+//		sb.append("(");
+//		sb.append(Peak.Columns.MZ + ",");
+//		sb.append(Peak.Columns.INTENSITY + ",");
+//		sb.append(Peak.Columns.RELATIVE_INTENSITY + ",");
+//		sb.append(Peak.Columns.RECORD_ID);
+//		sb.append(") values (?, ?, ?, ?)");
+//		for(int i = 1; i < peaks.size(); i++) {
+//			sb.append(",(?, ?, ?, ?)");
+//		}
+//		
+//		createPreparedStatement(sb.toString());
+//		int i = 1;
+//		for(Peak peak : peaks) {
+//			pstmt.setDouble(i++, peak.getMz());
+//			pstmt.setDouble(i++, peak.getIntensity());
+//			pstmt.setInt(i++, peak.getRelativeIntensity());
+//			pstmt.setString(i++, peak.getRecordId());
+//		}
+//		executeAndClosePreparedStatement();
+//	}
 	
 	@Override
 	public void insert(Peak peak) {
