@@ -20,8 +20,8 @@ public class SearchLogic {
 	
 	private static final Logger LOGGER = Logger.getLogger(SearchLogic.class);
 	
-	private List<String> queryMz;
-	private List<Double> queryVal;
+	private List<String> queryMz;	// list of PK$PEAK : m/z
+	private List<Double> queryVal;	// list of PK$PEAK : rel.int.
 	private Map<String, List<HitPeak>> mapHitPeak;
 	private Map<String, Integer> mapMzCnt;
 	private List<ResScore> vecScore;
@@ -43,28 +43,28 @@ public class SearchLogic {
 	public ArrayList<String> getSearchResult(SearchQueryParam param) {
 		ArrayList<String> result = new ArrayList<String>();
 		try {
-			System.out.println("start search result");
+			LOGGER.debug("start search result");
 			long s1 = System.currentTimeMillis();
 			DbAccessor.createConnection();
 			long s2 = System.currentTimeMillis();
-			System.out.println("open connection : " + (s2-s1) + " ms");
+			LOGGER.debug("open connection : " + (s2-s1) + " ms");
 			setQueryPeak(param);
 			long s3 = System.currentTimeMillis();
-			System.out.println("setQueryPeak : " + (s3-s2) + " ms");
+			LOGGER.debug("setQueryPeak : " + (s3-s2) + " ms");
 			if (!searchPeak(param)) {
 				return result;
 			}
 			long s4 = System.currentTimeMillis();
-			System.out.println("searchPeak : " + (s4-s3) + " ms");
+			LOGGER.debug("searchPeak : " + (s4-s3) + " ms");
 			setScore(param);
 			long s5 = System.currentTimeMillis();
-			System.out.println("setScore : " + (s5-s4) + " ms");
+			LOGGER.debug("setScore : " + (s5-s4) + " ms");
 			result.addAll(outResult());
 			long s6 = System.currentTimeMillis();
-			System.out.println("outResult : " + (s6-s5) + " ms");
+			LOGGER.debug("outResult : " + (s6-s5) + " ms");
 			DbAccessor.closeConnection();
 			long s7 = System.currentTimeMillis();
-			System.out.println("close connection : " + (s7-s6) + " ms");
+			LOGGER.debug("close connection : " + (s7-s6) + " ms");
 		} catch (SQLException e) {
 			LOGGER.error(e.getMessage(), e);
 		}
@@ -76,8 +76,8 @@ public class SearchLogic {
 		for (String peak : peaks) {
 			String[] pVals = peak.split(",");
 			String sMz = pVals[0];
-			double fMz = Float.parseFloat(sMz);
-			double fVal = Float.parseFloat(pVals[1]);
+			double fMz = Float.parseFloat(sMz); 		// PK$PEAK : m/z
+			double fVal = Float.parseFloat(pVals[1]); 	// PK$PEAK : rel.int.
 			
 			if ( fVal < 1 ) {
 				fVal = 1;
@@ -564,7 +564,7 @@ public class SearchLogic {
 //			String subSql = StringUtils.join(sqls.subList(i, max), " UNION ALL ");
 //			List<Map<Integer, Object>> result = dbExecuteSql(subSql);
 //			
-//			System.out.println("counting peak; dbExecuteSql :" + (System.currentTimeMillis() - s) + "ms");
+//			LOGGER.debug("counting peak; dbExecuteSql :" + (System.currentTimeMillis() - s) + "ms");
 //			List<QueryResultHitPeak> qrHitPeaks = new ArrayList<QueryResultHitPeak>();
 //			for (Map<Integer, Object> rowResult : result) {
 //				QueryResultHitPeak qrHitPeak = new QueryResultHitPeak();
@@ -591,7 +591,7 @@ public class SearchLogic {
 //				qrHitPeaks.add(qrHitPeak);
 //			}
 //			
-//			System.out.println("counting peak; read max :" + (System.currentTimeMillis() - s) + "ms");
+//			LOGGER.debug("counting peak; read max :" + (System.currentTimeMillis() - s) + "ms");
 //
 //			int prevAryNum = 0;
 //			for (QueryResultHitPeak grHitPeak : qrHitPeaks) {
@@ -647,7 +647,7 @@ public class SearchLogic {
 //				
 //			}
 //		}
-//		System.out.println("counting peak:" + (System.currentTimeMillis() - s) + "ms");
+//		LOGGER.debug("counting peak:" + (System.currentTimeMillis() - s) + "ms");
 //		
 //		/*int index = 0;
 //		StringBuilder sb = new StringBuilder();

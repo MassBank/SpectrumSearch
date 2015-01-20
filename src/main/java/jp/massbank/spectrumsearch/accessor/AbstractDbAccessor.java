@@ -155,8 +155,8 @@ public abstract class AbstractDbAccessor<T> extends DbAccessor {
 			stmt.execute(sql);
 		} catch (SQLException e) {
 			if ("X0Y32".equals(e.getSQLState())) {
-				LOGGER.info(sql);
-				LOGGER.info("Table already exist");
+				LOGGER.error(sql);
+				LOGGER.error("Table already exist");
 			} else {
 				errorLog(sql, e);
 			}

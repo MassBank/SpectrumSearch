@@ -87,9 +87,9 @@ public class MassBankDirSyncThread implements Runnable {
 							syncDir(name);
 						} else {
 							long s = System.currentTimeMillis();
-							LOGGER.info(">>> start merge file content (" + item.getName() + ")");
+							LOGGER.debug(">>> start merge file content (" + item.getName() + ")");
 							mbRecordLogic.mergeMassBankRecordIntoDb(item, instruments, msTypes);
-							LOGGER.info(">>> end merge file content (" + item.getName() + ") " + (System.currentTimeMillis() - s) + "ms");
+							LOGGER.debug(">>> end merge file content (" + item.getName() + ") " + (System.currentTimeMillis() - s) + "ms");
 							count++;
 						}
 					}

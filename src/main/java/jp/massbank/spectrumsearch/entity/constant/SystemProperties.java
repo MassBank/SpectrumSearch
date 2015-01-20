@@ -23,7 +23,7 @@ public class SystemProperties {
 	static {
 		URL classPath = SystemProperties.class.getClassLoader().getResource("config/" + Constant.SYS_PROPERTIES_FILE_NAME);
 		SYS_PROPS_FILE_PATH = classPath.getPath();
-		LOGGER.info("system.properties file path : " + SYS_PROPS_FILE_PATH);
+		LOGGER.debug("system.properties file path : " + SYS_PROPS_FILE_PATH);
 	}
 	
 	public static final class Key {

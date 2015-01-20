@@ -35,7 +35,7 @@ public class DbAccessor {
 			
 			// Get a connection
 			conn = DriverManager.getConnection(dbURL + ";create=true", connectionProps);
-			LOGGER.info("Derby start");
+			LOGGER.debug("Derby start");
 			executeCustomFunctions();
 		}
     }
@@ -60,7 +60,7 @@ public class DbAccessor {
 	            conn.close();
 	        } catch (SQLException e) {
 	        	if ("08006".equals(e.getSQLState())) {
-	        		LOGGER.info("Derby shut down normally");
+	        		LOGGER.debug("Derby shut down normally");
 	        	}
 	        }
 		}           
@@ -120,17 +120,7 @@ public class DbAccessor {
 		List<Map<Integer, Object>> result = new ArrayList<Map<Integer, Object>>();
 		try {
 			createPreparedStatement(sql);
-			ResultSet rs = pstmt.executeQuery();
-			ResultSetMetaData rsmd = rs.getMetaData();
-			int columnsCount = rsmd.getColumnCount();
-			while (rs.next() && columnsCount > 0) {
-				Map<Integer, Object> rowResult = new HashMap<Integer, Object>();
-				for (int i = 1; i <= columnsCount; i++) {
-					rowResult.put(i, rs.getObject(i));
-				}
-				result.add(rowResult);
-			}
-			rs.close();
+			result = getQueryResult();
 		} catch (SQLException e) {
 			errorLog(sql, e);
 		} finally {
@@ -140,6 +130,22 @@ public class DbAccessor {
 				LOGGER.error(e.getMessage(), e);
 			}
 		}
+		return result;
+	}
+	
+	private static List<Map<Integer, Object>> getQueryResult() throws SQLException {
+		List<Map<Integer, Object>> result = new ArrayList<Map<Integer, Object>>();
+		ResultSet rs = pstmt.executeQuery();
+		ResultSetMetaData rsmd = rs.getMetaData();
+		int columnsCount = rsmd.getColumnCount();
+		while (rs.next() && columnsCount > 0) {
+			Map<Integer, Object> rowResult = new HashMap<Integer, Object>();
+			for (int i = 1; i <= columnsCount; i++) {
+				rowResult.put(i, rs.getObject(i));
+			}
+			result.add(rowResult);
+		}
+		rs.close();
 		return result;
 	}
 	
@@ -229,6 +235,13 @@ public class DbAccessor {
 		}
 	}
 	
+	protected static void executeBatchAndClosePreparedStatement() throws SQLException {
+		if (pstmt != null && !pstmt.isClosed()) {
+			pstmt.executeBatch();
+			pstmt.close();
+		}
+	}
+	
 	protected static void errorLog(String sql, SQLException e) {
 		if ("X0Y32".equals(e.getSQLState())) { // table already exist
 			LOGGER.error("Table/View already exist: SQL ===> " + sql);
@@ -250,7 +263,7 @@ public class DbAccessor {
 
 	private static void executeCustomFunctions() {
 		if (!isExeCustomFunctions) {
-			LOGGER.info("start exec custom functions");
+			LOGGER.debug("start exec custom functions");
 			execute("DROP FUNCTION CONCAT");
 			execute("DROP FUNCTION LPAD");
 			execute("DROP FUNCTION CASTDOUBLE");
@@ -276,7 +289,7 @@ public class DbAccessor {
 			execute("CREATE DERBY AGGREGATE STRMAX FOR VARCHAR(32000) RETURNS VARCHAR(32000) " +
 					"EXTERNAL NAME 'jp.massbank.spectrumsearch.util.StrMax'");
 			isExeCustomFunctions = true;
-			LOGGER.info("end exec custom functions");
+			LOGGER.debug("end exec custom functions");
 		}
 	}
 	

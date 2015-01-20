@@ -156,7 +156,6 @@ public class MassBankRecordLogic {
 		// read the file content
 		long s = System.currentTimeMillis();
     	MassBankRecord massBankRecord = getFileRecordByFile(mbFile);
-    	LOGGER.info("read file (" + mbFile.getName() + ") - " + (System.currentTimeMillis() - s) + "ms");
     	
     	if (massBankRecord.isAvailable()) {
     		
@@ -210,7 +209,7 @@ public class MassBankRecordLogic {
     			record.setInstrumentId(oInstrument.getId());
     			this.recordAccessor.addBatchInsert(record);
     			
-    			// MASS_SPECTROMETRY
+    			/*// MASS_SPECTROMETRY
     			if (massBankRecord.getAcMassSpectrometryMap() != null) {
     				List<MassSpectrometry> massSpectrometries = new ArrayList<MassSpectrometry>();
     				for (Entry<String, String> entry : massBankRecord.getAcMassSpectrometryMap().entrySet()) {
@@ -223,7 +222,7 @@ public class MassBankRecordLogic {
 //    					massSpectrometryAccessor.addBatchInsert(massSpectrometries);
     					massSpectrometryAccessor.executeBatchInsert(massSpectrometries);
     				}
-    			}
+    			}*/
     			
     			// PEAK
     			if (massBankRecord.getPkPeak().getPeakMap() != null) {
@@ -242,31 +241,31 @@ public class MassBankRecordLogic {
     				}
     			}
     			
-    			// SPECTRUM
-    			String strPrecursorMz = massBankRecord.getMsFocusedIonMap().get("PRECURSOR_M/Z");
-    			String strIonMode = massBankRecord.getAcMassSpectrometryMap().get("ION_MODE");
-    			if (StringUtils.isNotBlank(strPrecursorMz) && StringUtils.isNotBlank(strIonMode)) {
-    				Spectrum spectrum = new Spectrum();
-    				spectrum.setTitle(massBankRecord.getTitle());
-    				try {
-    					spectrum.setPrecursorMz(Float.parseFloat(strPrecursorMz));
-    				} catch (NumberFormatException e) {
-    					LOGGER.error(e.getMessage(), e);
-    				}
-    				spectrum.setIonMode(IonMode.parseInt(strIonMode));
-    				spectrum.setRecordId(massBankRecord.getId());
-    				this.spectrumAccessor.addBatchInsert(spectrum);
-    			} else {
-    				LOGGER.warn("No Spectrum Info.: " + massBankRecord.getId());
+    			try {
+    				// SPECTRUM
+    				String strPrecursorMz = massBankRecord.getMsFocusedIonMap().get("PRECURSOR_M/Z");
+    				String strIonMode = massBankRecord.getAcMassSpectrometryMap().get("ION_MODE");
+	    			if (StringUtils.isNotBlank(strPrecursorMz) && StringUtils.isNotBlank(strIonMode)) {
+	    				Spectrum spectrum = new Spectrum();
+	    				spectrum.setTitle(massBankRecord.getTitle());
+	    				spectrum.setPrecursorMz(Float.parseFloat(strPrecursorMz));
+	    				spectrum.setIonMode(IonMode.parseInt(strIonMode));
+	    				spectrum.setRecordId(massBankRecord.getId());
+	    				this.spectrumAccessor.addBatchInsert(spectrum);
+	    			} else {
+	    				LOGGER.warn("No Spectrum Info.: " + massBankRecord.getId());
+	    			}
+    			} catch (NumberFormatException e) {
+    				LOGGER.error(e.getMessage(), e);
     			}
     			
-    			LOGGER.info("before executeBatch (" + mbFile.getName() + ") - " + (System.currentTimeMillis() - s) + "ms");
+    			LOGGER.debug("before executeBatch (" + mbFile.getName() + ") - " + (System.currentTimeMillis() - s) + "ms");
     			DbAccessor.executeBatchAndCloseStatment();
-    			LOGGER.info("after executeBatch (" + mbFile.getName() + ") - " + (System.currentTimeMillis() - s) + "ms");
+    			LOGGER.debug("after executeBatch (" + mbFile.getName() + ") - " + (System.currentTimeMillis() - s) + "ms");
     			// commit
     			DbAccessor.commit();
     			DbAccessor.setAutoCommit(true);
-    			LOGGER.info("after commit (" + mbFile.getName() + ") - " + (System.currentTimeMillis() - s) + "ms");
+    			LOGGER.debug("after commit (" + mbFile.getName() + ") - " + (System.currentTimeMillis() - s) + "ms");
     		} catch (SQLException e) {
     			LOGGER.error("error in file:" + mbFile.getPath());
     			LOGGER.error(e.getMessage(), e);
@@ -275,6 +274,8 @@ public class MassBankRecordLogic {
 				} catch (SQLException e1) {
 					LOGGER.error(e.getMessage(), e);
 				}
+    		} finally {
+    			
     		}
     	}
 	}
@@ -311,12 +312,12 @@ public class MassBankRecordLogic {
 		        	// read the file content
 		        	long s1 = System.currentTimeMillis();
                 	mergeMassBankRecordIntoDb(item, instruments, msTypes);
-                	LOGGER.info("merge massbank record : " + item.getName() + "(" + (System.currentTimeMillis() - s1) + ")");
+                	LOGGER.debug("merge massbank record : " + item.getName() + "(" + (System.currentTimeMillis() - s1) + ")");
 		        }
 			}
 		}
 		
-		LOGGER.info("time duration to read files : " + (System.currentTimeMillis() - s)/1000 + "s");
+		LOGGER.debug("time duration to read files : " + (System.currentTimeMillis() - s)/1000 + "s");
 	}
 	
 //	private void syncFolderInfo(String pathname) {
@@ -334,7 +335,7 @@ public class MassBankRecordLogic {
 //			File item = listfiles[i];
 //			if (! item.isHidden()) {
 //				if (item.isDirectory()) {
-////		        	LOGGER.info("start sync folder -> " + item);
+////		        	LOGGER.debug("start sync folder -> " + item);
 //					
 //					File[] internalFiles = item.listFiles();
 //					for (int j = 0; j < 1; j++) {
@@ -353,7 +354,7 @@ public class MassBankRecordLogic {
 //								if (massBankRecord.isAvailable()) {
 //									
 ////			                		long maxMemory = Runtime.getRuntime().maxMemory();
-////			            			LOGGER.info(
+////			            			LOGGER.debug(
 ////			            					"file: " + item2.getPath() +
 ////			            					"\nAvai. processors (cores): " + Runtime.getRuntime().availableProcessors() +
 ////			            					", Free mem (bytes): " + Runtime.getRuntime().freeMemory() +
@@ -474,21 +475,21 @@ public class MassBankRecordLogic {
 //										}
 //									}
 //									count++;
-//									LOGGER.info("progress... " + count + "/" + fileCount + " (" + (System.currentTimeMillis() - s1) + "ms / " + (s2-s1) + "ms)");
+//									LOGGER.debug("progress... " + count + "/" + fileCount + " (" + (System.currentTimeMillis() - s1) + "ms / " + (s2-s1) + "ms)");
 //								}
 //							}
 //						}
 //					}
-////	            	LOGGER.info("end sync folder -> " + item);
+////	            	LOGGER.debug("end sync folder -> " + item);
 //				} else {
-//					LOGGER.info(item);
+//					LOGGER.debug(item);
 //				}
 //			}
 //		}
 //		
 //		DbAccessor.execUpdate("CREATE INDEX IDX_RECORD_PEAK ON PEAK (RECORD_ID)");
 //		
-//		LOGGER.info("time duration to read files : " + (System.currentTimeMillis() - s)/1000 + "s");
+//		LOGGER.debug("time duration to read files : " + (System.currentTimeMillis() - s)/1000 + "s");
 //	}
 	
 	private void validateMassBankRecord(MassBankRecord massBankRecord) {
@@ -551,7 +552,7 @@ public class MassBankRecordLogic {
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage(), e);
 		}
-//		LOGGER.info("read a file: (" + file.getName() + ") - lines : (" + lineCount + ") " + (System.currentTimeMillis() - s) + "ms");
+		LOGGER.debug("read file: (" + file.getName() + ") - " + lineCount + " lines, " + (System.currentTimeMillis() - s) + "ms");
 		return result;
 	}
 	

@@ -302,7 +302,7 @@ public class GetConfig {
 		}
 		catch ( Exception e ) {
 		  // TODO avoid catch Exception. need detailed check for this method.
-			System.out.println("\"" + tagName + "\" tag doesn't exist in massbank.conf.");
+			LOGGER.info("\"" + tagName + "\" tag doesn't exist in massbank.conf.");
 		}
 		return val;
 	}
