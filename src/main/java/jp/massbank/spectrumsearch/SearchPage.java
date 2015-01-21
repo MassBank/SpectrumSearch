@@ -94,6 +94,7 @@ import jp.massbank.spectrumsearch.entity.gui.GuiResultTableRow;
 import jp.massbank.spectrumsearch.entity.param.SearchQueryParam;
 import jp.massbank.spectrumsearch.entity.type.IonMode;
 import jp.massbank.spectrumsearch.entity.type.ToleranceUnit;
+import jp.massbank.spectrumsearch.gui.AbstractDialog;
 import jp.massbank.spectrumsearch.gui.MenuBarGenerator;
 import jp.massbank.spectrumsearch.gui.ProgressDialog;
 import jp.massbank.spectrumsearch.logic.CompoundLogic;
@@ -641,7 +642,7 @@ public class SearchPage extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				// 子画面が開いていなければ生成
 				if (!isSubWindow) {
-					ps = new ParameterSetWindow();
+					ps = new ParameterSetWindow(getParentFrame());
 				} else {
 					ps.requestFocus();
 				}
@@ -1523,6 +1524,10 @@ public class SearchPage extends JFrame {
 	/**
 	 * アプレットのフレームを取得
 	 */
+	protected Frame getParentFrame() {
+		return (JFrame) SwingUtilities.getRoot(this);
+	}
+	
 	protected Frame getFrame() {
 		for (Container p = getParent(); p != null; p = p.getParent()) {
 			if (p instanceof Frame) return (Frame)p;
@@ -1550,8 +1555,10 @@ public class SearchPage extends JFrame {
 	/**
 	 * ParameterSetWindowクラス
 	 */
-	class ParameterSetWindow extends JFrame {
+//	class ParameterSetWindow extends JFrame {
+	class ParameterSetWindow extends AbstractDialog {
 		
+		private static final long serialVersionUID = -5319983912249144466L;
 		private final int LABEL_SIZE_L = 0;
 		private final int LABEL_SIZE_M = 1;
 		private final int LABEL_SIZE_S = 2;
@@ -1565,8 +1572,8 @@ public class SearchPage extends JFrame {
 		 * コンストラクタ
 		 * @throws SQLException 
 		 */
-		public ParameterSetWindow() {
-			
+		public ParameterSetWindow(Frame parent) {
+			super(parent, "Search Parameter Setting");
 			initSearchParameterSetting();
 			
 			// ウィンドウサイズ固定
@@ -2077,11 +2084,12 @@ public class SearchPage extends JFrame {
 					}
 				});
 			}
-			setTitle("Search Parameter Setting");
+//			setTitle("Search Parameter Setting");
 			pack();
-			Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
-			setLocation((int)(d.getWidth() / 2 - getWidth() / 2),
-					(int)(d.getHeight() / 2 - getHeight() / 2));
+//			Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
+//			setLocation((int)(d.getWidth() / 2 - getWidth() / 2),
+//					(int)(d.getHeight() / 2 - getHeight() / 2));
+			setLocation();
 			setVisible(true);
 			
 			// ウィンドウリスナー追加

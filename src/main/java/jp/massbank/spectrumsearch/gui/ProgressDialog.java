@@ -1,12 +1,10 @@
 package jp.massbank.spectrumsearch.gui;
 
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.Point;
+import java.awt.Frame;
 
 import javax.swing.BoxLayout;
-import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
@@ -14,25 +12,19 @@ import javax.swing.JRootPane;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
-import jp.massbank.spectrumsearch.SearchPage;
-
-public class ProgressDialog extends JDialog {
+public class ProgressDialog extends AbstractDialog {
 
 	private static final long serialVersionUID = -964096635641256745L;
 	private static boolean isHidden;
 	
-	public ProgressDialog(SearchPage parent) {
+	public ProgressDialog(Frame parent) {
 		super(parent, ModalityType.DOCUMENT_MODAL);
 		setDialogContent();
 	}
 	
 	public void showDialog() {
 		
-		if (getOwner() != null) {
-			Dimension parentSize = getOwner().getSize();
-			Point p = getOwner().getLocation();
-			setLocation(p.x + (parentSize.width - getWidth()) / 2, p.y + (parentSize.height - getHeight()) / 2);
-		}
+		setLocation();
 		
 		new Thread(new Runnable() {
 
