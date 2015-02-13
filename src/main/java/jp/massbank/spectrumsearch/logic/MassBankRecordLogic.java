@@ -244,17 +244,23 @@ public class MassBankRecordLogic {
     			try {
     				// SPECTRUM
     				String strPrecursorMz = massBankRecord.getMsFocusedIonMap().get("PRECURSOR_M/Z");
-    				String strIonMode = massBankRecord.getAcMassSpectrometryMap().get("ION_MODE");
-	    			if (StringUtils.isNotBlank(strPrecursorMz) && StringUtils.isNotBlank(strIonMode)) {
-	    				Spectrum spectrum = new Spectrum();
-	    				spectrum.setTitle(massBankRecord.getTitle());
-	    				spectrum.setPrecursorMz(Float.parseFloat(strPrecursorMz));
-	    				spectrum.setIonMode(IonMode.parseInt(strIonMode));
-	    				spectrum.setRecordId(massBankRecord.getId());
-	    				this.spectrumAccessor.addBatchInsert(spectrum);
-	    			} else {
-	    				LOGGER.warn("No Spectrum Info.: " + massBankRecord.getId());
-	    			}
+    				if (strPrecursorMz == null) {
+    					strPrecursorMz = StringUtils.EMPTY;
+    				}
+    				String[] strPrecursorMzArray = strPrecursorMz.split("/");
+    				for (String oStrPrecursorMz : strPrecursorMzArray) {
+	    				String strIonMode = massBankRecord.getAcMassSpectrometryMap().get("ION_MODE");
+		    			if (StringUtils.isNotBlank(strPrecursorMz) && StringUtils.isNotBlank(strIonMode)) {
+		    				Spectrum spectrum = new Spectrum();
+		    				spectrum.setTitle(massBankRecord.getTitle());
+		    				spectrum.setPrecursorMz(Float.parseFloat(oStrPrecursorMz));
+		    				spectrum.setIonMode(IonMode.parseInt(strIonMode));
+		    				spectrum.setRecordId(massBankRecord.getId());
+		    				this.spectrumAccessor.addBatchInsert(spectrum);
+		    			} else {
+		    				LOGGER.warn("No Spectrum Info.: " + massBankRecord.getId());
+		    			}
+    				}
     			} catch (NumberFormatException e) {
     				LOGGER.error(e.getMessage(), e);
     			}

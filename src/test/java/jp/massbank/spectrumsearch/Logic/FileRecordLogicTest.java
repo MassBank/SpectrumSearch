@@ -29,6 +29,26 @@ public class FileRecordLogicTest {
 	}
 	
 	@Test
+	public void testNestedId() {
+		int i = 0;
+		System.out.println("Step 01");
+		for (int j = -10; j<i; j++) {
+			if (i == 0) {
+				System.out.println("Step 02");
+				if (i == 0) {
+					System.out.println("Step 03");
+					if (i == 0) {
+						System.out.println("Step 04");
+						break;
+//						return;
+					}
+				}
+			}
+		}
+		System.out.println("Step N");
+	}
+	
+//	@Test
 	public void testReadFile() {
 		readFile("C:\\Apps\\Documents\\Projects\\proj-massbank\\massbankrecord\\Boise_State_Univ\\BSU00001.txt");
 		readFile("C:\\Apps\\Documents\\Projects\\proj-massbank\\massbankrecord\\Chubu_Univ\\UT002533.txt");
@@ -191,6 +211,16 @@ public class FileRecordLogicTest {
 
 //	@Test
 	public void testParse() {
-		System.out.println(("1,2").split(","));
+		for (String str : ("1,2").split(",")) {
+			System.out.println(str);
+		}
 	}
+	
+//	@Test
+	public void testSplit() {
+		for (String str : ("854.50/767.87").split("/")) {
+			System.out.println(str);
+		}
+	}
+	
 }
