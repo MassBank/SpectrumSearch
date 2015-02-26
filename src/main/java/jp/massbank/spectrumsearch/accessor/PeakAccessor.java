@@ -16,28 +16,17 @@ public class PeakAccessor extends AbstractDbAccessor<Peak> {
 		result.setMz(rs.getDouble(Peak.Columns.MZ));
 		result.setIntensity(rs.getFloat(Peak.Columns.INTENSITY));
 		result.setRelativeIntensity(rs.getInt(Peak.Columns.RELATIVE_INTENSITY));
-		result.setRecordId(rs.getString(Peak.Columns.RECORD_ID));
+		result.setCompoundId(rs.getString(Peak.Columns.COMPOUND_ID));
 		return result;
 	}
 	
 	public List<Peak> getOrderedPeakListByRecordId(String recordId) {
-		String sql = "SELECT * from PEAK where " + Peak.Columns.RECORD_ID + "='" + recordId + "' order by " + Peak.Columns.MZ;
+		String sql = "SELECT * from PEAK where " + Peak.Columns.COMPOUND_ID + "='" + recordId + "' order by " + Peak.Columns.MZ;
 		return listGeneric(sql);
 	}
 	
 	public void addBatchInsert(Peak peak) {
-		String insertQuery = "INSERT INTO " + Peak.TABLE + " " +
-				"(" + 
-				Peak.Columns.MZ + "," + 
-				Peak.Columns.INTENSITY + "," + 
-				Peak.Columns.RELATIVE_INTENSITY + "," +  
-				Peak.Columns.RECORD_ID + 
-				") values (" +
-				peak.getMz() + "," + 
-				peak.getIntensity() + "," + 
-				peak.getRelativeIntensity() + "," +
-				"'" + peak.getRecordId() + "')";
-		addBatch(insertQuery);
+		addBatch(getInsertQuery(peak));
 	}
 	
 	public void addBatchInsert(List<Peak> peaks) {
@@ -47,14 +36,14 @@ public class PeakAccessor extends AbstractDbAccessor<Peak> {
 		sb.append(Peak.Columns.MZ + ",");
 		sb.append(Peak.Columns.INTENSITY + ",");
 		sb.append(Peak.Columns.RELATIVE_INTENSITY + ",");
-		sb.append(Peak.Columns.RECORD_ID);
+		sb.append(Peak.Columns.COMPOUND_ID);
 		sb.append(") values ");
 		for (Peak peak : peaks) {
 			sb.append("(");
 			sb.append(peak.getMz() + ",");
 			sb.append(peak.getIntensity() + ",");
 			sb.append(peak.getRelativeIntensity() + ",");
-			sb.append("'" + peak.getRecordId() + "'");
+			sb.append("'" + peak.getCompoundId() + "'");
 			sb.append("), ");
 		}
 		String sql = sb.toString().trim();
@@ -69,7 +58,7 @@ public class PeakAccessor extends AbstractDbAccessor<Peak> {
 		sb.append(Peak.Columns.MZ + ",");
 		sb.append(Peak.Columns.INTENSITY + ",");
 		sb.append(Peak.Columns.RELATIVE_INTENSITY + ",");
-		sb.append(Peak.Columns.RECORD_ID);
+		sb.append(Peak.Columns.COMPOUND_ID);
 		sb.append(") values (?, ?, ?, ?)");
 		
 		createPreparedStatement(sb.toString());
@@ -78,7 +67,7 @@ public class PeakAccessor extends AbstractDbAccessor<Peak> {
 			pstmt.setDouble(1, peak.getMz());
 			pstmt.setDouble(2, peak.getIntensity());
 			pstmt.setInt(3, peak.getRelativeIntensity());
-			pstmt.setString(4, peak.getRecordId());
+			pstmt.setString(4, peak.getCompoundId());
 			pstmt.addBatch();
 			if ((i + 1) % 100 == 0) {
 				pstmt.executeBatch();
@@ -114,18 +103,21 @@ public class PeakAccessor extends AbstractDbAccessor<Peak> {
 	
 	@Override
 	public void insert(Peak peak) {
-		String insertQuery = "INSERT INTO " + Peak.TABLE + " " +
+		insert(getInsertQuery(peak));
+	}
+	
+	private String getInsertQuery(Peak peak) {
+		return "INSERT INTO " + Peak.TABLE + " " +
 				"(" + 
 				Peak.Columns.MZ + "," + 
 				Peak.Columns.INTENSITY + "," + 
 				Peak.Columns.RELATIVE_INTENSITY + "," +  
-				Peak.Columns.RECORD_ID + 
+				Peak.Columns.COMPOUND_ID + 
 				") values (" +
 				peak.getMz() + "," + 
 				peak.getIntensity() + "," + 
 				peak.getRelativeIntensity() + "," +
-				"'" + peak.getRecordId() + "')";
-		insert(insertQuery);
+				"'" + peak.getCompoundId() + "')";
 	}
 	
 	@Override
@@ -147,7 +139,7 @@ public class PeakAccessor extends AbstractDbAccessor<Peak> {
 		sb.append(Peak.Columns.MZ + " FLOAT,");
 		sb.append(Peak.Columns.INTENSITY + " FLOAT,");
 		sb.append(Peak.Columns.RELATIVE_INTENSITY + " INT,");
-		sb.append(Peak.Columns.RECORD_ID + " VARCHAR(20)");
+		sb.append(Peak.Columns.COMPOUND_ID + " VARCHAR(20)");
 		sb.append(")");
 		executeStatement(sb.toString());
 	}

@@ -88,7 +88,7 @@ import javax.swing.table.DefaultTableModel;
 import jp.massbank.spectrumsearch.accessor.DbAccessor;
 import jp.massbank.spectrumsearch.entity.constant.Constant;
 import jp.massbank.spectrumsearch.entity.constant.SystemProperties;
-import jp.massbank.spectrumsearch.entity.db.Record;
+import jp.massbank.spectrumsearch.entity.db.Compound;
 import jp.massbank.spectrumsearch.entity.gui.GuiDbTableRow;
 import jp.massbank.spectrumsearch.entity.gui.GuiResultTableRow;
 import jp.massbank.spectrumsearch.entity.param.SearchQueryParam;
@@ -98,7 +98,6 @@ import jp.massbank.spectrumsearch.gui.AbstractDialog;
 import jp.massbank.spectrumsearch.gui.MenuBarGenerator;
 import jp.massbank.spectrumsearch.gui.ProgressDialog;
 import jp.massbank.spectrumsearch.logic.CompoundLogic;
-import jp.massbank.spectrumsearch.logic.RecordLogic;
 import jp.massbank.spectrumsearch.logic.SpectrumLogic;
 import jp.massbank.spectrumsearch.logic.search.SearchLogic;
 import jp.massbank.spectrumsearch.model.PackageRecData;
@@ -1065,13 +1064,13 @@ public class SearchPage extends JFrame {
 		List<String> result = new ArrayList<String>();
 		try {
 			DbAccessor.createConnection();
-			RecordLogic recordLogic = new RecordLogic();
+			CompoundLogic compoundLogic = new CompoundLogic();
 			LOGGER.info("search records by keyword || " + searchName);
-			List<Record> recordList = recordLogic.getRecordListByKeyword(searchName);
+			List<Compound> compoundList = compoundLogic.getCompoundListByKeyword(searchName);
 			DbAccessor.closeConnection();
-			for (Record record : recordList) {
-				String prefix = SiteUtil.getServerPrefixByRecordId(record.getId());
-				result.add(String.format("%s\t%s\t%s", record.getTitle(), record.getId(), prefix));
+			for (Compound compound : compoundList) {
+				String prefix = SiteUtil.getServerPrefixByRecordId(compound.getId());
+				result.add(String.format("%s\t%s\t%s", compound.getTitle(), compound.getId(), prefix));
 			}
 		} catch (SQLException e) {
 	      LOGGER.error(e.getMessage(), e);
@@ -3173,7 +3172,7 @@ public class SearchPage extends JFrame {
 //				}
 				DbAccessor.createConnection();
 				CompoundLogic compoundLogic = new CompoundLogic();
-				List<String> infoList = compoundLogic.getInfo(id, name, Integer.parseInt(site));
+				List<String> infoList = compoundLogic.getInfo(id, name);
 				DbAccessor.closeConnection();
 				for (String line : infoList) {
 					if ( line.indexOf("GIF:") >= 0 ) {

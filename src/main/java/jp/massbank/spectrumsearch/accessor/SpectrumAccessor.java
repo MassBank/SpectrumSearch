@@ -4,10 +4,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
-import jp.massbank.spectrumsearch.entity.db.Record;
+import jp.massbank.spectrumsearch.entity.db.Compound;
 import jp.massbank.spectrumsearch.entity.db.Spectrum;
 import jp.massbank.spectrumsearch.util.QueryBuilder;
 
+@Deprecated
 public class SpectrumAccessor extends AbstractDbAccessor<Spectrum> {
 
 	@Override
@@ -17,23 +18,23 @@ public class SpectrumAccessor extends AbstractDbAccessor<Spectrum> {
 		result.setTitle(rs.getString(Spectrum.Columns.TITLE));
 		result.setIonMode(rs.getInt(Spectrum.Columns.ION_MODE));
 		result.setPrecursorMz(rs.getFloat(Spectrum.Columns.PRECURSOR_MZ));
-		result.setRecordId(rs.getString(Spectrum.Columns.RECORD_ID));
+		result.setRecordId(rs.getString(Spectrum.Columns.COMPOUND_ID));
 		return result;
 	}
 	
 	public Spectrum getSpectrumByRecordId(String recordId) {
-		String sql = "select * from " + Spectrum.TABLE +" where " + Spectrum.Columns.RECORD_ID +" = '" + recordId + "'";
+		String sql = "select * from " + Spectrum.TABLE +" where " + Spectrum.Columns.COMPOUND_ID +" = '" + recordId + "'";
 		return uniqueGeneric(sql);
 	}
 	
 	public Spectrum getSpectrumByRecordId(String recordId, int ionMode) {
-		String sql = "select * from " + Spectrum.TABLE +" where " + Spectrum.Columns.ION_MODE + " > 0 " + Spectrum.Columns.RECORD_ID +" = '" + recordId + "'";
+		String sql = "select * from " + Spectrum.TABLE +" where " + Spectrum.Columns.ION_MODE + " > 0 " + Spectrum.Columns.COMPOUND_ID +" = '" + recordId + "'";
 		return uniqueGeneric(sql);
 	}
 	
 	public List<String> getSpectrumRecordIdListByInstanceId(int instanceId, int ionMode) {
 		StringBuilder sb = new StringBuilder();
-		sb.append("SELECT S.RECORD_ID FROM " + Spectrum.TABLE +" S LEFT JOIN " + Record.TABLE +" R ON S.RECORD_ID=R.RECORD_ID ");
+		sb.append("SELECT S.RECORD_ID FROM " + Spectrum.TABLE +" S LEFT JOIN " + Compound.TABLE +" R ON S.RECORD_ID=R.RECORD_ID ");
 		sb.append("WHERE ");
 		if (ionMode > 0) {
 			sb.append("S." + Spectrum.Columns.ION_MODE + " > 0 AND ");
@@ -50,7 +51,7 @@ public class SpectrumAccessor extends AbstractDbAccessor<Spectrum> {
 				Spectrum.Columns.TITLE + "," + 
 				Spectrum.Columns.ION_MODE + "," + 
 				Spectrum.Columns.PRECURSOR_MZ + "," + 
-				Spectrum.Columns.RECORD_ID + 
+				Spectrum.Columns.COMPOUND_ID + 
 				") values (" +
 				"'" + spectrum.getTitle() + "'," +
 				spectrum.getIonMode() + "," + 
@@ -66,7 +67,7 @@ public class SpectrumAccessor extends AbstractDbAccessor<Spectrum> {
 				Spectrum.Columns.TITLE + "," + 
 				Spectrum.Columns.ION_MODE + "," + 
 				Spectrum.Columns.PRECURSOR_MZ + "," + 
-				Spectrum.Columns.RECORD_ID + 
+				Spectrum.Columns.COMPOUND_ID + 
 				") values (" +
 				"'" + spectrum.getTitle() + "'," +
 					  spectrum.getIonMode() + "," + 
@@ -94,7 +95,7 @@ public class SpectrumAccessor extends AbstractDbAccessor<Spectrum> {
 		sb.append(Spectrum.Columns.TITLE + " VARCHAR(255),");
 		sb.append(Spectrum.Columns.ION_MODE + " SMALLINT,");
 		sb.append(Spectrum.Columns.PRECURSOR_MZ + " FLOAT,");
-		sb.append(Spectrum.Columns.RECORD_ID + " VARCHAR(20)");
+		sb.append(Spectrum.Columns.COMPOUND_ID + " VARCHAR(20)");
 		sb.append(")");
 		executeStatement(sb.toString());
 	}

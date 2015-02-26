@@ -2,13 +2,21 @@ package jp.massbank.spectrumsearch.logic.search;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import jp.massbank.spectrumsearch.accessor.CompoundAccessor;
 import jp.massbank.spectrumsearch.accessor.DbAccessor;
+import jp.massbank.spectrumsearch.accessor.InstrumentAccessor;
+import jp.massbank.spectrumsearch.accessor.MsTypeAccessor;
 import jp.massbank.spectrumsearch.entity.constant.Constant;
+import jp.massbank.spectrumsearch.entity.db.Compound;
+import jp.massbank.spectrumsearch.entity.db.Instrument;
+import jp.massbank.spectrumsearch.entity.db.MsType;
+import jp.massbank.spectrumsearch.entity.db.Peak;
 import jp.massbank.spectrumsearch.entity.param.HitPeak;
 import jp.massbank.spectrumsearch.entity.param.ResScore;
 import jp.massbank.spectrumsearch.entity.param.SearchQueryParam;
@@ -32,12 +40,20 @@ public class SearchLogic {
 	private boolean isInteg;
 	private boolean isAPI;
 	
+	private CompoundAccessor compoundAccessor;
+	private InstrumentAccessor instrumentAccessor;
+	private MsTypeAccessor msTypeAccessor;
+	
 	public SearchLogic() {
 		this.queryMz = new ArrayList<String>();
 		this.queryVal = new ArrayList<Double>();
 		this.mapHitPeak = new HashMap<String, List<HitPeak>>();
 		this.mapMzCnt = new HashMap<String, Integer>();
 		this.vecScore = new ArrayList<ResScore>();
+		
+		this.compoundAccessor = new CompoundAccessor();
+		this.instrumentAccessor = new InstrumentAccessor();
+		this.msTypeAccessor = new MsTypeAccessor();
 	}
 
 	public ArrayList<String> getSearchResult(SearchQueryParam param) {
@@ -122,7 +138,7 @@ public class SearchLogic {
 		//----------------------------------------------------------------
 		// precursor m/zでの絞り込みに使用する検索条件を用意しておく
 		//----------------------------------------------------------------
-		String sqlw1 = StringUtils.EMPTY;
+		/*String sqlw1 = StringUtils.EMPTY;
 		boolean isPre = false;
 		if ( param.getPrecursor() > 0 ) {
 			isPre = true;
@@ -143,10 +159,10 @@ public class SearchLogic {
 			sqlw2 = String.format(" and R.MS_TYPE in ('%s')", ms);
 		}
 		
-		// 検索対象ALLの場合
+		// 検索対象ALLの場合*/
 		boolean isFilter = false;
 		List<String> vecTargetId = new ArrayList<String>();
-		if ( StringUtils.isBlank(param.getInstType()) || !param.getInstType().endsWith("ALL") ) {
+		/*if ( StringUtils.isBlank(param.getInstType()) || !param.getInstType().endsWith("ALL") ) {
 			if ( param.getIon() != 0 ) {
 				sql = "select R.RECORD_ID from RECORD R, SPECTRUM S where R.RECORD_ID = S.RECORD_ID and S.ION_MODE = ";
 				sql += param.getIon();
@@ -177,9 +193,9 @@ public class SearchLogic {
 				}
 				
 			}
-		}
+		}*/
 		// 検索対象ALL以外の場合
-		else {
+		/*else {
 			//------------------------------------------------------------
 			// (1) 検索対象のINSTRUMENT_TYPEが存在するかチェック
 			//------------------------------------------------------------		
@@ -247,6 +263,34 @@ public class SearchLogic {
 			for (Map<Integer, Object> rowResult : result2) {
 				vecTargetId.add(String.valueOf(rowResult.get(1)));
 			}
+		}*/
+		
+		Integer precursor1 = null;
+		Integer precursor2 = null;
+		if (param.getPrecursor() > 0) {
+			precursor1 = param.getPrecursor() - 1;
+			precursor2 = param.getPrecursor() + 1;
+		}
+		List<String> instrumentTypes = Arrays.asList(param.getInstType().split(","));
+		List<String> msTypes = Arrays.asList(param.getMstype().split(","));
+		List<Integer> instrumentIds = new ArrayList<Integer>();
+		List<Integer> msTypeIds = new ArrayList<Integer>();
+		if (!instrumentTypes.contains("ALL")) {
+			List<Instrument> oInstruments = this.instrumentAccessor.getInstrumentsByTypes(instrumentTypes);
+			for (Instrument oInstrument : oInstruments) {
+				instrumentIds.add(oInstrument.getId());
+			}
+		}
+		if (!msTypes.contains("ALL")) {
+			List<MsType> oMsTypes = this.msTypeAccessor.getMsTypesByNames(msTypes);
+			for (MsType oMsType : oMsTypes) {
+				msTypeIds.add(oMsType.getId());
+			}
+		}
+		List<Compound> oCompoundList = this.compoundAccessor.getCompoundList(precursor1, precursor2, 
+				param.getIon(), instrumentIds, msTypeIds);
+		for (Compound compound : oCompoundList) {
+			vecTargetId.add(compound.getId());
 		}
 		
 		//---------------------------------------------------
@@ -277,8 +321,8 @@ public class SearchLogic {
 				sqlw = String.format("RELATIVE >= %d and (MZ between %.6f and %.6f) group by SPECTRUM_NO",
 						param.getCutoff(), fMin, fMax);
 			} else {
-				sql = "select max(concat(lpad(castinteger(RELATIVE_INTENSITY), 3, ' ') || ' ' || RECORD_ID || ' ' || castdouble(MZ))) from PEAK where ";
-				sqlw = String.format("RELATIVE_INTENSITY >= %d and (MZ between %.6f and %.6f) group by RECORD_ID", param.getCutoff(), fMin, fMax);
+				sql = "SELECT max(concat(lpad(castinteger(" + Peak.Columns.RELATIVE_INTENSITY + "), 3, ' ') || ' ' || " + Peak.Columns.COMPOUND_ID + " || ' ' || castdouble(" + Peak.Columns.MZ + "))) FROM " + Peak.TABLE + " WHERE ";
+				sqlw = String.format(Peak.Columns.RELATIVE_INTENSITY + " >= %d AND (" + Peak.Columns.MZ + " BETWEEN %.6f and %.6f) GROUP BY " + Peak.Columns.COMPOUND_ID, param.getCutoff(), fMin, fMax);
 			}
 			sql += sqlw;
 			List<Map<Integer, Object>> result = dbExecuteSql(sql);
@@ -764,7 +808,7 @@ public class SearchLogic {
 			if ( isInteg ) {
 				sql = String.format("select MZ, RELATIVE from PARENT_PEAK where SPECTRUM_NO = %s and RELATIVE >= %d", strId, param.getCutoff());
 			} else {
-				sql = String.format("select MZ, RELATIVE_INTENSITY from %s where RECORD_ID = '%s' and RELATIVE_INTENSITY >= %d", tblName, strId, param.getCutoff());
+				sql = String.format("SELECT " + Peak.Columns.MZ + ", " + Peak.Columns.RELATIVE_INTENSITY + " FROM %s WHERE " + Peak.Columns.COMPOUND_ID + " = '%s' AND " + Peak.Columns.RELATIVE_INTENSITY + " >= %d", tblName, strId, param.getCutoff());
 			}
 			
 			
@@ -820,7 +864,7 @@ public class SearchLogic {
 			}
 			
 			ResScore resScore = new ResScore();
-			resScore.setRecordId(strId);
+			resScore.setCompoundId(strId);
 			resScore.setScore(iHitNum + dblScore);
 			vecScore.add(resScore);
 			
@@ -830,16 +874,24 @@ public class SearchLogic {
 	
 	private List<String> outResult() {
 		List<String> result = new ArrayList<String>();
-		String sql = StringUtils.EMPTY;
+//		String sql = StringUtils.EMPTY;
 		for (ResScore resScore : vecScore) {
 			StringBuilder sb = new StringBuilder();
+			
+			Compound compound = this.compoundAccessor.getCompoundById(resScore.getCompoundId());
+			if (compound != null) {
+				sb.append(String.format("%s\t%s\t%.12f\t%s", compound.getId(), compound.getTitle(), resScore.getScore(), compound.getIonMode()));
+				sb.append( "\n" );
+			}
+			
 
-			if ( isQuick || isAPI ) {
-				sql = String.format("select S.TITLE, S.ION_MODE, R.FORMULA, R.EXACT_MASS from SPECTRUM S, RECORD R where S.RECORD_ID = R.RECORD_ID and S.RECORD_ID='%s'", resScore.getRecordId());
+			/*if ( isQuick || isAPI ) {
+				sql = String.format("select S.TITLE, S.ION_MODE, R.FORMULA, R.EXACT_MASS from SPECTRUM S, RECORD R where S.RECORD_ID = R.RECORD_ID and S.RECORD_ID='%s'", resScore.getCompoundId());
 			} else if ( isInteg ) {
-				sql = String.format("select TITLE, ION_MODE, RECORD_ID from SPECTRUM where SPECTRUM_ID=%s", resScore.getRecordId());
+				sql = String.format("select TITLE, ION_MODE, RECORD_ID from SPECTRUM where SPECTRUM_ID=%s", resScore.getCompoundId());
 			} else {
-				sql = String.format("select TITLE, ION_MODE from SPECTRUM where RECORD_ID='%s'", resScore.getRecordId());
+				sql = String.format("select TITLE, ION_MODE from COMPOUND where COMPOUND_ID='%s'", resScore.getCompoundId());
+//				sql = String.format("select TITLE, ION_MODE from SPECTRUM where RECORD_ID='%s'", resScore.getRecordId());
 			}
 
 			List<Map<Integer,Object>> dbResult = dbExecuteSql( sql );
@@ -852,7 +904,7 @@ public class SearchLogic {
 				if ( isInteg ) {
 					strId = String.valueOf(resultRow.get(3));
 				} else {
-					strId = resScore.getRecordId();
+					strId = resScore.getCompoundId();
 				}
 
 				sb.append(String.format("%s\t%s\t%.12f\t%s", strId, strName, resScore.getScore(), strIon));
@@ -865,7 +917,7 @@ public class SearchLogic {
 					sb.append(String.format("\t%s", emass));
 				}
 				sb.append( "\n" );
-			}
+			}*/
 			String line = sb.toString();
 			if (StringUtils.isNotBlank(line)) {
 				result.add(line);
@@ -874,12 +926,12 @@ public class SearchLogic {
 		return result;
 	}
 	
-	private String removeLastChar(String str) {
+	/*private String removeLastChar(String str) {
 		if (StringUtils.isNotBlank(str)) {
 			return str.substring(0, str.length() - 1);
 		}
 		return StringUtils.EMPTY;
-	}
+	}*/
 
 	private List<Map<Integer,Object>> dbExecuteSql(String sql) {
 		return DbAccessor.execResultQuery(sql);

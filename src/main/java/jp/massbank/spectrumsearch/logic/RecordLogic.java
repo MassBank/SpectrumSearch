@@ -3,25 +3,26 @@ package jp.massbank.spectrumsearch.logic;
 import java.util.ArrayList;
 import java.util.List;
 
-import jp.massbank.spectrumsearch.accessor.RecordAccessor;
-import jp.massbank.spectrumsearch.entity.db.Record;
+import jp.massbank.spectrumsearch.accessor.CompoundAccessor;
+import jp.massbank.spectrumsearch.entity.db.Compound;
 
 import org.apache.commons.lang3.StringUtils;
 
+@Deprecated
 public class RecordLogic {
 	
-	private RecordAccessor recordAccessor;
+	private CompoundAccessor recordAccessor;
 	
 	public RecordLogic() {
-		this.recordAccessor = new RecordAccessor();
+		this.recordAccessor = new CompoundAccessor();
 	}
 	
-	public List<Record> getRecordListByKeyword(String pattern) {
-		List<Record> result = new ArrayList<Record>();
+	public List<Compound> getRecordListByKeyword(String pattern) {
+		List<Compound> result = new ArrayList<Compound>();
 		if (StringUtils.isNotBlank(pattern)) {
-			result = this.recordAccessor.getRecordsByName(pattern);
+			result = this.recordAccessor.getCompoundsByName(pattern);
 		} else {
-			result = this.recordAccessor.getAllRecords();
+			result = this.recordAccessor.getAllCompounds();
 		}
 		return result;
 	}

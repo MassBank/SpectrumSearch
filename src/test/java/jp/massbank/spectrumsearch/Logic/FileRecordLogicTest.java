@@ -10,9 +10,9 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import jp.massbank.spectrumsearch.accessor.DbAccessor;
-import jp.massbank.spectrumsearch.accessor.RecordAccessor;
+import jp.massbank.spectrumsearch.accessor.CompoundAccessor;
 import jp.massbank.spectrumsearch.entity.constant.SystemProperties;
-import jp.massbank.spectrumsearch.entity.db.Record;
+import jp.massbank.spectrumsearch.entity.db.Compound;
 import jp.massbank.spectrumsearch.entity.file.MassBankRecord;
 import jp.massbank.spectrumsearch.logic.MassBankRecordLogic;
 
@@ -21,14 +21,14 @@ import org.junit.Test;
 
 public class FileRecordLogicTest {
 	
-//	@Test
+	@Test
 	public void testSync() {
 		MassBankRecordLogic logic = new MassBankRecordLogic();
 		logic.upgradeAndResetDatabase();
-		logic.syncFilesRecordsByFolderPath(SystemProperties.getInstance().getDirPath());
+//		logic.syncFilesRecordsByFolderPath(SystemProperties.getInstance().getDirPath());
 	}
 	
-	@Test
+//	@Test
 	public void testNestedId() {
 		int i = 0;
 		System.out.println("Step 01");
@@ -138,8 +138,8 @@ public class FileRecordLogicTest {
 //		runSelectSQL("select P1.RELATIVE_INTENSITY, P1.MZ, P1.RECORD_ID from PEAK P1 join (select max(P.RELATIVE_INTENSITY) MAX_RELATIVE_INTENSITY, P.RECORD_ID from PEAK P where P.RELATIVE_INTENSITY >= 5 and (P.MZ between 84.099963 and 84.100039) group by P.RECORD_ID) P2 on P1.RELATIVE_INTENSITY = P2.MAX_RELATIVE_INTENSITY and P1.RECORD_ID = P2.RECORD_ID");
 		
 		// http://www.vogella.com/tutorials/JavaRegularExpressions/article.html
-		String sql = String.format("SELECT * FROM %s WHERE REGEXP_LIKE (%s, '%s')", Record.TABLE, Record.Columns.RECORD_TITLE, "^.*MS3.*$");
-		runSelectSQL(sql);
+//		String sql = String.format("SELECT * FROM %s WHERE REGEXP_LIKE (%s, '%s')", Compound.TABLE, Compound.Columns.RECORD_TITLE, "^.*MS3.*$");
+//		runSelectSQL(sql);
 		
 //		runSelectSQL("select max(concat(castinteger(RELATIVE_INTENSITY) || ' ' || castdouble(MZ))), RECORD_ID, 84.1, 47.57414337506346 from PEAK where RELATIVE_INTENSITY >= 5 and (MZ between 84.099963 and 84.100039) group by RECORD_ID UNION ALL select max(concat(castinteger(RELATIVE_INTENSITY) || ' ' || castdouble(MZ))), RECORD_ID, 105.1, 25.744136822888727 from PEAK where RELATIVE_INTENSITY >= 5 and (MZ between 105.099957 and 105.100046) group by RECORD_ID");
 //		runSelectSQL("select max(RELATIVE_INTENSITY) MAX_RELATIVE_INTENSITY, RECORD_ID from PEAK group by RECORD_ID");
@@ -202,9 +202,9 @@ public class FileRecordLogicTest {
 	public void testSearchQuery() throws SQLException {
 		DbAccessor.createConnection();
 		String keyword = "d%p_s";
-		RecordAccessor recordAccessor = new RecordAccessor();
-		List<Record> result = new ArrayList<Record>();
-		result = recordAccessor.getRecordsByName(keyword);
+		CompoundAccessor recordAccessor = new CompoundAccessor();
+		List<Compound> result = new ArrayList<Compound>();
+		result = recordAccessor.getCompoundsByName(keyword);
 		System.out.println(result.size());
 		DbAccessor.closeConnection();
 	}

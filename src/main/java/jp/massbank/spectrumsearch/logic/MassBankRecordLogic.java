@@ -12,23 +12,20 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
+import jp.massbank.spectrumsearch.accessor.CompoundAccessor;
 import jp.massbank.spectrumsearch.accessor.DbAccessor;
 import jp.massbank.spectrumsearch.accessor.InstrumentAccessor;
-import jp.massbank.spectrumsearch.accessor.MassSpectrometryAccessor;
 import jp.massbank.spectrumsearch.accessor.MsTypeAccessor;
 import jp.massbank.spectrumsearch.accessor.PeakAccessor;
-import jp.massbank.spectrumsearch.accessor.RecordAccessor;
-import jp.massbank.spectrumsearch.accessor.SpectrumAccessor;
+import jp.massbank.spectrumsearch.accessor.PrecursorAccessor;
 import jp.massbank.spectrumsearch.entity.constant.Constant;
 import jp.massbank.spectrumsearch.entity.constant.SystemProperties;
+import jp.massbank.spectrumsearch.entity.db.Compound;
 import jp.massbank.spectrumsearch.entity.db.Instrument;
-import jp.massbank.spectrumsearch.entity.db.MassSpectrometry;
 import jp.massbank.spectrumsearch.entity.db.MsType;
 import jp.massbank.spectrumsearch.entity.db.Peak;
-import jp.massbank.spectrumsearch.entity.db.Record;
-import jp.massbank.spectrumsearch.entity.db.Spectrum;
+import jp.massbank.spectrumsearch.entity.db.Precursor;
 import jp.massbank.spectrumsearch.entity.file.MassBankRecord;
 import jp.massbank.spectrumsearch.entity.type.IonMode;
 import jp.massbank.spectrumsearch.entity.type.MassBankRecordLine;
@@ -40,19 +37,21 @@ import org.apache.log4j.Logger;
 public class MassBankRecordLogic {
 	
 	private static final Logger LOGGER = Logger.getLogger(MassBankRecordLogic.class);
-	private RecordAccessor recordAccessor;
+	private CompoundAccessor compoundAccessor;
 	private InstrumentAccessor instrumentAccessor;
-	private MassSpectrometryAccessor massSpectrometryAccessor;
+//	private MassSpectrometryAccessor massSpectrometryAccessor;
 	private PeakAccessor peakAccessor;
-	private SpectrumAccessor spectrumAccessor;
+	private PrecursorAccessor precursorAccessor;
+//	private SpectrumAccessor spectrumAccessor;
 	private MsTypeAccessor msTypeAccessor;
 	
 	public MassBankRecordLogic() {
-		this.recordAccessor = new RecordAccessor();
+		this.compoundAccessor = new CompoundAccessor();
 		this.instrumentAccessor = new InstrumentAccessor();
-		this.massSpectrometryAccessor = new MassSpectrometryAccessor();
+//		this.massSpectrometryAccessor = new MassSpectrometryAccessor();
 		this.peakAccessor = new PeakAccessor();
-		this.spectrumAccessor = new SpectrumAccessor();
+		this.precursorAccessor = new PrecursorAccessor();
+//		this.spectrumAccessor = new SpectrumAccessor();
 		this.msTypeAccessor = new MsTypeAccessor();
 	}
 	
@@ -70,31 +69,35 @@ public class MassBankRecordLogic {
 	}
 
 	public void syncDatabaseSchema() {
-		recordAccessor.dropTable();
-		recordAccessor.createTable();
+		compoundAccessor.dropTable();
+		compoundAccessor.createTable();
 		
 		instrumentAccessor.dropTable();
 		instrumentAccessor.createTable();
 		
-		massSpectrometryAccessor.dropTable();
-		massSpectrometryAccessor.createTable();
+//		massSpectrometryAccessor.dropTable();
+//		massSpectrometryAccessor.createTable();
 		
 		peakAccessor.dropTable();
 		peakAccessor.createTable();
 		
-		spectrumAccessor.dropTable();
-		spectrumAccessor.createTable();
+		precursorAccessor.dropTable();
+		precursorAccessor.createTable();
+		
+//		spectrumAccessor.dropTable();
+//		spectrumAccessor.createTable();
 		
 		msTypeAccessor.dropTable();
 		msTypeAccessor.createTable();
 	}
 	
 	public void clearTableData() {
-		this.recordAccessor.deleteAll();
+		this.compoundAccessor.deleteAll();
 		this.instrumentAccessor.deleteAll();
-		this.massSpectrometryAccessor.deleteAll();
+//		this.massSpectrometryAccessor.deleteAll();
 		this.peakAccessor.deleteAll();
-		this.spectrumAccessor.deleteAll();
+		this.precursorAccessor.deleteAll();
+//		this.spectrumAccessor.deleteAll();
 		this.msTypeAccessor.deleteAll();
 	}
 	
@@ -102,14 +105,14 @@ public class MassBankRecordLogic {
 		DbAccessor.execUpdate("DROP INDEX IDX_PEAK_RECORD");
 		DbAccessor.execUpdate("DROP INDEX IDX_PEAK_MZ");
 		DbAccessor.execUpdate("DROP INDEX IDX_PEAK_RELATIVE_INTENSITY");
-		DbAccessor.execUpdate("DROP INDEX IDX_SPECTRUM_RECORD");
+//		DbAccessor.execUpdate("DROP INDEX IDX_SPECTRUM_RECORD");
 	}
 	
 	public void createTableIndexes() {
-		DbAccessor.execUpdate("CREATE INDEX IDX_PEAK_RECORD ON PEAK (RECORD_ID)");
-		DbAccessor.execUpdate("CREATE INDEX IDX_PEAK_MZ ON PEAK (MZ)");
-		DbAccessor.execUpdate("CREATE INDEX IDX_PEAK_RELATIVE_INTENSITY ON PEAK (RELATIVE_INTENSITY)");
-		DbAccessor.execUpdate("CREATE INDEX IDX_SPECTRUM_RECORD ON SPECTRUM (RECORD_ID)");
+		DbAccessor.execUpdate("CREATE INDEX IDX_PEAK_RECORD ON " + Peak.TABLE + " (" + Peak.Columns.COMPOUND_ID + ")");
+		DbAccessor.execUpdate("CREATE INDEX IDX_PEAK_MZ ON " + Peak.TABLE + " (" + Peak.Columns.MZ + ")");
+		DbAccessor.execUpdate("CREATE INDEX IDX_PEAK_RELATIVE_INTENSITY ON " + Peak.TABLE + " (" + Peak.Columns.RELATIVE_INTENSITY + ")");
+//		DbAccessor.execUpdate("CREATE INDEX IDX_SPECTRUM_RECORD ON SPECTRUM (RECORD_ID)");
 	}
 	
 	public void syncFilesRecordsByFolderPath(String pathname) {
@@ -200,14 +203,18 @@ public class MassBankRecordLogic {
     			DbAccessor.setAutoCommit(false);
     			
     			// RECORD
-    			Record record = new Record();
-    			record.setId(massBankRecord.getId());
-    			record.setTitle(massBankRecord.getTitle());
-    			record.setMsType(strMsType);
-    			record.setFormula(massBankRecord.getChFormula());
-    			record.setExactMass(massBankRecord.getChExtractMass());
-    			record.setInstrumentId(oInstrument.getId());
-    			this.recordAccessor.addBatchInsert(record);
+    			Compound compound = new Compound();
+    			compound.setId(massBankRecord.getId());
+    			compound.setTitle(massBankRecord.getTitle());
+    			compound.setFormula(massBankRecord.getChFormula());
+    			compound.setExactMass(massBankRecord.getChExtractMass());
+    			String strIonMode = massBankRecord.getAcMassSpectrometryMap().get("ION_MODE");
+    			if (StringUtils.isNotBlank(strIonMode)) {
+    				compound.setIonMode(IonMode.parseInt(strIonMode));
+    			}
+    			compound.setInstrumentId(oInstrument.getId());
+    			compound.setMsId(oMsType.getId());
+    			this.compoundAccessor.addBatchInsert(compound);
     			
     			/*// MASS_SPECTROMETRY
     			if (massBankRecord.getAcMassSpectrometryMap() != null) {
@@ -232,7 +239,7 @@ public class MassBankRecordLogic {
     					peak.setMz(Double.parseDouble(pValue.get("m/z")));
     					peak.setIntensity(Double.parseDouble(pValue.get("int.")));
     					peak.setRelativeIntensity(Integer.parseInt(pValue.get("rel.int.")));
-    					peak.setRecordId(massBankRecord.getId());
+    					peak.setCompoundId(massBankRecord.getId());
     					peaks.add(peak);
     				}
     				if (peaks.size() > 0) {
@@ -242,24 +249,30 @@ public class MassBankRecordLogic {
     			}
     			
     			try {
-    				// SPECTRUM
     				String strPrecursorMz = massBankRecord.getMsFocusedIonMap().get("PRECURSOR_M/Z");
     				if (strPrecursorMz == null) {
     					strPrecursorMz = StringUtils.EMPTY;
     				}
     				String[] strPrecursorMzArray = strPrecursorMz.split("/");
     				for (String oStrPrecursorMz : strPrecursorMzArray) {
-	    				String strIonMode = massBankRecord.getAcMassSpectrometryMap().get("ION_MODE");
-		    			if (StringUtils.isNotBlank(strPrecursorMz) && StringUtils.isNotBlank(strIonMode)) {
-		    				Spectrum spectrum = new Spectrum();
-		    				spectrum.setTitle(massBankRecord.getTitle());
-		    				spectrum.setPrecursorMz(Float.parseFloat(oStrPrecursorMz));
-		    				spectrum.setIonMode(IonMode.parseInt(strIonMode));
-		    				spectrum.setRecordId(massBankRecord.getId());
-		    				this.spectrumAccessor.addBatchInsert(spectrum);
-		    			} else {
-		    				LOGGER.warn("No Spectrum Info.: " + massBankRecord.getId());
-		    			}
+    					if (StringUtils.isNotBlank(oStrPrecursorMz)) {
+	    					Precursor precursor = new Precursor();
+	    					precursor.setPrecursorMz(Float.parseFloat(oStrPrecursorMz));
+	    					precursor.setCompoundId(massBankRecord.getId());
+	    					this.precursorAccessor.addBatchInsert(precursor);
+    					}
+//    					// SPECTRUM
+//	    				String strIonMode = massBankRecord.getAcMassSpectrometryMap().get("ION_MODE");
+//		    			if (StringUtils.isNotBlank(strPrecursorMz) && StringUtils.isNotBlank(strIonMode)) {
+//		    				Spectrum spectrum = new Spectrum();
+//		    				spectrum.setTitle(massBankRecord.getTitle());
+//		    				spectrum.setPrecursorMz(Float.parseFloat(oStrPrecursorMz));
+//		    				spectrum.setIonMode(IonMode.parseInt(strIonMode));
+//		    				spectrum.setRecordId(massBankRecord.getId());
+//		    				this.spectrumAccessor.addBatchInsert(spectrum);
+//		    			} else {
+//		    				LOGGER.warn("No Spectrum Info.: " + massBankRecord.getId());
+//		    			}
     				}
     			} catch (NumberFormatException e) {
     				LOGGER.error(e.getMessage(), e);

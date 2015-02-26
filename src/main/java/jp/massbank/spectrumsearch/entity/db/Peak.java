@@ -8,14 +8,14 @@ public class Peak {
 		public static final String MZ = "MZ";										// PK$PEAK -> m/z
 		public static final String INTENSITY = "INTENSITY";							// PK$PEAK -> int.
 		public static final String RELATIVE_INTENSITY = "RELATIVE_INTENSITY";		// PK$PEAK -> rel.int.
-		public static final String RECORD_ID = "RECORD_ID";							// PK$PEAK -> ACCESSION
+		public static final String COMPOUND_ID = "COMPOUND_ID";							// PK$PEAK -> ACCESSION
 	}
 	
 	private int id;
 	private double mz;
 	private double intensity;
 	private int relativeIntensity;
-	private String recordId;
+	private String compoundId;
 
 	public int getId() {
 		return id;
@@ -49,12 +49,12 @@ public class Peak {
 		this.relativeIntensity = relativeIntensity;
 	}
 
-	public String getRecordId() {
-		return recordId;
+	public String getCompoundId() {
+		return compoundId;
 	}
 
-	public void setRecordId(String recordId) {
-		this.recordId = recordId;
+	public void setCompoundId(String compoundId) {
+		this.compoundId = compoundId;
 	}
 
 }

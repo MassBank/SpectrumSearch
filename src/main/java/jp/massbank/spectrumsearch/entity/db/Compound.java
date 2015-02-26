@@ -1,23 +1,25 @@
 package jp.massbank.spectrumsearch.entity.db;
 
-public class Record {
+public class Compound {
 	
-	public static final String TABLE = "RECORD";
+	public static final String TABLE = "COMPOUND";
 	public static final class Columns {
-		public static final String RECORD_ID = "RECORD_ID";
-		public static final String RECORD_TITLE = "RECORD_TITLE";
-		public static final String MS_TYPE = "MS_TYPE";
+		public static final String COMPOUND_ID = "COMPOUND_ID";
+		public static final String TITLE = "TITLE";
 		public static final String FORMULA = "FORMULA";
 		public static final String EXACT_MASS = "EXACT_MASS";
+		public static final String ION_MODE = "ION_MODE";
 		public static final String INSTRUMENT_ID = "INSTRUMENT_ID";
+		public static final String MS_TYPE_ID = "MS_ID";
 	}
 
 	private String id;
 	private String title;
-	private String msType;
 	private String formula;
 	private double exactMass;
+	private int ionMode;
 	private int instrumentId;
+	private int msId;
 
 	public String getId() {
 		return id;
@@ -33,14 +35,6 @@ public class Record {
 
 	public void setTitle(String title) {
 		this.title = title;
-	}
-
-	public String getMsType() {
-		return msType;
-	}
-
-	public void setMsType(String msType) {
-		this.msType = msType;
 	}
 
 	public String getFormula() {
@@ -59,12 +53,28 @@ public class Record {
 		this.exactMass = exactMass;
 	}
 
+	public int getIonMode() {
+		return ionMode;
+	}
+
+	public void setIonMode(int ionMode) {
+		this.ionMode = ionMode;
+	}
+
 	public int getInstrumentId() {
 		return instrumentId;
 	}
 
 	public void setInstrumentId(int instrumentId) {
 		this.instrumentId = instrumentId;
+	}
+
+	public int getMsId() {
+		return msId;
+	}
+
+	public void setMsId(int msId) {
+		this.msId = msId;
 	}
 	
 }

@@ -7,6 +7,7 @@ import java.util.List;
 import jp.massbank.spectrumsearch.entity.db.MsType;
 import jp.massbank.spectrumsearch.util.QueryBuilder;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
 public class MsTypeAccessor extends AbstractDbAccessor<MsType> {
@@ -23,6 +24,11 @@ public class MsTypeAccessor extends AbstractDbAccessor<MsType> {
 
 	public List<MsType> getAllMsTypes() {
 		String sql = String.format("SELECT * FROM %s", MsType.TABLE);
+		return listGeneric(sql);
+	}
+	
+	public List<MsType> getMsTypesByNames(List<String> names) {
+		String sql = "SELECT * FROM " + MsType.TABLE + " WHERE " + MsType.Columns.MS_TYPE_NAME + " IN ('" + StringUtils.join(names, "','") + "')";
 		return listGeneric(sql);
 	}
 	

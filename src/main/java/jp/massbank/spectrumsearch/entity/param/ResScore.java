@@ -2,15 +2,15 @@ package jp.massbank.spectrumsearch.entity.param;
 
 public class ResScore {
 	
-	private String recordId;
+	private String compoundId;
 	private double score;
 
-	public String getRecordId() {
-		return recordId;
+	public String getCompoundId() {
+		return compoundId;
 	}
 
-	public void setRecordId(String recordId) {
-		this.recordId = recordId;
+	public void setCompoundId(String compoundId) {
+		this.compoundId = compoundId;
 	}
 
 	public double getScore() {

@@ -1,5 +1,6 @@
 package jp.massbank.spectrumsearch.entity.db;
 
+@Deprecated
 public class Spectrum {
 	
 	public static final String TABLE = "SPECTRUM";
@@ -8,7 +9,7 @@ public class Spectrum {
 		public static final String TITLE = "TITLE";					// RECORD_TITLE
 		public static final String ION_MODE = "ION_MODE";			// AC$MASS_SPECTROMETRY: ION_MODE
 		public static final String PRECURSOR_MZ = "PRECURSOR_MZ";	// MS$FOCUSED_ION: PRECURSOR_M/Z
-		public static final String RECORD_ID = "RECORD_ID";			// ACCESSION
+		public static final String COMPOUND_ID = "RECORD_ID";			// ACCESSION
 	}
 
 	private int id;

@@ -5,6 +5,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
+
 import jp.massbank.spectrumsearch.entity.db.Instrument;
 import jp.massbank.spectrumsearch.util.QueryBuilder;
 
@@ -61,6 +63,12 @@ public class InstrumentAccessor extends AbstractDbAccessor<Instrument> {
 		String selectQuery = "SELECT * FROM " + Instrument.TABLE + 
 				" WHERE " + Instrument.Columns.INSTRUMENT_TYPE + " = '" + type + "'";
 		return uniqueGeneric(selectQuery);
+	}
+	
+	public List<Instrument> getInstrumentsByTypes(List<String> types) {
+		String selectQuery = "SELECT * FROM " + Instrument.TABLE + 
+				" WHERE " + Instrument.Columns.INSTRUMENT_TYPE + " IN ('" + StringUtils.join(types, "','") + "')";
+		return listGeneric(selectQuery);
 	}
 	
 	public Instrument getInstrument(String type) {
