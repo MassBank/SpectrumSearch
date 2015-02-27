@@ -10,7 +10,7 @@ public class Compound {
 		public static final String EXACT_MASS = "EXACT_MASS";
 		public static final String ION_MODE = "ION_MODE";
 		public static final String INSTRUMENT_ID = "INSTRUMENT_ID";
-		public static final String MS_TYPE_ID = "MS_ID";
+		public static final String MS_TYPE_ID = "MS_TYPE_ID";
 	}
 
 	private String id;
