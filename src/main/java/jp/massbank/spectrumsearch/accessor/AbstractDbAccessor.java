@@ -172,37 +172,6 @@ public abstract class AbstractDbAccessor<T> extends DbAccessor {
 	
 	// private methods
 	
-//	private void createConnection() {
-//        try {
-//        	if (conn == null || conn.isClosed()) {
-//	        	Properties connectionProps = new Properties();
-//	        	// connectionProps.put("user", "massbank");
-//	        	// connectionProps.put("password", "massbank");
-//	        	
-//	            // Get a connection
-//	            conn = DriverManager.getConnection(dbURL + ";create=true", connectionProps); 
-//        	}
-//        } catch (Exception e) {
-//        	LOGGER.error(e.getMessage(), e);
-//        }
-//    }
-	
-//	private void closeConnection() {
-//		if (conn != null) {
-//	        try {
-//	        	// shutdown single database
-//	            DriverManager.getConnection(dbURL + ";shutdown=true");
-//	            conn.close();
-//	        } catch (SQLException e) {
-//	        	if ("08006".equals(e.getSQLState())) {
-//	        		LOGGER.info("Derby shut down normally");
-//	        	} else {
-//	        		LOGGER.error(e.getMessage(), e);
-//	        	}
-//	        }
-//		}           
-//    }
-	
 	private List<T> listResult(String sql) throws SQLException {
 		List<T> result = new ArrayList<T>();
 		if (stmt != null) {
