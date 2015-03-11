@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 import jp.massbank.spectrumsearch.accessor.CompoundAccessor;
+import jp.massbank.spectrumsearch.accessor.CompoundNameAccessor;
 import jp.massbank.spectrumsearch.accessor.DbAccessor;
 import jp.massbank.spectrumsearch.accessor.InstrumentAccessor;
 import jp.massbank.spectrumsearch.accessor.MsTypeAccessor;
@@ -22,6 +23,7 @@ import jp.massbank.spectrumsearch.accessor.PrecursorAccessor;
 import jp.massbank.spectrumsearch.entity.constant.Constant;
 import jp.massbank.spectrumsearch.entity.constant.SystemProperties;
 import jp.massbank.spectrumsearch.entity.db.Compound;
+import jp.massbank.spectrumsearch.entity.db.CompoundName;
 import jp.massbank.spectrumsearch.entity.db.Instrument;
 import jp.massbank.spectrumsearch.entity.db.MsType;
 import jp.massbank.spectrumsearch.entity.db.Peak;
@@ -38,6 +40,7 @@ public class MassBankRecordLogic {
 	
 	private static final Logger LOGGER = Logger.getLogger(MassBankRecordLogic.class);
 	private CompoundAccessor compoundAccessor;
+	private CompoundNameAccessor compoundNameAccessor;
 	private InstrumentAccessor instrumentAccessor;
 //	private MassSpectrometryAccessor massSpectrometryAccessor;
 	private PeakAccessor peakAccessor;
@@ -47,6 +50,7 @@ public class MassBankRecordLogic {
 	
 	public MassBankRecordLogic() {
 		this.compoundAccessor = new CompoundAccessor();
+		this.compoundNameAccessor = new CompoundNameAccessor();
 		this.instrumentAccessor = new InstrumentAccessor();
 //		this.massSpectrometryAccessor = new MassSpectrometryAccessor();
 		this.peakAccessor = new PeakAccessor();
@@ -60,7 +64,6 @@ public class MassBankRecordLogic {
 			DbAccessor.createConnection();
 			dropTableIndexes();
 			syncDatabaseSchema();
-			clearTableData();
 			createTableIndexes();
 			DbAccessor.closeConnection();
 		} catch (SQLException e) {
@@ -69,11 +72,17 @@ public class MassBankRecordLogic {
 	}
 
 	public void syncDatabaseSchema() {
+		instrumentAccessor.dropTable();
+		instrumentAccessor.createTable();
+		
+		msTypeAccessor.dropTable();
+		msTypeAccessor.createTable();
+		
 		compoundAccessor.dropTable();
 		compoundAccessor.createTable();
 		
-		instrumentAccessor.dropTable();
-		instrumentAccessor.createTable();
+		compoundNameAccessor.dropTable();
+		compoundNameAccessor.createTable();
 		
 //		massSpectrometryAccessor.dropTable();
 //		massSpectrometryAccessor.createTable();
@@ -86,9 +95,6 @@ public class MassBankRecordLogic {
 		
 //		spectrumAccessor.dropTable();
 //		spectrumAccessor.createTable();
-		
-		msTypeAccessor.dropTable();
-		msTypeAccessor.createTable();
 	}
 	
 	public void clearTableData() {
@@ -102,17 +108,15 @@ public class MassBankRecordLogic {
 	}
 	
 	public void dropTableIndexes() {
-		DbAccessor.execUpdate("DROP INDEX IDX_PEAK_RECORD");
+		DbAccessor.execUpdate("DROP INDEX IDX_PEAK_COMPOUND");
 		DbAccessor.execUpdate("DROP INDEX IDX_PEAK_MZ");
 		DbAccessor.execUpdate("DROP INDEX IDX_PEAK_RELATIVE_INTENSITY");
-//		DbAccessor.execUpdate("DROP INDEX IDX_SPECTRUM_RECORD");
 	}
 	
 	public void createTableIndexes() {
-		DbAccessor.execUpdate("CREATE INDEX IDX_PEAK_RECORD ON " + Peak.TABLE + " (" + Peak.Columns.COMPOUND_ID + ")");
+		DbAccessor.execUpdate("CREATE INDEX IDX_PEAK_COMPOUND ON " + Peak.TABLE + " (" + Peak.Columns.COMPOUND_ID + ")");
 		DbAccessor.execUpdate("CREATE INDEX IDX_PEAK_MZ ON " + Peak.TABLE + " (" + Peak.Columns.MZ + ")");
 		DbAccessor.execUpdate("CREATE INDEX IDX_PEAK_RELATIVE_INTENSITY ON " + Peak.TABLE + " (" + Peak.Columns.RELATIVE_INTENSITY + ")");
-//		DbAccessor.execUpdate("CREATE INDEX IDX_SPECTRUM_RECORD ON SPECTRUM (RECORD_ID)");
 	}
 	
 	public void syncFilesRecordsByFolderPath(String pathname) {
@@ -215,6 +219,13 @@ public class MassBankRecordLogic {
     			compound.setInstrumentId(oInstrument.getId());
     			compound.setMsId(oMsType.getId());
     			this.compoundAccessor.addBatchInsert(compound);
+    			
+//    			for (String name : massBankRecord.getChNames()) {
+//    				CompoundName compoundName = new CompoundName();
+//    				compoundName.setName(name);
+//    				compoundName.setCompoundId(massBankRecord.getId());
+//    				this.compoundNameAccessor.addBatchInsert(compoundName);
+//    			}
     			
     			/*// MASS_SPECTROMETRY
     			if (massBankRecord.getAcMassSpectrometryMap() != null) {
